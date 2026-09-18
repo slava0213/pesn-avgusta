@@ -105,7 +105,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
 	<tw-storydata name="Песнь Августа" startnode="2" creator="Twine" creator-version="2.12.0" format="SugarCube" format-version="2.37.3" ifid="5BA7786A-143F-4271-807B-BBD7F4A261CD" options="" tags="" zoom="0.6" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* ============================================
-   ПЕСНЬ АВГУСТА — Полный CSS
+   ПЕСНЬ АВГУСТА — Полный CSS (диалог во всю ширину)
    ============================================ */
 
 /* ===== ОБЩИЕ НАСТРОЙКИ ===== */
@@ -128,23 +128,28 @@ body {
   box-shadow: none;
 }
 
-/* ===== ДИАЛОГОВОЕ ОКНО ===== */
+/* ============================================
+   ДИАЛОГОВОЕ ОКНО (ВО ВСЮ ШИРИНУ)
+   ============================================ */
 .dialogue-box {
   position: fixed;
-  bottom: 1.5vh;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 92vw;
-  max-width: 1400px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  max-width: none;
   height: auto;
-  max-height: 32vh;
+  max-height: 35vh;
   overflow: hidden;
-  background: rgba(255, 248, 231, 0.65);
-  border: 0.25vw solid rgba(244, 197, 66, 0.9);
-  border-radius: 2px;
+  background: rgba(255, 248, 231, 0.92);
+  border-top: 3px solid rgba(244, 197, 66, 0.95);
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 0;
   padding: 0;
-  box-shadow: 0 15px 50px rgba(80, 50, 10, 0.4), inset 0 0 30px rgba(244, 197, 66, 0.15);
-  backdrop-filter: blur(4px);
+  box-shadow: 0 -10px 40px rgba(80, 50, 10, 0.5);
+  backdrop-filter: blur(8px);
   z-index: 100;
   animation: dialogueIn 0.4s ease-out;
   display: flex;
@@ -152,33 +157,37 @@ body {
 }
 
 @keyframes dialogueIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(30px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
+/* ===== ИМЯ ПЕРСОНАЖА ===== */
 .speaker-name {
   width: 20vw;
   max-width: 280px;
-  min-width: 140px;
+  min-width: 160px;
   height: 4.5vh;
-  min-height: 30px;
+  min-height: 32px;
   display: flex;
   align-items: center;
-  padding: 0 1vw;
-  background: rgba(217, 119, 6, 0.75);
+  padding: 0 1.5vw;
+  background: rgba(217, 119, 6, 0.85);
   color: #FFF8E7;
-  font-size: 1.5vw;
+  font-size: 1.4vw;
   font-weight: bold;
-  border-radius: 2px 2px 0 0;
+  border-radius: 0 0 2px 0;
   border: 0.15vw solid rgba(244, 197, 66, 0.9);
   border-bottom: none;
+  border-top: none;
+  border-left: none;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
   letter-spacing: 1px;
-  margin: 0;
+  margin: 0 0 0 2vw;
   box-sizing: border-box;
   flex-shrink: 0;
 }
 
+/* ===== ТЕКСТ ДИАЛОГА ===== */
 .dialogue-text {
   width: 100%;
   max-width: 100%;
@@ -186,67 +195,72 @@ body {
   min-height: 10vh;
   color: #3A2A1A;
   font-size: 1.2vw;
-  line-height: 1.5;
+  line-height: 1.6;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-  padding: 1vh 1.5vw;
+  padding: 1.5vh 3vw;
   margin: 0;
   box-sizing: border-box;
   overflow-y: auto;
-  background: rgba(255, 248, 231, 0.4);
-  border-radius: 0 0 2px 2px;
-  border-top: 0.1vw solid rgba(244, 197, 66, 0.5);
+  background: transparent;
+  border-radius: 0;
+  border-top: 1px solid rgba(244, 197, 66, 0.5);
 }
 
-/* ===== ТИПЫ ДИАЛОГОВ ===== */
-.dialogue-box.narrator { background: rgba(255, 248, 231, 0.65); border-color: rgba(244, 197, 66, 0.9); }
-.dialogue-box.narrator .speaker-name { background: rgba(180, 130, 40, 0.75); color: #FFF8E7; }
+/* ============================================
+   ТИПЫ ДИАЛОГОВ
+   ============================================ */
+.dialogue-box.narrator { background: rgba(255, 248, 231, 0.92); border-top-color: rgba(244, 197, 66, 0.95); }
+.dialogue-box.narrator .speaker-name { background: rgba(180, 130, 40, 0.9); color: #FFF8E7; }
 
-.dialogue-box.mira { background: rgba(255, 230, 200, 0.7); border-color: rgba(230, 126, 34, 0.9); }
-.dialogue-box.mira .speaker-name { background: rgba(230, 126, 34, 0.8); color: #FFF8E7; }
+.dialogue-box.mira { background: rgba(255, 230, 200, 0.93); border-top-color: rgba(230, 126, 34, 0.95); }
+.dialogue-box.mira .speaker-name { background: rgba(230, 126, 34, 0.9); color: #FFF8E7; }
 
-.dialogue-box.bruno { background: rgba(220, 220, 220, 0.7); border-color: rgba(120, 120, 120, 0.9); }
-.dialogue-box.bruno .speaker-name { background: rgba(100, 100, 100, 0.8); color: #FFF8E7; }
+.dialogue-box.bruno { background: rgba(230, 230, 230, 0.92); border-top-color: rgba(120, 120, 120, 0.95); }
+.dialogue-box.bruno .speaker-name { background: rgba(100, 100, 100, 0.9); color: #FFF8E7; }
 
-.dialogue-box.shustik { background: rgba(210, 240, 210, 0.7); border-color: rgba(80, 160, 80, 0.9); }
-.dialogue-box.shustik .speaker-name { background: rgba(60, 140, 60, 0.8); color: #FFF8E7; }
+.dialogue-box.shustik { background: rgba(220, 245, 220, 0.92); border-top-color: rgba(80, 160, 80, 0.95); }
+.dialogue-box.shustik .speaker-name { background: rgba(60, 140, 60, 0.9); color: #FFF8E7; }
 
-.dialogue-box.selesta { background: rgba(235, 220, 245, 0.7); border-color: rgba(150, 110, 180, 0.9); }
-.dialogue-box.selesta .speaker-name { background: rgba(130, 90, 160, 0.8); color: #FFF8E7; }
+.dialogue-box.selesta { background: rgba(240, 230, 250, 0.92); border-top-color: rgba(150, 110, 180, 0.95); }
+.dialogue-box.selesta .speaker-name { background: rgba(130, 90, 160, 0.9); color: #FFF8E7; }
 
-.dialogue-box.cornelius { background: rgba(210, 225, 245, 0.7); border-color: rgba(70, 110, 160, 0.9); }
-.dialogue-box.cornelius .speaker-name { background: rgba(60, 90, 140, 0.8); color: #FFF8E7; }
+.dialogue-box.cornelius { background: rgba(220, 232, 248, 0.92); border-top-color: rgba(70, 110, 160, 0.95); }
+.dialogue-box.cornelius .speaker-name { background: rgba(60, 90, 140, 0.9); color: #FFF8E7; }
 
 .dialogue-box.august {
-  background: rgba(255, 245, 200, 0.75);
-  border-color: rgba(255, 200, 50, 0.95);
-  box-shadow: 0 15px 50px rgba(255, 200, 50, 0.3), inset 0 0 40px rgba(255, 220, 100, 0.2);
+  background: rgba(255, 250, 210, 0.93);
+  border-top-color: rgba(255, 200, 50, 0.95);
+  box-shadow: 0 -10px 50px rgba(255, 200, 50, 0.4);
 }
-.dialogue-box.august .speaker-name { background: rgba(230, 170, 20, 0.85); color: #FFF8E7; }
+.dialogue-box.august .speaker-name { background: rgba(230, 170, 20, 0.9); color: #FFF8E7; }
 
 .dialogue-box.olven {
-  background: rgba(240, 230, 200, 0.7);
-  border-color: rgba(160, 120, 60, 0.9);
-  border-style: dashed;
+  background: rgba(245, 235, 210, 0.92);
+  border-top-color: rgba(160, 120, 60, 0.95);
+  border-top-style: dashed;
 }
-.dialogue-box.olven .speaker-name { background: rgba(140, 100, 50, 0.8); color: #FFF8E7; }
+.dialogue-box.olven .speaker-name { background: rgba(140, 100, 50, 0.9); color: #FFF8E7; }
 
 .dialogue-box.final-box {
-  background: rgba(255, 250, 220, 0.8);
-  border-color: rgba(255, 215, 0, 0.95);
-  box-shadow: 0 15px 60px rgba(255, 215, 0, 0.4), inset 0 0 50px rgba(255, 230, 120, 0.2);
+  background: rgba(255, 252, 225, 0.93);
+  border-top-color: rgba(255, 215, 0, 0.95);
+  box-shadow: 0 -10px 60px rgba(255, 215, 0, 0.5);
 }
-.dialogue-box.final-box .speaker-name { background: rgba(200, 150, 20, 0.85); color: #FFF8E7; }
+.dialogue-box.final-box .speaker-name { background: rgba(200, 150, 20, 0.9); color: #FFF8E7; }
 
-/* ===== КНОПКИ-ВЫБОРЫ ===== */
+/* ============================================
+   КНОПКИ-ВЫБОРЫ (НАД ДИАЛОГОМ)
+   ============================================ */
 .choice-box {
   position: fixed;
-  top: 15vh;
+  top: auto;
+  bottom: 37vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 101;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   width: 60%;
   max-width: 700px;
 }
@@ -255,13 +269,13 @@ body {
   width: 100%;
   display: block;
   text-align: center;
-  padding: 18px 24px;
-  background: rgba(251, 191, 36, 0.85);
+  padding: 16px 24px;
+  background: rgba(251, 191, 36, 0.92);
   color: #4A2500;
   border: 3px solid rgba(180, 83, 9, 0.95);
   border-radius: 2px;
   text-decoration: none;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: bold;
   line-height: 1.3;
   transition: all 0.3s ease;
@@ -277,11 +291,13 @@ body {
   box-shadow: 0 10px 30px rgba(255, 200, 100, 0.7);
 }
 
-/* ===== КНОПКА "ДАЛЬШЕ" ===== */
+/* ============================================
+   КНОПКА "ДАЛЬШЕ" (НАД ДИАЛОГОМ СПРАВА)
+   ============================================ */
 .next-box {
   position: fixed;
-  bottom: 34vh;
-  right: 2vw;
+  bottom: 37vh;
+  right: 3vw;
   width: 10vw;
   max-width: 150px;
   min-width: 100px;
@@ -290,7 +306,7 @@ body {
 
 .next-box a.link-internal {
   display: block;
-  background: rgba(110, 231, 183, 0.85);
+  background: rgba(110, 231, 183, 0.9);
   color: #064E3B;
   padding: 1.2vh 1vw;
   border-radius: 2px;
@@ -327,12 +343,12 @@ body {
 
 .sprite {
   position: absolute;
-  bottom: 34vh;
-  height: 60vh;
-  max-height: 700px;
+  bottom: 36vh;
+  height: 55vh;
+  max-height: 650px;
   min-height: 250px;
   width: auto;
-  max-width: 35vw;
+  max-width: 32vw;
   object-fit: contain;
   pointer-events: none;
   transition: 
@@ -416,7 +432,7 @@ body {
 }
 
 /* ============================================
-   КНОПКИ ИСТОРИИ
+   КНОПКИ ИСТОРИИ (Назад / Вперёд)
    ============================================ */
 
 .history-controls {
@@ -434,7 +450,7 @@ body {
   height: 48px;
   border-radius: 50%;
   border: 3px solid rgba(180, 83, 9, 0.95);
-  background: rgba(251, 191, 36, 0.85);
+  background: rgba(251, 191, 36, 0.9);
   color: #4A2500;
   font-size: 22px;
   font-weight: bold;
@@ -470,7 +486,9 @@ body {
   color: rgba(60, 40, 10, 0.5);
 }
 
-/* ===== ФОНЫ ЛОКАЦИЙ ===== */
+/* ============================================
+   ФОНЫ ЛОКАЦИЙ
+   ============================================ */
 body.title { background-image: url("images/fon_title.png"); }
 body.start { background-image: url("images/fon_start.png"); }
 body.most { background-image: url("images/fon_most.png"); }
@@ -481,13 +499,17 @@ body.tower_inside { background-image: url("images/fon_tower_inside.png"); }
 body.final { background-image: url("images/fon_final.png"); }
 body.ending { background-image: url("images/fon_ending.png"); }
 
-/* ===== СКРОЛЛБАР ===== */
+/* ============================================
+   СКРОЛЛБАР
+   ============================================ */
 .dialogue-text::-webkit-scrollbar { width: 8px; }
 .dialogue-text::-webkit-scrollbar-track { background: rgba(255, 243, 196, 0.5); }
 .dialogue-text::-webkit-scrollbar-thumb { background: #FBBF24; }
 .dialogue-text::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
 
-/* ===== ТИТУЛЬНЫЙ ЭКРАН ===== */
+/* ============================================
+   ТИТУЛЬНЫЙ ЭКРАН
+   ============================================ */
 .title-screen {
   position: fixed;
   top: 0;
@@ -585,20 +607,57 @@ body.ending { background-image: url("images/fon_ending.png"); }
   animation: titleFadeIn 1s ease-out 0.6s backwards;
 }
 
-/* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ===== */
+/* ============================================
+   МОБИЛЬНАЯ АДАПТАЦИЯ
+   ============================================ */
 @media (max-width: 768px) {
-  .dialogue-box { width: 95vw; max-height: 38vh; bottom: 1vh; }
-  .speaker-name { width: 30vw; height: 4vh; min-height: 28px; font-size: 3.5vw; }
-  .dialogue-text { font-size: 3.2vw; padding: 0.8vh 2vw; }
-  .choice-box { width: 85%; gap: 10px; top: 12vh; }
-  .choice-box a.link-internal { padding: 14px 18px; font-size: 14px; }
-  .sprite { height: 45vh; max-width: 50vw; bottom: 38vh; }
-  .sprite.pos-left { left: 28%; }
-  .sprite.pos-right { right: 28%; }
-  .sprite.pos-far-left { left: 18%; }
-  .sprite.pos-far-right { right: 18%; }
-  .next-box { bottom: 40vh; right: 2vw; width: 20vw; min-width: 90px; }
-  .next-box a.link-internal { font-size: 3vw; padding: 1vh 2vw; }
+  .dialogue-box {
+    width: 100vw;
+    max-height: 42vh;
+    bottom: 0;
+    border-radius: 0;
+    border-top-width: 2px;
+  }
+  .speaker-name {
+    width: 32vw;
+    height: 4vh;
+    min-height: 30px;
+    font-size: 4vw;
+    margin-left: 3vw;
+    padding: 0 2vw;
+  }
+  .dialogue-text {
+    font-size: 3.5vw;
+    padding: 1.5vh 4vw;
+  }
+  .choice-box {
+    bottom: 44vh;
+    width: 88%;
+    gap: 8px;
+  }
+  .choice-box a.link-internal {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  .next-box {
+    bottom: 44vh;
+    right: 3vw;
+    width: 22vw;
+    min-width: 90px;
+  }
+  .next-box a.link-internal {
+    font-size: 3.2vw;
+    padding: 1vh 2vw;
+  }
+  .sprite {
+    height: 42vh;
+    max-width: 48vw;
+    bottom: 42vh;
+  }
+  .sprite.pos-left { left: 26%; }
+  .sprite.pos-right { right: 26%; }
+  .sprite.pos-far-left { left: 16%; }
+  .sprite.pos-far-right { right: 16%; }
   .title-main { font-size: 32px; letter-spacing: 2px; }
   .title-sub { font-size: 13px; letter-spacing: 2px; }
   .title-menu { width: 240px; gap: 9px; }
@@ -987,7 +1046,8 @@ Setting.addList("sfxVolume", {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Дальше-&gt;Start5]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="8" name="Start5" tags="start" position="6300,100" size="100,100">&lt;img src=&quot;images/mira.png&quot; class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="8" name="Start5" tags="start" position="6300,100" size="100,100">&lt;img src=&quot;images/player.png&quot; class=&quot;sprite&quot; data-char=&quot;player&quot;&gt;
+&lt;img src=&quot;images/mira.png&quot;   class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
 
 &lt;div class=&quot;dialogue-box mira&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Мира&lt;/div&gt;
@@ -1022,8 +1082,8 @@ Setting.addList("sfxVolume", {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Дальше-&gt;ВыборПути2]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="11" name="РазговорСМирой1" tags="start" position="6400,300" size="100,100">&lt;img src=&quot;images/mira.png&quot; class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
-&lt;img src=&quot;images/player.png&quot; class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="11" name="РазговорСМирой1" tags="start" position="6400,300" size="100,100">&lt;img src=&quot;images/player.png&quot; class=&quot;sprite&quot; data-char=&quot;player&quot;&gt;
+&lt;img src=&quot;images/mira.png&quot;   class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
 &lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
   &lt;div class=&quot;dialogue-text&quot;&gt;
