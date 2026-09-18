@@ -129,7 +129,7 @@ body {
 }
 
 /* ============================================
-   СЛОЙ ФОНА
+   СЛОЙ ФОНА — растянут на всю область над диалогом
    ============================================ */
 .bg-layer {
   position: fixed;
@@ -147,6 +147,7 @@ body {
   transition: background-image 0.5s ease-in-out;
 }
 
+/* ===== ФОНЫ ЛОКАЦИЙ ===== */
 body.title .bg-layer         { background-image: url("images/fon_title.png"); }
 body.start .bg-layer         { background-image: url("images/fon_start.png"); }
 body.most .bg-layer          { background-image: url("images/fon_most.png"); }
@@ -158,7 +159,121 @@ body.final .bg-layer         { background-image: url("images/fon_final.png"); }
 body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
 
 /* ============================================
-   ДИАЛОГОВОЕ ОКНО
+   ТИТУЛЬНЫЙ ЭКРАН (с картинкой)
+   ============================================ */
+
+/* Затемнение поверх фона титульника для читаемости текста */
+body.title .bg-layer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.15) 40%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  pointer-events: none;
+}
+
+.title-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6vh 20px 5vh 20px;
+  box-sizing: border-box;
+  z-index: 200;
+  background: transparent;
+}
+
+.title-logo {
+  text-align: center;
+  animation: titleFadeIn 1s ease-out;
+}
+
+@keyframes titleFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.title-main {
+  font-size: 52px;
+  color: #FFF8E7;
+  text-shadow:
+    -2px -2px 0 #B45309, 2px -2px 0 #B45309,
+    -2px  2px 0 #B45309, 2px  2px 0 #B45309,
+     0 0 25px rgba(255, 220, 100, 1),
+     5px 5px 20px rgba(0, 0, 0, 0.7);
+  letter-spacing: 5px;
+  margin: 0;
+  font-family: 'Georgia', serif;
+  font-weight: bold;
+}
+
+.title-sub {
+  font-size: 17px;
+  color: #FFF3C4;
+  text-shadow: 1px 1px 0 #B45309, 2px 2px 6px rgba(0, 0, 0, 0.9);
+  font-style: italic;
+  margin-top: 8px;
+  margin-bottom: 0;
+  letter-spacing: 3px;
+}
+
+.title-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 280px;
+  animation: titleFadeIn 1s ease-out 0.3s backwards;
+}
+
+.title-menu a.link-internal {
+  display: block;
+  background: rgba(251, 191, 36, 0.9);
+  color: #4A2500;
+  padding: 13px 20px;
+  border-radius: 2px;
+  border: 3px solid rgba(180, 83, 9, 0.95);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  font-family: 'Georgia', serif;
+}
+
+.title-menu a.link-internal:hover {
+  background: rgba(252, 211, 77, 1);
+  color: #2A1500;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(255, 200, 100, 0.7);
+}
+
+.title-footer {
+  font-size: 13px;
+  color: #FFF3C4;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9);
+  letter-spacing: 2px;
+  font-style: italic;
+  opacity: 0.9;
+  margin: 0;
+  animation: titleFadeIn 1s ease-out 0.6s backwards;
+}
+
+/* ============================================
+   ДИАЛОГОВОЕ ОКНО (ВО ВСЮ ШИРИНУ)
    ============================================ */
 .dialogue-box {
   position: fixed;
@@ -392,6 +507,7 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   will-change: transform, filter, opacity;
 }
 
+/* ===== ПОЗИЦИИ ===== */
 .sprite.pos-solo      { left: 50%; --tx: -50%; --sc: 1; }
 .sprite.pos-left      { left: 20%; --tx: -50%; --sc: 0.95; }
 .sprite.pos-right     { right: 20%; --tx: 50%;  --sc: 0.95; }
@@ -411,6 +527,7 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   transform: translateX(50%) scale(var(--sc));
 }
 
+/* ===== АКТИВНЫЙ ===== */
 .sprite.active {
   opacity: 1;
   filter: 
@@ -422,6 +539,7 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   animation: spriteJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* ===== НЕАКТИВНЫЙ ===== */
 .sprite.inactive {
   opacity: 0.9;
   filter: 
@@ -431,6 +549,7 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   z-index: 5;
 }
 
+/* ===== АНИМАЦИЯ ПОДПРЫГИВАНИЯ ===== */
 @keyframes spriteJump {
   0%   { transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1)); }
   25%  { transform: translateX(var(--tx, -50%)) translateY(-25px) scale(calc(var(--sc, 1) * 1.05)); }
@@ -519,292 +638,6 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
 .dialogue-text::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
 
 /* ============================================
-   ТИТУЛЬНЫЙ ЭКРАН
-   ============================================ */
-.title-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6vh 20px 5vh 20px;
-  box-sizing: border-box;
-  z-index: 200;
-  background: linear-gradient(
-    180deg,
-    rgba(80, 140, 200, 0.45) 0%,
-    rgba(135, 206, 235, 0.25) 40%,
-    rgba(255, 248, 231, 0.15) 70%,
-    rgba(80, 50, 10, 0.5) 100%
-  );
-  backdrop-filter: blur(3px);
-}
-
-.title-logo { text-align: center; animation: titleFadeIn 1s ease-out; }
-
-@keyframes titleFadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.title-main {
-  font-size: 52px;
-  color: #FFF8E7;
-  text-shadow:
-    -2px -2px 0 #B45309, 2px -2px 0 #B45309,
-    -2px  2px 0 #B45309, 2px  2px 0 #B45309,
-     0 0 25px rgba(255, 220, 100, 1),
-     5px 5px 20px rgba(0, 0, 0, 0.7);
-  letter-spacing: 5px;
-  margin: 0;
-  font-family: 'Georgia', serif;
-  font-weight: bold;
-}
-
-.title-sub {
-  font-size: 17px;
-  color: #FFF3C4;
-  text-shadow: 1px 1px 0 #B45309, 2px 2px 6px rgba(0, 0, 0, 0.9);
-  font-style: italic;
-  margin-top: 8px;
-  margin-bottom: 0;
-  letter-spacing: 3px;
-}
-
-.title-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 280px;
-  animation: titleFadeIn 1s ease-out 0.3s backwards;
-}
-
-.title-menu a.link-internal {
-  display: block;
-  background: rgba(251, 191, 36, 0.9);
-  color: #4A2500;
-  padding: 13px 20px;
-  border-radius: 2px;
-  border: 3px solid rgba(180, 83, 9, 0.95);
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: bold;
-  text-align: center;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  font-family: 'Georgia', serif;
-}
-
-.title-menu a.link-internal:hover {
-  background: rgba(252, 211, 77, 1);
-  color: #2A1500;
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 10px 30px rgba(255, 200, 100, 0.7);
-}
-
-.title-footer {
-  font-size: 13px;
-  color: #FFF3C4;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9);
-  letter-spacing: 2px;
-  font-style: italic;
-  opacity: 0.9;
-  margin: 0;
-  animation: titleFadeIn 1s ease-out 0.6s backwards;
-}
-
-/* ============================================
-   СЧЁТЧИК КОНЦОВОК
-   ============================================ */
-
-.endings-counter {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: 250;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  background: rgba(251, 191, 36, 0.9);
-  border: 3px solid rgba(180, 83, 9, 0.95);
-  border-radius: 30px;
-  color: #4A2500;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(3px);
-  font-family: 'Georgia', serif;
-  user-select: none;
-}
-
-.endings-counter:hover {
-  background: rgba(252, 211, 77, 1);
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(255, 200, 100, 0.7);
-}
-
-.endings-counter.all-unlocked {
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  border-color: #B45309;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 4px 15px rgba(255, 200, 0, 0.6); }
-  50%      { box-shadow: 0 4px 25px rgba(255, 220, 50, 1); }
-}
-
-.endings-icon { font-size: 18px; line-height: 1; }
-.endings-text { letter-spacing: 1px; }
-
-.endings-panel {
-  position: fixed;
-  top: 70px;
-  right: 15px;
-  z-index: 249;
-  width: 280px;
-  max-width: 90vw;
-  background: rgba(255, 248, 231, 0.97);
-  border: 3px solid rgba(180, 83, 9, 0.95);
-  border-radius: 8px;
-  padding: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-  font-family: 'Georgia', serif;
-}
-
-.endings-panel.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.endings-panel-title {
-  font-size: 15px;
-  font-weight: bold;
-  color: #4A2500;
-  text-align: center;
-  padding-bottom: 10px;
-  border-bottom: 2px solid rgba(244, 197, 66, 0.6);
-  margin-bottom: 10px;
-  letter-spacing: 1px;
-}
-
-.endings-panel-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.endings-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
-
-.endings-item.unlocked {
-  background: rgba(251, 191, 36, 0.3);
-  color: #4A2500;
-  font-weight: bold;
-}
-
-.endings-item.locked {
-  background: rgba(100, 100, 100, 0.15);
-  color: #888;
-  font-style: italic;
-}
-
-.endings-item-icon { font-size: 18px; line-height: 1; }
-.endings-item-name { flex: 1; }
-
-.endings-panel-footer {
-  text-align: center;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 2px solid rgba(244, 197, 66, 0.6);
-  font-size: 13px;
-  color: #6B3410;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-/* ============================================
-   УВЕДОМЛЕНИЕ О НОВОЙ КОНЦОВКЕ
-   ============================================ */
-
-.ending-notification {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
-  z-index: 9999;
-  background: linear-gradient(135deg, #FFF8E7, #FFE9B0);
-  border: 4px solid rgba(180, 83, 9, 0.95);
-  border-radius: 12px;
-  padding: 30px 40px;
-  text-align: center;
-  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(255, 220, 100, 0.6);
-  opacity: 0;
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-family: 'Georgia', serif;
-  pointer-events: none;
-}
-
-.ending-notification.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.ending-notification-icon {
-  font-size: 60px;
-  line-height: 1;
-  margin-bottom: 15px;
-  animation: bounce 0.6s ease infinite alternate;
-}
-
-@keyframes bounce {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-10px); }
-}
-
-.ending-notification-title {
-  font-size: 22px;
-  font-weight: bold;
-  color: #B45309;
-  margin-bottom: 10px;
-  letter-spacing: 2px;
-}
-
-.ending-notification-name {
-  font-size: 20px;
-  color: #4A2500;
-  font-style: italic;
-  margin-bottom: 15px;
-}
-
-.ending-notification-sub {
-  font-size: 14px;
-  color: #6B3410;
-  letter-spacing: 1px;
-}
-
-/* ============================================
    МОБИЛЬНАЯ АДАПТАЦИЯ
    ============================================ */
 @media (max-width: 768px) {
@@ -863,14 +696,6 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   .title-footer { font-size: 11px; letter-spacing: 1px; }
   .history-controls { top: 10px; left: 10px; gap: 8px; }
   .history-btn { width: 40px; height: 40px; font-size: 18px; }
-  .endings-counter { top: 10px; right: 10px; padding: 6px 10px; font-size: 13px; }
-  .endings-icon { font-size: 15px; }
-  .endings-panel { top: 55px; right: 10px; width: 240px; }
-  .ending-notification { padding: 20px 25px; max-width: 85vw; }
-  .ending-notification-icon { font-size: 45px; }
-  .ending-notification-title { font-size: 18px; }
-  .ending-notification-name { font-size: 16px; }
-  .ending-notification-sub { font-size: 12px; }
 }
 
 @media (min-width: 1920px) {
@@ -913,82 +738,17 @@ Setting.addList("textSpeed", {
   default: 40,
 });
 
+Setting.addList("musicVolume", {
+  label: "Громкость музыки",
+  list: [0, 0.3, 0.6, 1],
+  default: 0.6,
+});
+
 Setting.addList("sfxVolume", {
   label: "Громкость звуков",
   list: [0, 0.3, 0.6, 1],
   default: 0.6,
 });
-
-/* ============================================
-   ФОНОВАЯ МУЗЫКА (играет всю игру)
-   ============================================ */
-
-(function () {
-  'use strict';
-
-  var MUSIC_TRACK = 'main_theme';
-  var MUSIC_VOLUME_DEFAULT = 0.4;
-  var musicStarted = false;
-
-  // Регистрируем трек
-  SimpleAudio.tracks.add(MUSIC_TRACK, 'audio/main_theme.mp3');
-
-  // Применяем громкость
-  SimpleAudio.volume(MUSIC_VOLUME_DEFAULT);
-
-  // Запуск музыки (один раз, после клика игрока)
-  function startMusic() {
-    if (musicStarted) return;
-    var track = SimpleAudio.tracks.get(MUSIC_TRACK);
-    if (!track) return;
-
-    track.loop(true);
-    track.volume(settings.musicVolume || MUSIC_VOLUME_DEFAULT);
-    track.play().then(function () {
-      musicStarted = true;
-    }).catch(function (ex) {
-      if (ex.name === 'NotAllowedError') {
-        // Браузер заблокировал — ждём следующего клика
-        jQuery(document).one('click.music-start touchstart.music-start', startMusic);
-      }
-    });
-  }
-
-  // Первый клик в любом месте — запуск
-  jQuery(document).one('click.music-start touchstart.music-start', startMusic);
-
-  // Настройка громкости музыки
-  Setting.addList("musicVolume", {
-    label: "Громкость музыки",
-    list: [0, 0.2, 0.4, 0.6, 0.8],
-    default: MUSIC_VOLUME_DEFAULT,
-    onChange: function () {
-      var vol = settings.musicVolume;
-      SimpleAudio.volume(vol);
-      var track = SimpleAudio.tracks.get(MUSIC_TRACK);
-      if (track) track.volume(vol);
-    }
-  });
-
-  // Публичный API
-  window.GameMusic = {
-    start: startMusic,
-    stop: function () {
-      var track = SimpleAudio.tracks.get(MUSIC_TRACK);
-      if (track) track.stop();
-    },
-    pause: function () {
-      var track = SimpleAudio.tracks.get(MUSIC_TRACK);
-      if (track) track.pause();
-    },
-    setVolume: function (v) {
-      SimpleAudio.volume(v);
-      var track = SimpleAudio.tracks.get(MUSIC_TRACK);
-      if (track) track.volume(v);
-    }
-  };
-
-})();
 
 /* ============================================
    СИСТЕМА СПРАЙТОВ ПЕРСОНАЖЕЙ
@@ -1228,182 +988,6 @@ Setting.addList("sfxVolume", {
     }
   });
 
-})();
-
-/* ============================================
-   СИСТЕМА ОТСЛЕЖИВАНИЯ КОНЦОВОК
-   ============================================ */
-
-(function () {
-  'use strict';
-
-  var ALL_ENDINGS = {
-    'КонецГармония':   { name: 'Финал Мелодии и Добра',   icon: '🎵' },
-    'КонецМастерство': { name: 'Финал Заботы и Изобилия', icon: '🍎' },
-    'КонецНаука':      { name: 'Финал Инженерного Чуда',  icon: '⚙️' },
-    'КонецЕдинство':   { name: 'Финал Истинной Гармонии', icon: '✨' }
-  };
-
-  var STORAGE_KEY = 'pesn_augusta_endings';
-
-  function loadUnlocked() {
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveUnlocked(list) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    } catch (e) {}
-  }
-
-  function unlockEnding(passageName) {
-    if (!ALL_ENDINGS[passageName]) return false;
-    var unlocked = loadUnlocked();
-    if (unlocked.indexOf(passageName) !== -1) return false;
-    unlocked.push(passageName);
-    saveUnlocked(unlocked);
-    return true;
-  }
-
-  function totalCount() {
-    return Object.keys(ALL_ENDINGS).length;
-  }
-
-  function unlockedCount() {
-    return loadUnlocked().length;
-  }
-
-  var $counter = null;
-  var $endingsPanel = null;
-  var panelOpen = false;
-
-  function createCounter() {
-    if ($counter && document.body.contains($counter[0])) return;
-
-    $counter = jQuery('<button class="endings-counter" id="endings-counter" title="Открытые концовки">' +
-      '<span class="endings-icon">🏆</span>' +
-      '<span class="endings-text">0 / 4</span>' +
-      '</button>');
-
-    $endingsPanel = jQuery('<div class="endings-panel" id="endings-panel"></div>');
-
-    $counter.on('click', function () {
-      panelOpen = !panelOpen;
-      if (panelOpen) {
-        updatePanel();
-        $endingsPanel.addClass('open');
-      } else {
-        $endingsPanel.removeClass('open');
-      }
-    });
-
-    jQuery('body').append($counter).append($endingsPanel);
-    updateCounter();
-  }
-
-  function updateCounter() {
-    if (!$counter) return;
-    var unlocked = unlockedCount();
-    var total = totalCount();
-    $counter.find('.endings-text').text(unlocked + ' / ' + total);
-
-    if (unlocked === total) {
-      $counter.addClass('all-unlocked');
-    } else {
-      $counter.removeClass('all-unlocked');
-    }
-  }
-
-  function updatePanel() {
-    if (!$endingsPanel) return;
-
-    var unlocked = loadUnlocked();
-    var html = '<div class="endings-panel-title">🏆 Открытые концовки</div>';
-    html += '<div class="endings-panel-list">';
-
-    Object.keys(ALL_ENDINGS).forEach(function (key) {
-      var ending = ALL_ENDINGS[key];
-      var isU = unlocked.indexOf(key) !== -1;
-      var icon = isU ? ending.icon : '🔒';
-      var name = isU ? ending.name : '???';
-      var cls = isU ? 'unlocked' : 'locked';
-
-      html += '<div class="endings-item ' + cls + '">' +
-                '<span class="endings-item-icon">' + icon + '</span>' +
-                '<span class="endings-item-name">' + name + '</span>' +
-              '</div>';
-    });
-
-    html += '</div>';
-    html += '<div class="endings-panel-footer">' + unlocked.length + ' из ' + totalCount() + '</div>';
-
-    $endingsPanel.html(html);
-  }
-
-  jQuery(document).on(':passagedisplay', function () {
-    createCounter();
-
-    var currentPassage = State.passage;
-
-    if (ALL_ENDINGS[currentPassage]) {
-      var isNew = unlockEnding(currentPassage);
-      updateCounter();
-      updatePanel();
-
-      if (isNew) {
-        showEndingNotification(ALL_ENDINGS[currentPassage]);
-
-        setTimeout(function () {
-          Engine.restart();
-        }, 3000);
-      }
-    }
-  });
-
-  function showEndingNotification(ending) {
-    var $notif = jQuery(
-      '<div class="ending-notification">' +
-        '<div class="ending-notification-icon">🎉</div>' +
-        '<div class="ending-notification-title">Новая концовка открыта!</div>' +
-        '<div class="ending-notification-name">' + ending.icon + ' ' + ending.name + '</div>' +
-        '<div class="ending-notification-sub">Начинаем заново через 3 секунды…</div>' +
-      '</div>'
-    );
-
-    jQuery('body').append($notif);
-
-    setTimeout(function () {
-      $notif.addClass('show');
-    }, 50);
-
-    setTimeout(function () {
-      $notif.removeClass('show');
-      setTimeout(function () { $notif.remove(); }, 500);
-    }, 2500);
-  }
-
-  window.EndingsSystem = {
-    reset: function () {
-      localStorage.removeItem(STORAGE_KEY);
-      updateCounter();
-      updatePanel();
-      console.log('Концовки сброшены');
-    },
-    unlockAll: function () {
-      saveUnlocked(Object.keys(ALL_ENDINGS));
-      updateCounter();
-      updatePanel();
-      console.log('Все концовки открыты');
-    },
-    getUnlocked: loadUnlocked,
-    getAll: function () { return ALL_ENDINGS; }
-  };
-
 })();</script><tw-tag name="lavka" color="blue"></tw-tag><tw-tag name="most" color="yellow"></tw-tag><tw-tag name="tower_inside" color="red"></tw-tag><tw-tag name="final" color="green"></tw-tag><tw-tag name="ending" color="blue"></tw-tag><tw-tag name="start" color="red"></tw-tag><tw-tag name="start-write" color="green"></tw-tag><tw-tag name="tropf" color="blue"></tw-tag><tw-passagedata pid="1" name="Start1" tags="start" position="6800,100" size="100,100">&lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
   &lt;div class=&quot;dialogue-text&quot;&gt;
@@ -1414,16 +998,20 @@ Setting.addList("sfxVolume", {
 &lt;div class=&quot;next-box&quot;&gt;
 [[Дальше-&gt;Start2]]
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="2" name="Title" tags="" position="7000,100" size="100,100">&lt;div class=&quot;title-screen&quot;&gt;
+
   &lt;div class=&quot;title-logo&quot;&gt;
     &lt;h1 class=&quot;title-main&quot;&gt;Песнь Августа&lt;/h1&gt;
     &lt;p class=&quot;title-sub&quot;&gt;Интерактивная сказка&lt;/p&gt;
   &lt;/div&gt;
+
   &lt;div class=&quot;title-menu&quot;&gt;
     &lt;&lt;link &quot;▶ Начать историю&quot;&gt;&gt;&lt;&lt;goto &quot;Start1&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
     &lt;&lt;link &quot;💾 Загрузить&quot;&gt;&gt;&lt;&lt;script&gt;&gt;UI.saves();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
     &lt;&lt;link &quot;⚙ Настройки&quot;&gt;&gt;&lt;&lt;script&gt;&gt;UI.settings();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
+
   &lt;p class=&quot;title-footer&quot;&gt;Верхний Шепоть · Праздник Осенней Звезды&lt;/p&gt;
+
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="3" name="Start2" tags="start" position="6700,100" size="100,100">&lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
   &lt;div class=&quot;dialogue-text&quot;&gt;
@@ -1481,7 +1069,7 @@ Setting.addList("sfxVolume", {
 
   &lt;/div&gt;
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="6" name="StoryInit" tags="" position="6900,325" size="100,100">&lt;&lt;set $textSpeed to 40&gt;&gt;
-&lt;&lt;set $musicVolume to 0.4&gt;&gt;
+&lt;&lt;set $musicVolume to 0.6&gt;&gt;
 &lt;&lt;set $sfxVolume to 0.6&gt;&gt;
 &lt;&lt;set $has_feather to false&gt;&gt;
 &lt;&lt;set $has_crystal to false&gt;&gt;
