@@ -105,19 +105,16 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
 	<tw-storydata name="Песнь Августа" startnode="2" creator="Twine" creator-version="2.12.0" format="SugarCube" format-version="2.37.3" ifid="5BA7786A-143F-4271-807B-BBD7F4A261CD" options="" tags="" zoom="0.6" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* ============================================
-   ПЕСНЬ АВГУСТА — Полный CSS
+   ПЕСНЬ АВГУСТА — CSS
    ============================================ */
 
-/* ===== ОБЩИЕ НАСТРОЙКИ ===== */
 body {
-  background-color: #1a1a2e;
-  background-image: none !important;
-  background-size: cover;
-  background-position: center;
+  background-color: #0a0a14;
   margin: 0;
   padding: 0;
   font-family: 'Georgia', 'Times New Roman', serif;
   overflow: hidden;
+  color: #eee;
 }
 
 #passages {
@@ -128,35 +125,39 @@ body {
   box-shadow: none;
 }
 
-/* ============================================
-   СЛОЙ ФОНА
-   ============================================ */
+/* ===== СЛОЙ ФОНА ===== */
 .bg-layer {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 35vh;
+  top: 0; left: 0; right: 0; bottom: 35vh;
   width: 100vw;
   background-size: 100% 100%;
   background-position: center center;
   background-repeat: no-repeat;
-  background-color: #1a1a2e;
+  background-color: #0a0a14;
   z-index: 1;
   pointer-events: none;
-  transition: background-image 0.5s ease-in-out;
+  transition: background-image 0.8s ease-in-out;
+}
+
+.vignette-layer {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 35vh;
+  width: 100vw;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
 }
 
 /* ===== ФОНЫ ЛОКАЦИЙ ===== */
-body.title .bg-layer         { background-image: url("images/fon_title.png"); }
-body.start .bg-layer         { background-image: url("images/fon_start.png"); }
-body.most .bg-layer          { background-image: url("images/fon_most.png"); }
-body.lavka .bg-layer         { background-image: url("images/fon_lavka.png"); }
-body.tropa .bg-layer         { background-image: url("images/fon_tropa.png"); }
-body.tower .bg-layer         { background-image: url("images/fon_tower.png"); }
-body.tower_inside .bg-layer  { background-image: url("images/fon_tower_inside.png"); }
-body.final .bg-layer         { background-image: url("images/fon_final.png"); }
-body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
+body.title .bg-layer        { background-image: url("images/fon_title.png"); }
+body.start .bg-layer        { background-image: url("images/fon_start.png"); }
+body.most .bg-layer         { background-image: url("images/fon_most.png"); }
+body.lavka .bg-layer        { background-image: url("images/fon_lavka.png"); }
+body.tropa .bg-layer        { background-image: url("images/fon_tropa.png"); }
+body.tower .bg-layer        { background-image: url("images/fon_tower.png"); }
+body.tower_inside .bg-layer { background-image: url("images/fon_tower_inside.png"); }
+body.final .bg-layer        { background-image: url("images/fon_final.png"); }
+body.ending .bg-layer       { background-image: url("images/fon_ending.png"); }
 
 /* ============================================
    ТИТУЛЬНЫЙ ЭКРАН
@@ -164,25 +165,16 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
 body.title .bg-layer::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.35) 0%,
-    rgba(0, 0, 0, 0.15) 40%,
-    rgba(0, 0, 0, 0.65) 100%
-  );
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(180deg,
+    rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.7) 100%);
   pointer-events: none;
 }
 
 .title-screen {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -193,98 +185,98 @@ body.title .bg-layer::after {
   background: transparent;
 }
 
-.title-logo { text-align: center; animation: titleFadeIn 1s ease-out; }
+.title-logo { text-align: center; animation: titleFadeIn 1.2s ease-out; }
 
 @keyframes titleFadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .title-main {
-  font-size: 52px;
+  font-size: 58px;
   color: #FFF8E7;
   text-shadow:
     -2px -2px 0 #B45309, 2px -2px 0 #B45309,
     -2px  2px 0 #B45309, 2px  2px 0 #B45309,
-     0 0 25px rgba(255, 220, 100, 1),
-     5px 5px 20px rgba(0, 0, 0, 0.7);
-  letter-spacing: 5px;
+     0 0 30px rgba(255, 220, 100, 1),
+     5px 5px 25px rgba(0, 0, 0, 0.8);
+  letter-spacing: 6px;
   margin: 0;
-  font-family: 'Georgia', serif;
   font-weight: bold;
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% { text-shadow: -2px -2px 0 #B45309, 2px -2px 0 #B45309, -2px 2px 0 #B45309, 2px 2px 0 #B45309, 0 0 30px rgba(255,220,100,1), 5px 5px 25px rgba(0,0,0,0.8); }
+  50%      { text-shadow: -2px -2px 0 #B45309, 2px -2px 0 #B45309, -2px 2px 0 #B45309, 2px 2px 0 #B45309, 0 0 50px rgba(255,240,150,1), 5px 5px 25px rgba(0,0,0,0.8); }
 }
 
 .title-sub {
   font-size: 17px;
   color: #FFF3C4;
-  text-shadow: 1px 1px 0 #B45309, 2px 2px 6px rgba(0, 0, 0, 0.9);
+  text-shadow: 1px 1px 0 #B45309, 2px 2px 6px rgba(0,0,0,0.9);
   font-style: italic;
-  margin-top: 8px;
-  margin-bottom: 0;
-  letter-spacing: 3px;
+  margin-top: 10px;
+  letter-spacing: 4px;
 }
 
 .title-menu {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: 280px;
-  animation: titleFadeIn 1s ease-out 0.3s backwards;
+  gap: 14px;
+  width: 300px;
+  animation: titleFadeIn 1s ease-out 0.4s backwards;
 }
 
 .title-menu a.link-internal {
   display: block;
-  background: rgba(251, 191, 36, 0.9);
-  color: #4A2500;
-  padding: 13px 20px;
-  border-radius: 2px;
-  border: 3px solid rgba(180, 83, 9, 0.95);
+  background: linear-gradient(180deg, rgba(251,191,36,0.95) 0%, rgba(217,119,6,0.95) 100%);
+  color: #2A1500;
+  padding: 14px 22px;
+  border-radius: 4px;
+  border: 3px solid rgba(180,83,9,0.95);
   text-decoration: none;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: bold;
   text-align: center;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  font-family: 'Georgia', serif;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
 }
 
 .title-menu a.link-internal:hover {
-  background: rgba(252, 211, 77, 1);
-  color: #2A1500;
+  background: linear-gradient(180deg, rgba(252,211,77,1) 0%, rgba(245,158,11,1) 100%);
   transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 10px 30px rgba(255, 200, 100, 0.7);
+  box-shadow: 0 12px 30px rgba(255,200,100,0.7);
 }
 
 .title-footer {
   font-size: 13px;
   color: #FFF3C4;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9);
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.9);
   letter-spacing: 2px;
   font-style: italic;
   opacity: 0.9;
   margin: 0;
-  animation: titleFadeIn 1s ease-out 0.6s backwards;
+  animation: titleFadeIn 1s ease-out 0.8s backwards;
 }
 
-/* ===== СЧЁТЧИК КОНЦОВОК ===== */
 .title-endings {
   position: fixed;
   bottom: 12vh;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0,0,0,0.75);
   color: #FFD700;
   padding: 12px 28px;
-  border: 2px solid rgba(255, 215, 0, 0.85);
-  border-radius: 8px;
+  border: 2px solid rgba(255,215,0,0.85);
+  border-radius: 10px;
   font-size: 16px;
-  font-weight: bold;
   letter-spacing: 1.5px;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.9);
+  box-shadow: 0 4px 25px rgba(255,215,0,0.3);
   z-index: 210;
-  animation: titleFadeIn 1s ease-out 0.9s backwards;
+  animation: titleFadeIn 1s ease-out 1s backwards;
 }
 
 /* ============================================
@@ -296,50 +288,41 @@ body.title .bg-layer::after {
   left: 0;
   right: 0;
   width: 100vw;
-  max-width: none;
-  height: auto;
   max-height: 35vh;
   overflow: hidden;
-  background: rgba(255, 248, 231, 0.92);
-  border-top: 3px solid rgba(244, 197, 66, 0.95);
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
-  border-radius: 0;
-  padding: 0;
-  box-shadow: 0 -10px 40px rgba(80, 50, 10, 0.5);
-  backdrop-filter: blur(8px);
+  background: linear-gradient(180deg, rgba(20,15,10,0.92) 0%, rgba(10,8,5,0.95) 100%);
+  border-top: 3px solid rgba(244,197,66,0.95);
+  box-shadow: 0 -10px 50px rgba(0,0,0,0.7), inset 0 1px 0 rgba(244,197,66,0.3);
+  backdrop-filter: blur(10px);
   z-index: 100;
-  animation: dialogueIn 0.4s ease-out;
+  animation: dialogueIn 0.5s ease-out;
   display: flex;
   flex-direction: column;
 }
 
 @keyframes dialogueIn {
   from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .speaker-name {
-  width: 20vw;
-  max-width: 280px;
+  display: inline-block;
   min-width: 160px;
+  max-width: 280px;
   height: 4.5vh;
   min-height: 32px;
   display: flex;
   align-items: center;
   padding: 0 1.5vw;
-  background: rgba(217, 119, 6, 0.85);
+  background: linear-gradient(180deg, rgba(217,119,6,0.95) 0%, rgba(180,83,9,0.95) 100%);
   color: #FFF8E7;
   font-size: 1.4vw;
   font-weight: bold;
-  border-radius: 0 0 2px 0;
-  border: 0.15vw solid rgba(244, 197, 66, 0.9);
-  border-bottom: none;
-  border-top: none;
-  border-left: none;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-  letter-spacing: 1px;
+  border-radius: 0 0 6px 0;
+  border-right: 3px solid rgba(244,197,66,0.9);
+  border-bottom: 3px solid rgba(244,197,66,0.9);
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+  letter-spacing: 1.5px;
   margin: 0 0 0 2vw;
   box-sizing: border-box;
   flex-shrink: 0;
@@ -347,66 +330,73 @@ body.title .bg-layer::after {
 
 .dialogue-text {
   width: 100%;
-  max-width: 100%;
   flex: 1;
   min-height: 10vh;
-  color: #3A2A1A;
+  color: #f0e6d2;
   font-size: 1.2vw;
-  line-height: 1.6;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  line-height: 1.7;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
   padding: 1.5vh 3vw;
-  margin: 0;
   box-sizing: border-box;
   overflow-y: auto;
-  background: transparent;
-  border-radius: 0;
-  border-top: 1px solid rgba(244, 197, 66, 0.5);
+  border-top: 1px solid rgba(244,197,66,0.3);
+}
+
+/* Курсор печати */
+.type-cursor {
+  display: inline-block;
+  color: #FFD700;
+  animation: cursorBlink 0.8s steps(2, start) infinite;
+  font-weight: bold;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
 }
 
 /* ===== ТИПЫ ДИАЛОГОВ ===== */
-.dialogue-box.narrator { background: rgba(255, 248, 231, 0.92); border-top-color: rgba(244, 197, 66, 0.95); }
-.dialogue-box.narrator .speaker-name { background: rgba(180, 130, 40, 0.9); color: #FFF8E7; }
+.dialogue-box.narrator { background: linear-gradient(180deg, rgba(30,25,15,0.92) 0%, rgba(15,12,8,0.95) 100%); }
+.dialogue-box.narrator .speaker-name { background: linear-gradient(180deg, rgba(180,130,40,0.95) 0%, rgba(140,100,30,0.95) 100%); }
 
-.dialogue-box.mira { background: rgba(255, 230, 200, 0.93); border-top-color: rgba(230, 126, 34, 0.95); }
-.dialogue-box.mira .speaker-name { background: rgba(230, 126, 34, 0.9); color: #FFF8E7; }
+.dialogue-box.mira { background: linear-gradient(180deg, rgba(45,25,10,0.92) 0%, rgba(25,15,5,0.95) 100%); border-top-color: rgba(230,126,34,0.95); }
+.dialogue-box.mira .speaker-name { background: linear-gradient(180deg, rgba(230,126,34,0.95) 0%, rgba(200,100,20,0.95) 100%); }
 
-.dialogue-box.bruno { background: rgba(230, 230, 230, 0.92); border-top-color: rgba(120, 120, 120, 0.95); }
-.dialogue-box.bruno .speaker-name { background: rgba(100, 100, 100, 0.9); color: #FFF8E7; }
+.dialogue-box.bruno { background: linear-gradient(180deg, rgba(30,30,30,0.92) 0%, rgba(15,15,15,0.95) 100%); border-top-color: rgba(150,150,150,0.95); }
+.dialogue-box.bruno .speaker-name { background: linear-gradient(180deg, rgba(100,100,100,0.95) 0%, rgba(70,70,70,0.95) 100%); }
 
-.dialogue-box.shustik { background: rgba(220, 245, 220, 0.92); border-top-color: rgba(80, 160, 80, 0.95); }
-.dialogue-box.shustik .speaker-name { background: rgba(60, 140, 60, 0.9); color: #FFF8E7; }
+.dialogue-box.shustik { background: linear-gradient(180deg, rgba(15,35,20,0.92) 0%, rgba(8,20,12,0.95) 100%); border-top-color: rgba(80,200,100,0.95); }
+.dialogue-box.shustik .speaker-name { background: linear-gradient(180deg, rgba(60,160,80,0.95) 0%, rgba(40,120,60,0.95) 100%); }
 
-.dialogue-box.selesta { background: rgba(240, 230, 250, 0.92); border-top-color: rgba(150, 110, 180, 0.95); }
-.dialogue-box.selesta .speaker-name { background: rgba(130, 90, 160, 0.9); color: #FFF8E7; }
+.dialogue-box.selesta { background: linear-gradient(180deg, rgba(30,20,40,0.92) 0%, rgba(18,12,25,0.95) 100%); border-top-color: rgba(150,110,200,0.95); }
+.dialogue-box.selesta .speaker-name { background: linear-gradient(180deg, rgba(130,90,180,0.95) 0%, rgba(100,70,140,0.95) 100%); }
 
-.dialogue-box.cornelius { background: rgba(220, 232, 248, 0.92); border-top-color: rgba(70, 110, 160, 0.95); }
-.dialogue-box.cornelius .speaker-name { background: rgba(60, 90, 140, 0.9); color: #FFF8E7; }
+.dialogue-box.cornelius { background: linear-gradient(180deg, rgba(15,25,45,0.92) 0%, rgba(8,15,30,0.95) 100%); border-top-color: rgba(70,110,200,0.95); }
+.dialogue-box.cornelius .speaker-name { background: linear-gradient(180deg, rgba(60,100,180,0.95) 0%, rgba(40,70,140,0.95) 100%); }
 
 .dialogue-box.august {
-  background: rgba(255, 250, 210, 0.93);
-  border-top-color: rgba(255, 200, 50, 0.95);
-  box-shadow: 0 -10px 50px rgba(255, 200, 50, 0.4);
+  background: linear-gradient(180deg, rgba(60,45,10,0.92) 0%, rgba(35,25,5,0.95) 100%);
+  border-top-color: rgba(255,200,50,1);
+  box-shadow: 0 -10px 60px rgba(255,200,50,0.4), inset 0 1px 0 rgba(255,220,100,0.4);
 }
-.dialogue-box.august .speaker-name { background: rgba(230, 170, 20, 0.9); color: #FFF8E7; }
+.dialogue-box.august .speaker-name { background: linear-gradient(180deg, rgba(255,200,50,1) 0%, rgba(220,160,20,1) 100%); color: #2A1500; }
 
 .dialogue-box.olven {
-  background: rgba(245, 235, 210, 0.92);
-  border-top-color: rgba(160, 120, 60, 0.95);
-  border-top-style: dashed;
+  background: linear-gradient(180deg, rgba(40,32,18,0.92) 0%, rgba(22,18,10,0.95) 100%);
+  border-top: 3px dashed rgba(160,120,60,0.95);
 }
-.dialogue-box.olven .speaker-name { background: rgba(140, 100, 50, 0.9); color: #FFF8E7; }
+.dialogue-box.olven .speaker-name { background: linear-gradient(180deg, rgba(140,100,50,0.95) 0%, rgba(110,80,40,0.95) 100%); }
 
 .dialogue-box.final-box {
-  background: rgba(255, 252, 225, 0.93);
-  border-top-color: rgba(255, 215, 0, 0.95);
-  box-shadow: 0 -10px 60px rgba(255, 215, 0, 0.5);
+  background: linear-gradient(180deg, rgba(40,35,15,0.92) 0%, rgba(20,18,8,0.95) 100%);
+  border-top-color: rgba(255,215,0,1);
+  box-shadow: 0 -10px 70px rgba(255,215,0,0.5);
 }
-.dialogue-box.final-box .speaker-name { background: rgba(200, 150, 20, 0.9); color: #FFF8E7; }
+.dialogue-box.final-box .speaker-name { background: linear-gradient(180deg, rgba(255,215,0,1) 0%, rgba(200,150,20,1) 100%); color: #2A1500; }
 
-/* ===== КНОПКИ-ВЫБОРЫ ===== */
+/* ===== КНОПКИ ВЫБОРА ===== */
 .choice-box {
   position: fixed;
-  top: auto;
   bottom: 37vh;
   left: 50%;
   transform: translateX(-50%);
@@ -416,6 +406,12 @@ body.title .bg-layer::after {
   gap: 12px;
   width: 60%;
   max-width: 700px;
+  animation: choicesIn 0.6s ease-out 0.3s backwards;
+}
+
+@keyframes choicesIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 .choice-box a.link-internal {
@@ -423,25 +419,24 @@ body.title .bg-layer::after {
   display: block;
   text-align: center;
   padding: 16px 24px;
-  background: rgba(251, 191, 36, 0.92);
-  color: #4A2500;
-  border: 3px solid rgba(180, 83, 9, 0.95);
-  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(251,191,36,0.92) 0%, rgba(217,119,6,0.92) 100%);
+  color: #2A1500;
+  border: 3px solid rgba(180,83,9,0.95);
+  border-radius: 6px;
   text-decoration: none;
   font-size: 16px;
   font-weight: bold;
   line-height: 1.3;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  box-sizing: border-box;
-  backdrop-filter: blur(3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+  letter-spacing: 0.5px;
 }
 
 .choice-box a.link-internal:hover {
-  background: rgba(252, 211, 77, 1);
-  color: #2A1500;
+  background: linear-gradient(180deg, rgba(252,211,77,1) 0%, rgba(245,158,11,1) 100%);
+  color: #1a0d00;
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 10px 30px rgba(255, 200, 100, 0.7);
+  box-shadow: 0 12px 35px rgba(255,200,100,0.7);
 }
 
 /* ===== КНОПКА "ДАЛЬШЕ" ===== */
@@ -453,34 +448,34 @@ body.title .bg-layer::after {
   max-width: 150px;
   min-width: 100px;
   z-index: 102;
+  animation: choicesIn 0.6s ease-out 0.4s backwards;
 }
 
 .next-box a.link-internal {
   display: block;
-  background: rgba(110, 231, 183, 0.9);
+  background: linear-gradient(180deg, rgba(110,231,183,0.95) 0%, rgba(16,185,129,0.95) 100%);
   color: #064E3B;
   padding: 1.2vh 1vw;
-  border-radius: 2px;
-  border: 0.2vw solid rgba(5, 150, 105, 0.9);
+  border-radius: 6px;
+  border: 0.2vw solid rgba(5,150,105,0.95);
   text-decoration: none;
   font-size: 1.1vw;
   font-weight: bold;
   text-align: center;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
-  backdrop-filter: blur(3px);
+  box-shadow: 0 4px 15px rgba(16,185,129,0.5);
+  letter-spacing: 1px;
 }
 
 .next-box a.link-internal:hover {
-  background: rgba(167, 243, 208, 0.95);
+  background: linear-gradient(180deg, rgba(167,243,208,1) 0%, rgba(52,211,153,1) 100%);
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.7);
+  box-shadow: 0 8px 30px rgba(16,185,129,0.8);
 }
 
 /* ============================================
    СИСТЕМА СПРАЙТОВ
    ============================================ */
-
 .sprite-stage {
   position: fixed;
   bottom: 0;
@@ -506,19 +501,16 @@ body.title .bg-layer::after {
     transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
     filter 0.4s ease-out,
     opacity 0.4s ease-out,
-    left 0.5s ease-out,
-    right 0.5s ease-out;
-  filter: 
-    drop-shadow(0 0 15px rgba(0, 0, 0, 0.6))
-    contrast(1.1)
-    brightness(1.05);
+    left 0.6s ease-out,
+    right 0.6s ease-out;
+  filter: drop-shadow(0 0 15px rgba(0,0,0,0.7)) contrast(1.1) brightness(1.05);
   opacity: 1;
   will-change: transform, filter, opacity;
 }
 
 .sprite.pos-solo      { left: 50%; --tx: -50%; --sc: 1; }
-.sprite.pos-left      { left: 20%; --tx: -50%; --sc: 0.95; }
-.sprite.pos-right     { right: 20%; --tx: 50%;  --sc: 0.95; }
+.sprite.pos-left      { left: 22%; --tx: -50%; --sc: 0.95; }
+.sprite.pos-right     { right: 22%; --tx: 50%;  --sc: 0.95; }
 .sprite.pos-far-left  { left: 14%; --tx: -50%; --sc: 0.85; }
 .sprite.pos-center    { left: 50%; --tx: -50%; --sc: 1; }
 .sprite.pos-far-right { right: 14%; --tx: 50%;  --sc: 0.85; }
@@ -538,68 +530,67 @@ body.title .bg-layer::after {
 .sprite.active {
   opacity: 1;
   filter: 
-    drop-shadow(0 0 30px rgba(255, 220, 100, 0.9))
-    drop-shadow(0 0 60px rgba(255, 180, 50, 0.6))
+    drop-shadow(0 0 35px rgba(255,220,100,0.9))
+    drop-shadow(0 0 70px rgba(255,180,50,0.6))
     brightness(1.15)
     saturate(1.2);
   z-index: 10;
-  animation: spriteJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: spriteJump 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .sprite.inactive {
-  opacity: 0.9;
+  opacity: 0.85;
   filter: 
-    drop-shadow(0 0 12px rgba(0, 0, 0, 0.6))
-    brightness(0.85)
-    saturate(0.9);
+    drop-shadow(0 0 12px rgba(0,0,0,0.7))
+    brightness(0.75)
+    saturate(0.8);
   z-index: 5;
 }
 
 @keyframes spriteJump {
-  0%   { transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1)); }
-  25%  { transform: translateX(var(--tx, -50%)) translateY(-25px) scale(calc(var(--sc, 1) * 1.05)); }
-  50%  { transform: translateX(var(--tx, -50%)) translateY(-10px) scale(calc(var(--sc, 1) * 1.02)); }
-  75%  { transform: translateX(var(--tx, -50%)) translateY(-3px) scale(var(--sc, 1)); }
-  100% { transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1)); }
+  0%   { transform: translateX(var(--tx,-50%)) translateY(0)    scale(var(--sc,1)); }
+  25%  { transform: translateX(var(--tx,-50%)) translateY(-30px) scale(calc(var(--sc,1) * 1.06)); }
+  50%  { transform: translateX(var(--tx,-50%)) translateY(-12px) scale(calc(var(--sc,1) * 1.03)); }
+  75%  { transform: translateX(var(--tx,-50%)) translateY(-4px)  scale(var(--sc,1)); }
+  100% { transform: translateX(var(--tx,-50%)) translateY(0)    scale(var(--sc,1)); }
 }
 
 .sprite.entering {
   opacity: 0;
-  transform: translateX(var(--tx, -50%)) translateY(40px) scale(var(--sc, 1));
+  transform: translateX(var(--tx,-50%)) translateY(50px) scale(var(--sc,1));
 }
 
 .sprite.entered {
   opacity: 1;
-  transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1));
+  transform: translateX(var(--tx,-50%)) translateY(0) scale(var(--sc,1));
 }
 
 .sprite.leaving {
   opacity: 0;
-  transform: translateX(var(--tx, -50%)) translateY(40px) scale(var(--sc, 1));
-  transition: all 0.4s ease-in;
+  transform: translateX(var(--tx,-50%)) translateY(50px) scale(var(--sc,1));
+  transition: all 0.5s ease-in;
 }
 
 /* ============================================
    КНОПКИ ИСТОРИИ
    ============================================ */
-
 .history-controls {
   position: fixed;
   top: 15px;
   left: 15px;
   display: flex;
   gap: 10px;
-  z-index: 200;
+  z-index: 300;
   pointer-events: auto;
 }
 
 .history-btn {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  border: 3px solid rgba(180, 83, 9, 0.95);
-  background: rgba(251, 191, 36, 0.9);
-  color: #4A2500;
+  border: 3px solid rgba(180,83,9,0.95);
+  background: linear-gradient(180deg, rgba(251,191,36,0.95) 0%, rgba(217,119,6,0.95) 100%);
+  color: #2A1500;
   font-size: 22px;
   font-weight: bold;
   cursor: pointer;
@@ -607,39 +598,27 @@ body.title .bg-layer::after {
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(3px);
-  padding: 0;
-  line-height: 1;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   user-select: none;
   font-family: 'Georgia', serif;
+  padding: 0;
 }
 
 .history-btn:hover:not(:disabled) {
-  background: rgba(252, 211, 77, 1);
-  color: #2A1500;
   transform: translateY(-3px) scale(1.1);
-  box-shadow: 0 8px 25px rgba(255, 200, 100, 0.7);
-}
-
-.history-btn:active:not(:disabled) {
-  transform: translateY(0) scale(1);
+  box-shadow: 0 8px 25px rgba(255,200,100,0.7);
 }
 
 .history-btn:disabled {
   opacity: 0.35;
   cursor: not-allowed;
-  background: rgba(150, 130, 90, 0.5);
-  border-color: rgba(100, 80, 40, 0.5);
-  color: rgba(60, 40, 10, 0.5);
+  filter: grayscale(0.7);
 }
 
-/* ============================================
-   СКРОЛЛБАР
-   ============================================ */
+/* ===== СКРОЛЛБАР ===== */
 .dialogue-text::-webkit-scrollbar { width: 8px; }
-.dialogue-text::-webkit-scrollbar-track { background: rgba(255, 243, 196, 0.5); }
-.dialogue-text::-webkit-scrollbar-thumb { background: #FBBF24; }
+.dialogue-text::-webkit-scrollbar-track { background: rgba(255,243,196,0.2); }
+.dialogue-text::-webkit-scrollbar-thumb { background: #FBBF24; border-radius: 4px; }
 .dialogue-text::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
 
 /* ============================================
@@ -647,85 +626,42 @@ body.title .bg-layer::after {
    ============================================ */
 @media (max-width: 768px) {
   .bg-layer { bottom: 42vh; }
-  .dialogue-box {
-    width: 100vw;
-    max-height: 42vh;
-    bottom: 0;
-    border-radius: 0;
-    border-top-width: 2px;
-  }
-  .speaker-name {
-    width: 32vw;
-    height: 4vh;
-    min-height: 30px;
-    font-size: 4vw;
-    margin-left: 3vw;
-    padding: 0 2vw;
-  }
-  .dialogue-text {
-    font-size: 3.5vw;
-    padding: 1.5vh 4vw;
-  }
-  .choice-box {
-    bottom: 44vh;
-    width: 88%;
-    gap: 8px;
-  }
-  .choice-box a.link-internal {
-    padding: 12px 16px;
-    font-size: 13px;
-  }
-  .next-box {
-    bottom: 44vh;
-    right: 3vw;
-    width: 22vw;
-    min-width: 90px;
-  }
-  .next-box a.link-internal {
-    font-size: 3.2vw;
-    padding: 1vh 2vw;
-  }
-  .sprite {
-    height: 60vh;
-    max-width: 55vw;
-    bottom: 25vh;
-  }
+  .vignette-layer { bottom: 42vh; }
+  .dialogue-box { max-height: 42vh; }
+  .speaker-name { font-size: 4vw; min-width: 130px; margin-left: 3vw; }
+  .dialogue-text { font-size: 3.5vw; padding: 1.5vh 4vw; }
+  .choice-box { bottom: 44vh; width: 88%; }
+  .choice-box a.link-internal { padding: 12px 16px; font-size: 13px; }
+  .next-box { bottom: 44vh; right: 3vw; width: 22vw; min-width: 90px; }
+  .next-box a.link-internal { font-size: 3.2vw; }
+  .sprite { height: 60vh; max-width: 55vw; bottom: 25vh; }
   .sprite.pos-left { left: 24%; }
   .sprite.pos-right { right: 24%; }
-  .sprite.pos-far-left { left: 14%; }
-  .sprite.pos-far-right { right: 14%; }
-  .title-main { font-size: 32px; letter-spacing: 2px; }
+  .title-main { font-size: 34px; letter-spacing: 2px; }
   .title-sub { font-size: 13px; letter-spacing: 2px; }
-  .title-menu { width: 240px; gap: 9px; }
+  .title-menu { width: 240px; }
   .title-menu a.link-internal { font-size: 13px; padding: 10px 14px; }
-  .title-footer { font-size: 11px; letter-spacing: 1px; }
-  .title-endings { font-size: 13px; padding: 10px 20px; bottom: 14vh; }
-  .history-controls { top: 10px; left: 10px; gap: 8px; }
-  .history-btn { width: 40px; height: 40px; font-size: 18px; }
-}
-
-@media (min-width: 1920px) {
-  .dialogue-text { font-size: 22px; }
-  .speaker-name { font-size: 26px; }
-  .choice-box a.link-internal { font-size: 20px; }
-  .next-box a.link-internal { font-size: 18px; }
+  .title-endings { font-size: 13px; padding: 10px 20px; bottom: 16vh; }
+  .history-btn { width: 42px; height: 42px; font-size: 18px; }
 }</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ============================================
-   СОЗДАНИЕ СЛОЯ ФОНА
+   ПЕСНЬ АВГУСТА — JavaScript
    ============================================ */
+
+/* ===== СОЗДАНИЕ СЛОЯ ФОНА ===== */
 jQuery(function () {
   if (!jQuery('.bg-layer').length) {
     jQuery('<div class="bg-layer"></div>').prependTo('body');
   }
+  if (!jQuery('.vignette-layer').length) {
+    jQuery('<div class="vignette-layer"></div>').appendTo('body');
+  }
 });
 
-/* ============================================
-   АВТОПОЗИЦИОНИРОВАНИЕ КНОПОК ВЫБОРА
-   ============================================ */
+/* ===== АВТОПОЗИЦИОНИРОВАНИЕ КНОПОК ВЫБОРА ===== */
 $(document).on(':passagedisplay', function () {
   setTimeout(function () {
     var dialogueBox = $('.dialogue-box').last();
     var choiceBox = $('.choice-box');
-    
     if (dialogueBox.length && choiceBox.length) {
       var boxTop = dialogueBox[0].getBoundingClientRect().top;
       var bottomPosition = window.innerHeight - boxTop + 15;
@@ -750,39 +686,99 @@ Setting.addList("musicVolume", {
   default: 0.6,
 });
 
-Setting.addList("sfxVolume", {
-  label: "Громкость звуков",
-  list: [0, 0.3, 0.6, 1],
-  default: 0.6,
+Setting.addList("typewriter", {
+  label: "Печатующийся текст",
+  list: ["Вкл", "Выкл"],
+  default: "Вкл",
 });
 
 /* ============================================
    МУЗЫКА (один трек на всю игру)
    ============================================ */
-
 SimpleAudio.tracks.add("main_theme", "audio/main_theme.mp3");
-
 SimpleAudio.volume(0.6);
 
-/* Настройка громкости музыки */
 Setting.onChange("musicVolume", function () {
   SimpleAudio.volume(this.value);
 });
 
-/* Автозапуск музыки при первом клике (обход блокировки браузера) */
 jQuery(document).one('click.main_theme', function () {
   try {
     var track = SimpleAudio.tracks.get("main_theme");
-    if (track && !track.isPlaying()) {
-      track.play();
-    }
+    if (track && !track.isPlaying()) track.play();
   } catch (e) {}
 });
 
 /* ============================================
-   СИСТЕМА СПРАЙТОВ ПЕРСОНАЖЕЙ
+   ПЕЧАТАЮЩИЙСЯ ТЕКСТ (Typewriter)
    ============================================ */
+(function () {
+  'use strict';
 
+  function typeText($el, html, speed, done) {
+    // Разбиваем HTML на символы, сохраняя теги
+    var tokens = [];
+    var i = 0;
+    while (i < html.length) {
+      if (html[i] === '<') {
+        var end = html.indexOf('>', i);
+        if (end === -1) { tokens.push(html[i]); i++; continue; }
+        tokens.push(html.slice(i, end + 1));
+        i = end + 1;
+      } else {
+        tokens.push(html[i]);
+        i++;
+      }
+    }
+
+    $el.empty();
+    var $cursor = jQuery('<span class="type-cursor">▍</span>');
+    var idx = 0;
+    var buffer = '';
+
+    function step() {
+      if (idx >= tokens.length) {
+        $cursor.remove();
+        $el.html(html);
+        if (done) done();
+        return;
+      }
+      var t = tokens[idx++];
+      buffer += t;
+      $el.html(buffer).append($cursor);
+      if (t.indexOf('<') === 0) {
+        // тег — сразу, без задержки
+        step();
+      } else {
+        setTimeout(step, speed);
+      }
+    }
+    step();
+  }
+
+  jQuery(document).on(':passagedisplay', function () {
+    // Проверяем настройку
+    var setting = (typeof settings !== 'undefined' && settings.typewriter) ? settings.typewriter : "Вкл";
+    if (setting === "Выкл") return;
+
+    setTimeout(function () {
+      var $text = jQuery('#passages .passage:last-child .dialogue-text').first();
+      if (!$text.length) return;
+      if ($text.data('typed')) return;
+      $text.data('typed', true);
+
+      var html = $text.html().trim();
+      if (!html || html.length < 3) return;
+
+      var speed = (typeof settings !== 'undefined' && settings.textSpeed) ? settings.textSpeed : 40;
+      typeText($text, html, speed);
+    }, 50);
+  });
+})();
+
+/* ============================================
+   СИСТЕМА СПРАЙТОВ
+   ============================================ */
 (function () {
   'use strict';
 
@@ -798,7 +794,8 @@ jQuery(document).one('click.main_theme', function () {
     'Корнелиус':          'cornelius',
     'Господин Корнелиус': 'cornelius',
     'Август':             'august',
-    'Тик-Так':            'tik_tak'
+    'Тик-Так':            'tik_tak',
+    'Вы':                 'player'
   };
 
   function ensureStage() {
@@ -811,18 +808,16 @@ jQuery(document).one('click.main_theme', function () {
   function getSceneLayout(count) {
     if (count === 1) return ['pos-solo'];
     if (count === 2) return ['pos-left', 'pos-right'];
-    if (count >= 3) return ['pos-far-left', 'pos-center', 'pos-far-right'];
-    return [];
+    if (count === 3) return ['pos-far-left', 'pos-center', 'pos-far-right'];
+    return ['pos-far-left', 'pos-left', 'pos-right', 'pos-far-right'];
   }
 
   function relayout() {
     var names = Object.keys(activeSprites);
     var layout = getSceneLayout(names.length);
-
     names.forEach(function (name, i) {
       var sprite = activeSprites[name];
       var posClass = layout[i] || 'pos-solo';
-
       sprite.el.removeClass(
         'pos-solo pos-left pos-right pos-center pos-far-left pos-far-right'
       );
@@ -836,22 +831,14 @@ jQuery(document).one('click.main_theme', function () {
       activeSprites[name].el.attr('src', src);
       return activeSprites[name].el;
     }
-
     var $sprite = jQuery('<img>')
       .addClass('sprite entering')
-      .attr({ 
-        src: src, 
-        'data-char': name,
-        alt: name
-      })
+      .attr({ src: src, 'data-char': name, alt: name })
       .appendTo(stage);
-
     activeSprites[name] = { el: $sprite };
-
     setTimeout(function () {
       $sprite.removeClass('entering').addClass('entered');
     }, 50);
-
     relayout();
     return $sprite;
   }
@@ -896,7 +883,6 @@ jQuery(document).one('click.main_theme', function () {
 
   jQuery(document).on(':passagedisplay', function () {
     ensureStage();
-
     var $passageSprites = jQuery('#passages .passage:last-child img.sprite[data-char]');
     var currentSpeakers = [];
 
@@ -905,9 +891,7 @@ jQuery(document).one('click.main_theme', function () {
       var name = $img.attr('data-char');
       var src = $img.attr('src');
       if (!name || !src) return;
-
       currentSpeakers.push(name);
-
       if (activeSprites[name]) {
         activeSprites[name].el.attr('src', src);
       } else {
@@ -941,82 +925,77 @@ jQuery(document).one('click.main_theme', function () {
     setActive: setActive,
     deactivateAll: deactivateAll
   };
-
 })();
 
 /* ============================================
    КНОПКИ ИСТОРИИ (Назад / Вперёд)
    ============================================ */
-
 (function () {
   'use strict';
-
-  var $controls = null;
-  var $backBtn = null;
-  var $forwardBtn = null;
+  var $controls = null, $backBtn = null, $forwardBtn = null;
 
   function createControls() {
     if ($controls && document.body.contains($controls[0])) return;
-
     $controls = jQuery('<div class="history-controls"></div>');
-
-    $backBtn = jQuery('<button class="history-btn" id="history-back" title="Назад (←)" aria-label="Назад">←</button>');
-    $forwardBtn = jQuery('<button class="history-btn" id="history-forward" title="Вперёд (→)" aria-label="Вперёд">→</button>');
+    $backBtn = jQuery('<button class="history-btn" id="history-back" title="Назад (←)">←</button>');
+    $forwardBtn = jQuery('<button class="history-btn" id="history-forward" title="Вперёд (→)">→</button>');
 
     $backBtn.on('click', function () {
       if (Engine.state !== Engine.States.Idle) return;
-      if (State.length > 1) {
-        Engine.backward();
-      }
+      if (State.length > 1) Engine.backward();
     });
-
     $forwardBtn.on('click', function () {
       if (Engine.state !== Engine.States.Idle) return;
-      if (State.length < State.size) {
-        Engine.forward();
-      }
+      if (State.length < State.size) Engine.forward();
     });
-
     $controls.append($backBtn).append($forwardBtn).appendTo('body');
   }
 
   function updateControls() {
     if (!$backBtn || !$forwardBtn) return;
-
-    var canBack = State.length > 1;
-    var canForward = State.length < State.size;
-
-    $backBtn.prop('disabled', !canBack);
-    $forwardBtn.prop('disabled', !canForward);
+    $backBtn.prop('disabled', State.length <= 1);
+    $forwardBtn.prop('disabled', State.length >= State.size);
   }
 
-  jQuery(document).on(':passagedisplay', function () {
-    createControls();
-    updateControls();
-  });
-
-  jQuery(document).on(':historyupdate', function () {
-    updateControls();
-  });
+  jQuery(document).on(':passagedisplay', function () { createControls(); updateControls(); });
+  jQuery(document).on(':historyupdate', updateControls);
 
   jQuery(document).on('keydown.history-nav', function (ev) {
     var tag = (ev.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
     if (ev.ctrlKey || ev.altKey || ev.metaKey) return;
-
-    if (ev.key === 'ArrowLeft') {
-      if (State.length > 1 && Engine.state === Engine.States.Idle) {
-        ev.preventDefault();
-        Engine.backward();
-      }
-    } else if (ev.key === 'ArrowRight') {
-      if (State.length < State.size && Engine.state === Engine.States.Idle) {
-        ev.preventDefault();
-        Engine.forward();
-      }
+    if (ev.key === 'ArrowLeft' && State.length > 1 && Engine.state === Engine.States.Idle) {
+      ev.preventDefault(); Engine.backward();
+    } else if (ev.key === 'ArrowRight' && State.length < State.size && Engine.state === Engine.States.Idle) {
+      ev.preventDefault(); Engine.forward();
     }
   });
+})();
 
+/* ============================================
+   СЧЁТЧИК КОНЦОВОК
+   ============================================ */
+(function () {
+  'use strict';
+
+  function countEndings() {
+    var count = 0;
+    if (State.variables.ending_harmony) count++;
+    if (State.variables.ending_mastery) count++;
+    if (State.variables.ending_science) count++;
+    if (State.variables.ending_unity) count++;
+    return count;
+  }
+
+  jQuery(document).on(':passagedisplay', function () {
+    setTimeout(function () {
+      var $counter = jQuery('.title-endings');
+      if (!$counter.length) return;
+      var count = countEndings();
+      var total = State.variables.endings_total || 4;
+      $counter.html('🏆 Концовок открыто: <b>' + count + ' / ' + total + '</b>');
+    }, 100);
+  });
 })();</script><tw-tag name="lavka" color="blue"></tw-tag><tw-tag name="most" color="yellow"></tw-tag><tw-tag name="tower_inside" color="red"></tw-tag><tw-tag name="final" color="green"></tw-tag><tw-tag name="ending" color="blue"></tw-tag><tw-tag name="start" color="red"></tw-tag><tw-tag name="start-write" color="green"></tw-tag><tw-tag name="tropf" color="blue"></tw-tag><tw-passagedata pid="1" name="Start1" tags="start" position="6800,100" size="100,100">&lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
   &lt;div class=&quot;dialogue-text&quot;&gt;
@@ -1039,14 +1018,7 @@ jQuery(document).one('click.main_theme', function () {
     &lt;&lt;link &quot;⚙ Настройки&quot;&gt;&gt;&lt;&lt;script&gt;&gt;UI.settings();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
   &lt;/div&gt;
 
-  &lt;div class=&quot;title-endings&quot;&gt;
-    &lt;&lt;set _count to 0&gt;&gt;
-    &lt;&lt;if $ending_harmony&gt;&gt;&lt;&lt;set _count to _count + 1&gt;&gt;&lt;&lt;/if&gt;&gt;
-    &lt;&lt;if $ending_mastery&gt;&gt;&lt;&lt;set _count to _count + 1&gt;&gt;&lt;&lt;/if&gt;&gt;
-    &lt;&lt;if $ending_science&gt;&gt;&lt;&lt;set _count to _count + 1&gt;&gt;&lt;&lt;/if&gt;&gt;
-    &lt;&lt;if $ending_unity&gt;&gt;&lt;&lt;set _count to _count + 1&gt;&gt;&lt;&lt;/if&gt;&gt;
-    Концовок открыто: _count / $endings_total
-  &lt;/div&gt;
+  &lt;div class=&quot;title-endings&quot;&gt;🏆 Концовок открыто: &lt;b&gt;0 / 4&lt;/b&gt;&lt;/div&gt;
 
   &lt;p class=&quot;title-footer&quot;&gt;Верхний Шепоть · Праздник Осенней Звезды&lt;/p&gt;
 
@@ -1092,12 +1064,10 @@ jQuery(document).one('click.main_theme', function () {
     &lt;/div&gt;
 
     &lt;div class=&quot;setting-item&quot;&gt;
-      &lt;label&gt;Громкость звуков&lt;/label&gt;
-      &lt;&lt;listbox &quot;$sfxVolume&quot;&gt;&gt;
-        &lt;&lt;option 0 &quot;Выкл&quot;&gt;&gt;
-        &lt;&lt;option 0.3 &quot;Тихо&quot;&gt;&gt;
-        &lt;&lt;option 0.6 &quot;Средне&quot;&gt;&gt;
-        &lt;&lt;option 1 &quot;Громко&quot;&gt;&gt;
+      &lt;label&gt;Печатующийся текст&lt;/label&gt;
+      &lt;&lt;listbox &quot;$typewriter&quot;&gt;&gt;
+        &lt;&lt;option &quot;Вкл&quot; &quot;Включён&quot;&gt;&gt;
+        &lt;&lt;option &quot;Выкл&quot; &quot;Выключен&quot;&gt;&gt;
       &lt;&lt;/listbox&gt;&gt;
     &lt;/div&gt;
 
@@ -1109,6 +1079,7 @@ jQuery(document).one('click.main_theme', function () {
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="6" name="StoryInit" tags="" position="6900,325" size="100,100">&lt;&lt;set $textSpeed to 40&gt;&gt;
 &lt;&lt;set $musicVolume to 0.6&gt;&gt;
 &lt;&lt;set $sfxVolume to 0.6&gt;&gt;
+&lt;&lt;set $typewriter to &quot;Вкл&quot;&gt;&gt;
 
 &lt;&lt;set $has_feather to false&gt;&gt;
 &lt;&lt;set $has_crystal to false&gt;&gt;
@@ -1173,6 +1144,7 @@ jQuery(document).one('click.main_theme', function () {
 [[Дальше-&gt;ВыборПути2]]
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="11" name="РазговорСМирой1" tags="start" position="6400,300" size="100,100">&lt;img src=&quot;images/player.png&quot; class=&quot;sprite&quot; data-char=&quot;player&quot;&gt;
 &lt;img src=&quot;images/mira.png&quot;   class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+
 &lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
   &lt;div class=&quot;dialogue-text&quot;&gt;
@@ -1182,7 +1154,8 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Дальше-&gt;РазговорСМирой2]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="12" name="ПисьмоОлвена2" tags="start-write" position="5900,100" size="100,100">&lt;img src=&quot;images/mira.png&quot; class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="12" name="ПисьмоОлвена2" tags="start-write" position="5900,100" size="100,100">&lt;img src=&quot;images/mira.png&quot;  class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;img src=&quot;images/olven.png&quot; class=&quot;sprite&quot; data-char=&quot;olven&quot;&gt;
 
 &lt;div class=&quot;dialogue-box olven&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Мастер Олвен&lt;/div&gt;
@@ -1196,6 +1169,7 @@ jQuery(document).one('click.main_theme', function () {
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="13" name="ПисьмоОлвена3" tags="start-write" position="5800,100" size="100,100">&lt;img src=&quot;images/mira.png&quot; class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
 
 &lt;div class=&quot;dialogue-box mira&quot;&gt;
+  &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
   &lt;div class=&quot;dialogue-text&quot;&gt;
 Мира заглянула через ваше плечо.
   &lt;/div&gt;
@@ -1288,8 +1262,9 @@ jQuery(document).one('click.main_theme', function () {
 [[Пойти через Старый каменный мост-&gt;СтарыйМост]]
 [[Срезать через тенистую Грибную тропу-&gt;ГрибнаяТропа]]
 [[Сначала заглянуть в Чайную беседку травницы Селесты-&gt;ЛавкаСелесты]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="21" name="РазговорСМирой2" tags="start" position="6400,400" size="100,100">&lt;img src=&quot;images/mira.png&quot; class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
-&lt;img src=&quot;images/player.png&quot; class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="21" name="РазговорСМирой2" tags="start" position="6400,400" size="100,100">&lt;img src=&quot;images/player.png&quot; class=&quot;sprite&quot; data-char=&quot;player&quot;&gt;
+&lt;img src=&quot;images/mira.png&quot;   class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+
 &lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Вы&lt;/div&gt;
   &lt;div class=&quot;dialogue-text&quot;&gt;
@@ -1332,7 +1307,8 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Дальше-&gt;ЛавкаСелесты3]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="25" name="ЛавкаСелесты3" tags="lavka" position="6100,1000" size="100,100">&lt;img src=&quot;images/selesta.png&quot; class=&quot;sprite&quot; data-char=&quot;selesta&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="25" name="ЛавкаСелесты3" tags="lavka" position="6100,1000" size="100,100">&lt;img src=&quot;images/mira.png&quot;    class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;img src=&quot;images/selesta.png&quot; class=&quot;sprite&quot; data-char=&quot;selesta&quot;&gt;
 
 &lt;div class=&quot;dialogue-box mira&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Мира&lt;/div&gt;
@@ -1368,7 +1344,8 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Дальше-&gt;СтарыйМост3]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="28" name="СтарыйМост3" tags="most" position="5300,700" size="100,100">&lt;img src=&quot;images/bruno.png&quot; class=&quot;sprite&quot; data-char=&quot;bruno&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="28" name="СтарыйМост3" tags="most" position="5300,700" size="100,100">&lt;img src=&quot;images/mira.png&quot;  class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;img src=&quot;images/bruno.png&quot; class=&quot;sprite&quot; data-char=&quot;bruno&quot;&gt;
 
 &lt;div class=&quot;dialogue-box mira&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Мира&lt;/div&gt;
@@ -1473,7 +1450,8 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Дальше-&gt;МостВетер5]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="37" name="МостВетер5" tags="most" position="4500,800" size="100,100">&lt;img src=&quot;images/bruno.png&quot; class=&quot;sprite&quot; data-char=&quot;bruno&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="37" name="МостВетер5" tags="most" position="4500,800" size="100,100">&lt;img src=&quot;images/mira.png&quot;   class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;img src=&quot;images/bruno.png&quot;  class=&quot;sprite&quot; data-char=&quot;bruno&quot;&gt;
 
 &lt;div class=&quot;dialogue-box mira&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Мира&lt;/div&gt;
@@ -1965,7 +1943,8 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Дальше-&gt;Корнелиус2]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="79" name="Корнелиус2" tags="tower_inside" position="5925,2250" size="100,100">&lt;img src=&quot;images/cornelius.png&quot; class=&quot;sprite&quot; data-char=&quot;cornelius&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="79" name="Корнелиус2" tags="tower_inside" position="5925,2250" size="100,100">&lt;img src=&quot;images/mira.png&quot;      class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;img src=&quot;images/cornelius.png&quot; class=&quot;sprite&quot; data-char=&quot;cornelius&quot;&gt;
 
 &lt;div class=&quot;dialogue-box cornelius&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Мира&lt;/div&gt;
@@ -2125,7 +2104,8 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Приступить к оживлению маяка-&gt;ГлавнаяПочинка]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="92" name="ФиналМузыка" tags="final" position="5612.5,3250" size="100,100">&lt;img src=&quot;images/august.png&quot; class=&quot;sprite&quot; data-char=&quot;august&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="92" name="ФиналМузыка" tags="final" position="5612.5,3250" size="100,100">&lt;img src=&quot;images/mira.png&quot;   class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;img src=&quot;images/august.png&quot; class=&quot;sprite&quot; data-char=&quot;august&quot;&gt;
 
 &lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
@@ -2148,7 +2128,8 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Запустить вращение главной световой линзы-&gt;КонецГармония]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="93" name="ФиналНектар" tags="final" position="5737.5,3250" size="100,100">&lt;img src=&quot;images/august.png&quot; class=&quot;sprite&quot; data-char=&quot;august&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="93" name="ФиналНектар" tags="final" position="5737.5,3250" size="100,100">&lt;img src=&quot;images/mira.png&quot;   class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;img src=&quot;images/august.png&quot; class=&quot;sprite&quot; data-char=&quot;august&quot;&gt;
 
 &lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
@@ -2184,7 +2165,9 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Сделать финальный поворот штурвала-&gt;КонецНаука]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="95" name="ФиналТриумф" tags="final" position="5987.5,3250" size="100,100">&lt;img src=&quot;images/group.png&quot; class=&quot;sprite&quot; data-char=&quot;group&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="95" name="ФиналТриумф" tags="final" position="5987.5,3250" size="100,100">&lt;img src=&quot;images/player.png&quot; class=&quot;sprite&quot; data-char=&quot;player&quot;&gt;
+&lt;img src=&quot;images/mira.png&quot;   class=&quot;sprite&quot; data-char=&quot;mira&quot;&gt;
+&lt;img src=&quot;images/august.png&quot; class=&quot;sprite&quot; data-char=&quot;august&quot;&gt;
 
 &lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
@@ -2205,7 +2188,9 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Зажечь Главный Маяк на всю мощь-&gt;КонецЕдинство]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="96" name="КонецГармония" tags="ending" position="5612.5,3375" size="100,100">&lt;img src=&quot;images/valley.png&quot; class=&quot;sprite&quot; data-char=&quot;valley&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="96" name="КонецГармония" tags="ending" position="5612.5,3375" size="100,100">&lt;&lt;set $ending_harmony to true&gt;&gt;
+
+&lt;img src=&quot;images/valley.png&quot; class=&quot;sprite&quot; data-char=&quot;valley&quot;&gt;
 
 &lt;div class=&quot;dialogue-box final-box&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Финал&lt;/div&gt;
@@ -2228,7 +2213,9 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Начать сказку заново-&gt;TitleStory]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="97" name="КонецМастерство" tags="ending" position="5737.5,3375" size="100,100">&lt;img src=&quot;images/valley.png&quot; class=&quot;sprite&quot; data-char=&quot;valley&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="97" name="КонецМастерство" tags="ending" position="5737.5,3375" size="100,100">&lt;&lt;set $ending_mastery to true&gt;&gt;
+
+&lt;img src=&quot;images/valley.png&quot; class=&quot;sprite&quot; data-char=&quot;valley&quot;&gt;
 
 &lt;div class=&quot;dialogue-box final-box&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Финал&lt;/div&gt;
@@ -2249,7 +2236,9 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Начать сказку заново-&gt;TitleStory]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="98" name="КонецНаука" tags="ending" position="5862.5,3375" size="100,100">&lt;img src=&quot;images/valley.png&quot; class=&quot;sprite&quot; data-char=&quot;valley&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="98" name="КонецНаука" tags="ending" position="5862.5,3375" size="100,100">&lt;&lt;set $ending_science to true&gt;&gt;
+
+&lt;img src=&quot;images/valley.png&quot; class=&quot;sprite&quot; data-char=&quot;valley&quot;&gt;
 
 &lt;div class=&quot;dialogue-box final-box&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Финал&lt;/div&gt;
@@ -2270,7 +2259,9 @@ jQuery(document).one('click.main_theme', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Начать сказку заново-&gt;TitleStory]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="99" name="КонецЕдинство" tags="ending" position="5987.5,3375" size="100,100">&lt;img src=&quot;images/valley.png&quot; class=&quot;sprite&quot; data-char=&quot;valley&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="99" name="КонецЕдинство" tags="ending" position="5987.5,3375" size="100,100">&lt;&lt;set $ending_unity to true&gt;&gt;
+
+&lt;img src=&quot;images/valley.png&quot; class=&quot;sprite&quot; data-char=&quot;valley&quot;&gt;
 
 &lt;div class=&quot;dialogue-box final-box&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Финал&lt;/div&gt;
