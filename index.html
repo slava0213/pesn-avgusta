@@ -105,14 +105,14 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
 	<tw-storydata name="Песнь Августа" startnode="2" creator="Twine" creator-version="2.12.0" format="SugarCube" format-version="2.37.3" ifid="5BA7786A-143F-4271-807B-BBD7F4A261CD" options="" tags="" zoom="0.6" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* ============================================
-   ПЕСНЬ АВГУСТА — Полный CSS (диалог во всю ширину)
+   ПЕСНЬ АВГУСТА — Полный CSS
    ============================================ */
 
 /* ===== ОБЩИЕ НАСТРОЙКИ ===== */
 body {
-  background-color: #87CEEB;
+  background-color: #1a1a2e;
+  background-image: none !important;
   background-size: cover;
-  background-attachment: fixed;
   background-position: center;
   margin: 0;
   padding: 0;
@@ -127,6 +127,35 @@ body {
   background: transparent;
   box-shadow: none;
 }
+
+/* ============================================
+   СЛОЙ ФОНА — только над диалогом
+   ============================================ */
+.bg-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 35vh;
+  width: 100vw;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  pointer-events: none;
+  transition: background-image 0.5s ease-in-out;
+}
+
+/* ===== ФОНЫ ЛОКАЦИЙ (на .bg-layer) ===== */
+body.title .bg-layer         { background-image: url("images/fon_title.png"); }
+body.start .bg-layer         { background-image: url("images/fon_start.png"); }
+body.most .bg-layer          { background-image: url("images/fon_most.png"); }
+body.lavka .bg-layer         { background-image: url("images/fon_lavka.png"); }
+body.tropa .bg-layer         { background-image: url("images/fon_tropa.png"); }
+body.tower .bg-layer         { background-image: url("images/fon_tower.png"); }
+body.tower_inside .bg-layer  { background-image: url("images/fon_tower_inside.png"); }
+body.final .bg-layer         { background-image: url("images/fon_final.png"); }
+body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
 
 /* ============================================
    ДИАЛОГОВОЕ ОКНО (ВО ВСЮ ШИРИНУ)
@@ -161,7 +190,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== ИМЯ ПЕРСОНАЖА ===== */
 .speaker-name {
   width: 20vw;
   max-width: 280px;
@@ -187,7 +215,6 @@ body {
   flex-shrink: 0;
 }
 
-/* ===== ТЕКСТ ДИАЛОГА ===== */
 .dialogue-text {
   width: 100%;
   max-width: 100%;
@@ -249,7 +276,7 @@ body {
 .dialogue-box.final-box .speaker-name { background: rgba(200, 150, 20, 0.9); color: #FFF8E7; }
 
 /* ============================================
-   КНОПКИ-ВЫБОРЫ (НАД ДИАЛОГОМ)
+   КНОПКИ-ВЫБОРЫ
    ============================================ */
 .choice-box {
   position: fixed;
@@ -292,7 +319,7 @@ body {
 }
 
 /* ============================================
-   КНОПКА "ДАЛЬШЕ" (НАД ДИАЛОГОМ СПРАВА)
+   КНОПКА "ДАЛЬШЕ"
    ============================================ */
 .next-box {
   position: fixed;
@@ -327,7 +354,7 @@ body {
 }
 
 /* ============================================
-   СИСТЕМА СПРАЙТОВ ПЕРСОНАЖЕЙ
+   СИСТЕМА СПРАЙТОВ
    ============================================ */
 
 .sprite-stage {
@@ -362,7 +389,6 @@ body {
   will-change: transform, filter, opacity;
 }
 
-/* ===== ПОЗИЦИИ ===== */
 .sprite.pos-solo      { left: 50%; --tx: -50%; --sc: 1; }
 .sprite.pos-left      { left: 22%; --tx: -50%; --sc: 0.95; }
 .sprite.pos-right     { right: 22%; --tx: 50%;  --sc: 0.95; }
@@ -382,7 +408,6 @@ body {
   transform: translateX(50%) scale(var(--sc));
 }
 
-/* ===== АКТИВНЫЙ ===== */
 .sprite.active {
   opacity: 1;
   filter: 
@@ -394,7 +419,6 @@ body {
   animation: spriteJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ===== НЕАКТИВНЫЙ ===== */
 .sprite.inactive {
   opacity: 0.55;
   filter: 
@@ -404,7 +428,6 @@ body {
   z-index: 5;
 }
 
-/* ===== АНИМАЦИЯ ПОДПРЫГИВАНИЯ ===== */
 @keyframes spriteJump {
   0%   { transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1)); }
   25%  { transform: translateX(var(--tx, -50%)) translateY(-25px) scale(calc(var(--sc, 1) * 1.05)); }
@@ -413,7 +436,6 @@ body {
   100% { transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1)); }
 }
 
-/* ===== ПОЯВЛЕНИЕ ===== */
 .sprite.entering {
   opacity: 0;
   transform: translateX(var(--tx, -50%)) translateY(40px) scale(var(--sc, 1));
@@ -424,7 +446,6 @@ body {
   transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1));
 }
 
-/* ===== УХОД ===== */
 .sprite.leaving {
   opacity: 0;
   transform: translateX(var(--tx, -50%)) translateY(40px) scale(var(--sc, 1));
@@ -432,7 +453,7 @@ body {
 }
 
 /* ============================================
-   КНОПКИ ИСТОРИИ (Назад / Вперёд)
+   КНОПКИ ИСТОРИИ
    ============================================ */
 
 .history-controls {
@@ -485,19 +506,6 @@ body {
   border-color: rgba(100, 80, 40, 0.5);
   color: rgba(60, 40, 10, 0.5);
 }
-
-/* ============================================
-   ФОНЫ ЛОКАЦИЙ
-   ============================================ */
-body.title { background-image: url("images/fon_title.png"); }
-body.start { background-image: url("images/fon_start.png"); }
-body.most { background-image: url("images/fon_most.png"); }
-body.lavka { background-image: url("images/fon_lavka.png"); }
-body.tropa { background-image: url("images/fon_tropa.png"); }
-body.tower { background-image: url("images/fon_tower.png"); }
-body.tower_inside { background-image: url("images/fon_tower_inside.png"); }
-body.final { background-image: url("images/fon_final.png"); }
-body.ending { background-image: url("images/fon_ending.png"); }
 
 /* ============================================
    СКРОЛЛБАР
@@ -611,6 +619,7 @@ body.ending { background-image: url("images/fon_ending.png"); }
    МОБИЛЬНАЯ АДАПТАЦИЯ
    ============================================ */
 @media (max-width: 768px) {
+  .bg-layer { bottom: 42vh; }
   .dialogue-box {
     width: 100vw;
     max-height: 42vh;
@@ -673,6 +682,15 @@ body.ending { background-image: url("images/fon_ending.png"); }
   .choice-box a.link-internal { font-size: 20px; }
   .next-box a.link-internal { font-size: 18px; }
 }</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ============================================
+   СОЗДАНИЕ СЛОЯ ФОНА (один раз при старте)
+   ============================================ */
+jQuery(function () {
+  if (!jQuery('.bg-layer').length) {
+    jQuery('<div class="bg-layer"></div>').prependTo('body');
+  }
+});
+
+/* ============================================
    АВТОПОЗИЦИОНИРОВАНИЕ КНОПОК ВЫБОРА
    ============================================ */
 $(document).on(':passagedisplay', function () {
