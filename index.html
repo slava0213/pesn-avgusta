@@ -129,16 +129,16 @@ body {
 }
 
 /* ============================================
-   СЛОЙ ФОНА — растянут на всю область над диалогом
+   СЛОЙ ФОНА
    ============================================ */
 .bg-layer {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 35vh;                     /* фон заканчивается над диалогом */
+  bottom: 35vh;
   width: 100vw;
-  background-size: 100% 100%;       /* растягивает на всю область */
+  background-size: 100% 100%;
   background-position: center center;
   background-repeat: no-repeat;
   background-color: #1a1a2e;
@@ -159,7 +159,7 @@ body.final .bg-layer         { background-image: url("images/fon_final.png"); }
 body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
 
 /* ============================================
-   ДИАЛОГОВОЕ ОКНО (ВО ВСЮ ШИРИНУ)
+   ДИАЛОГОВОЕ ОКНО
    ============================================ */
 .dialogue-box {
   position: fixed;
@@ -393,7 +393,6 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   will-change: transform, filter, opacity;
 }
 
-/* ===== ПОЗИЦИИ ===== */
 .sprite.pos-solo      { left: 50%; --tx: -50%; --sc: 1; }
 .sprite.pos-left      { left: 20%; --tx: -50%; --sc: 0.95; }
 .sprite.pos-right     { right: 20%; --tx: 50%;  --sc: 0.95; }
@@ -413,7 +412,6 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   transform: translateX(50%) scale(var(--sc));
 }
 
-/* ===== АКТИВНЫЙ ===== */
 .sprite.active {
   opacity: 1;
   filter: 
@@ -425,7 +423,6 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   animation: spriteJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ===== НЕАКТИВНЫЙ ===== */
 .sprite.inactive {
   opacity: 0.9;
   filter: 
@@ -435,7 +432,6 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   z-index: 5;
 }
 
-/* ===== АНИМАЦИЯ ПОДПРЫГИВАНИЯ ===== */
 @keyframes spriteJump {
   0%   { transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1)); }
   25%  { transform: translateX(var(--tx, -50%)) translateY(-25px) scale(calc(var(--sc, 1) * 1.05)); }
@@ -624,6 +620,196 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
 }
 
 /* ============================================
+   СЧЁТЧИК КОНЦОВОК
+   ============================================ */
+
+.endings-counter {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(251, 191, 36, 0.9);
+  border: 3px solid rgba(180, 83, 9, 0.95);
+  border-radius: 30px;
+  color: #4A2500;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  font-family: 'Georgia', serif;
+  user-select: none;
+}
+
+.endings-counter:hover {
+  background: rgba(252, 211, 77, 1);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 200, 100, 0.7);
+}
+
+.endings-counter.all-unlocked {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  border-color: #B45309;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 4px 15px rgba(255, 200, 0, 0.6); }
+  50%      { box-shadow: 0 4px 25px rgba(255, 220, 50, 1); }
+}
+
+.endings-icon { font-size: 18px; line-height: 1; }
+.endings-text { letter-spacing: 1px; }
+
+/* ============================================
+   ПАНЕЛЬ СО СПИСКОМ КОНЦОВОК
+   ============================================ */
+
+.endings-panel {
+  position: fixed;
+  top: 70px;
+  right: 15px;
+  z-index: 249;
+  width: 280px;
+  max-width: 90vw;
+  background: rgba(255, 248, 231, 0.97);
+  border: 3px solid rgba(180, 83, 9, 0.95);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  font-family: 'Georgia', serif;
+}
+
+.endings-panel.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.endings-panel-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #4A2500;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(244, 197, 66, 0.6);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.endings-panel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.endings-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.endings-item.unlocked {
+  background: rgba(251, 191, 36, 0.3);
+  color: #4A2500;
+  font-weight: bold;
+}
+
+.endings-item.locked {
+  background: rgba(100, 100, 100, 0.15);
+  color: #888;
+  font-style: italic;
+}
+
+.endings-item-icon { font-size: 18px; line-height: 1; }
+.endings-item-name { flex: 1; }
+
+.endings-panel-footer {
+  text-align: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid rgba(244, 197, 66, 0.6);
+  font-size: 13px;
+  color: #6B3410;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* ============================================
+   УВЕДОМЛЕНИЕ О НОВОЙ КОНЦОВКЕ
+   ============================================ */
+
+.ending-notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  z-index: 9999;
+  background: linear-gradient(135deg, #FFF8E7, #FFE9B0);
+  border: 4px solid rgba(180, 83, 9, 0.95);
+  border-radius: 12px;
+  padding: 30px 40px;
+  text-align: center;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(255, 220, 100, 0.6);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: 'Georgia', serif;
+  pointer-events: none;
+}
+
+.ending-notification.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.ending-notification-icon {
+  font-size: 60px;
+  line-height: 1;
+  margin-bottom: 15px;
+  animation: bounce 0.6s ease infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-10px); }
+}
+
+.ending-notification-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #B45309;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+
+.ending-notification-name {
+  font-size: 20px;
+  color: #4A2500;
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+.ending-notification-sub {
+  font-size: 14px;
+  color: #6B3410;
+  letter-spacing: 1px;
+}
+
+/* ============================================
    МОБИЛЬНАЯ АДАПТАЦИЯ
    ============================================ */
 @media (max-width: 768px) {
@@ -682,6 +868,14 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   .title-footer { font-size: 11px; letter-spacing: 1px; }
   .history-controls { top: 10px; left: 10px; gap: 8px; }
   .history-btn { width: 40px; height: 40px; font-size: 18px; }
+  .endings-counter { top: 10px; right: 10px; padding: 6px 10px; font-size: 13px; }
+  .endings-icon { font-size: 15px; }
+  .endings-panel { top: 55px; right: 10px; width: 240px; }
+  .ending-notification { padding: 20px 25px; max-width: 85vw; }
+  .ending-notification-icon { font-size: 45px; }
+  .ending-notification-title { font-size: 18px; }
+  .ending-notification-name { font-size: 16px; }
+  .ending-notification-sub { font-size: 12px; }
 }
 
 @media (min-width: 1920px) {
@@ -973,6 +1167,186 @@ Setting.addList("sfxVolume", {
       }
     }
   });
+
+})();
+
+/* ============================================
+   СИСТЕМА ОТСЛЕЖИВАНИЯ КОНЦОВОК
+   ============================================ */
+
+(function () {
+  'use strict';
+
+  var ALL_ENDINGS = {
+    'КонецГармония':   { name: 'Финал Мелодии и Добра',       icon: '🎵' },
+    'КонецМастерство': { name: 'Финал Заботы и Изобилия',     icon: '🍎' },
+    'КонецНаука':      { name: 'Финал Инженерного Чуда',      icon: '⚙️' },
+    'КонецЕдинство':   { name: 'Финал Истинной Гармонии',     icon: '✨' }
+  };
+
+  var STORAGE_KEY = 'pesn_augusta_endings';
+
+  function loadUnlocked() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveUnlocked(list) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    } catch (e) {}
+  }
+
+  function unlockEnding(passageName) {
+    if (!ALL_ENDINGS[passageName]) return false;
+    var unlocked = loadUnlocked();
+    if (unlocked.indexOf(passageName) !== -1) return false;
+    unlocked.push(passageName);
+    saveUnlocked(unlocked);
+    return true;
+  }
+
+  function isUnlocked(passageName) {
+    return loadUnlocked().indexOf(passageName) !== -1;
+  }
+
+  function totalCount() {
+    return Object.keys(ALL_ENDINGS).length;
+  }
+
+  function unlockedCount() {
+    return loadUnlocked().length;
+  }
+
+  var $counter = null;
+  var $endingsPanel = null;
+  var panelOpen = false;
+
+  function createCounter() {
+    if ($counter && document.body.contains($counter[0])) return;
+
+    $counter = jQuery('<button class="endings-counter" id="endings-counter" title="Открытые концовки">' +
+      '<span class="endings-icon">🏆</span>' +
+      '<span class="endings-text">0 / 4</span>' +
+      '</button>');
+
+    $endingsPanel = jQuery('<div class="endings-panel" id="endings-panel"></div>');
+
+    $counter.on('click', function () {
+      panelOpen = !panelOpen;
+      if (panelOpen) {
+        updatePanel();
+        $endingsPanel.addClass('open');
+      } else {
+        $endingsPanel.removeClass('open');
+      }
+    });
+
+    jQuery('body').append($counter).append($endingsPanel);
+    updateCounter();
+  }
+
+  function updateCounter() {
+    if (!$counter) return;
+    var unlocked = unlockedCount();
+    var total = totalCount();
+    $counter.find('.endings-text').text(unlocked + ' / ' + total);
+
+    if (unlocked === total) {
+      $counter.addClass('all-unlocked');
+    } else {
+      $counter.removeClass('all-unlocked');
+    }
+  }
+
+  function updatePanel() {
+    if (!$endingsPanel) return;
+
+    var unlocked = loadUnlocked();
+    var html = '<div class="endings-panel-title">🏆 Открытые концовки</div>';
+    html += '<div class="endings-panel-list">';
+
+    Object.keys(ALL_ENDINGS).forEach(function (key) {
+      var ending = ALL_ENDINGS[key];
+      var isU = unlocked.indexOf(key) !== -1;
+      var icon = isU ? ending.icon : '🔒';
+      var name = isU ? ending.name : '???';
+      var cls = isU ? 'unlocked' : 'locked';
+
+      html += '<div class="endings-item ' + cls + '">' +
+                '<span class="endings-item-icon">' + icon + '</span>' +
+                '<span class="endings-item-name">' + name + '</span>' +
+              '</div>';
+    });
+
+    html += '</div>';
+    html += '<div class="endings-panel-footer">' + unlocked.length + ' из ' + totalCount() + '</div>';
+
+    $endingsPanel.html(html);
+  }
+
+  jQuery(document).on(':passagedisplay', function () {
+    createCounter();
+
+    var currentPassage = State.passage;
+
+    if (ALL_ENDINGS[currentPassage]) {
+      var isNew = unlockEnding(currentPassage);
+      updateCounter();
+      updatePanel();
+
+      if (isNew) {
+        showEndingNotification(ALL_ENDINGS[currentPassage]);
+
+        setTimeout(function () {
+          Engine.restart();
+        }, 3000);
+      }
+    }
+  });
+
+  function showEndingNotification(ending) {
+    var $notif = jQuery(
+      '<div class="ending-notification">' +
+        '<div class="ending-notification-icon">🎉</div>' +
+        '<div class="ending-notification-title">Новая концовка открыта!</div>' +
+        '<div class="ending-notification-name">' + ending.icon + ' ' + ending.name + '</div>' +
+        '<div class="ending-notification-sub">Начинаем заново через 3 секунды…</div>' +
+      '</div>'
+    );
+
+    jQuery('body').append($notif);
+
+    setTimeout(function () {
+      $notif.addClass('show');
+    }, 50);
+
+    setTimeout(function () {
+      $notif.removeClass('show');
+      setTimeout(function () { $notif.remove(); }, 500);
+    }, 2500);
+  }
+
+  window.EndingsSystem = {
+    reset: function () {
+      localStorage.removeItem(STORAGE_KEY);
+      updateCounter();
+      updatePanel();
+      console.log('Концовки сброшены');
+    },
+    unlockAll: function () {
+      saveUnlocked(Object.keys(ALL_ENDINGS));
+      updateCounter();
+      updatePanel();
+      console.log('Все концовки открыты');
+    },
+    getUnlocked: loadUnlocked,
+    getAll: function () { return ALL_ENDINGS; }
+  };
 
 })();</script><tw-tag name="lavka" color="blue"></tw-tag><tw-tag name="most" color="yellow"></tw-tag><tw-tag name="tower_inside" color="red"></tw-tag><tw-tag name="final" color="green"></tw-tag><tw-tag name="ending" color="blue"></tw-tag><tw-tag name="start" color="red"></tw-tag><tw-tag name="start-write" color="green"></tw-tag><tw-tag name="tropf" color="blue"></tw-tag><tw-passagedata pid="1" name="Start1" tags="start" position="6800,100" size="100,100">&lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
