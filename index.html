@@ -129,16 +129,16 @@ body {
 }
 
 /* ============================================
-   СЛОЙ ФОНА — заполняет область 1919×821
+   СЛОЙ ФОНА — растянут на всю область над диалогом
    ============================================ */
 .bg-layer {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 35vh;
+  bottom: 35vh;                     /* фон заканчивается над диалогом */
   width: 100vw;
-  background-size: cover;
+  background-size: 100% 100%;       /* растягивает на всю область */
   background-position: center center;
   background-repeat: no-repeat;
   background-color: #1a1a2e;
