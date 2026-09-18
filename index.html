@@ -129,7 +129,7 @@ body {
 }
 
 /* ============================================
-   СЛОЙ ФОНА — растянут на всю область над диалогом
+   СЛОЙ ФОНА
    ============================================ */
 .bg-layer {
   position: fixed;
@@ -267,8 +267,28 @@ body.title .bg-layer::after {
   animation: titleFadeIn 1s ease-out 0.6s backwards;
 }
 
+/* ===== СЧЁТЧИК КОНЦОВОК ===== */
+.title-endings {
+  position: fixed;
+  bottom: 12vh;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.65);
+  color: #FFD700;
+  padding: 12px 28px;
+  border: 2px solid rgba(255, 215, 0, 0.85);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 210;
+  animation: titleFadeIn 1s ease-out 0.9s backwards;
+}
+
 /* ============================================
-   ДИАЛОГОВОЕ ОКНО (ВО ВСЮ ШИРИНУ)
+   ДИАЛОГОВОЕ ОКНО
    ============================================ */
 .dialogue-box {
   position: fixed;
@@ -343,9 +363,7 @@ body.title .bg-layer::after {
   border-top: 1px solid rgba(244, 197, 66, 0.5);
 }
 
-/* ============================================
-   ТИПЫ ДИАЛОГОВ
-   ============================================ */
+/* ===== ТИПЫ ДИАЛОГОВ ===== */
 .dialogue-box.narrator { background: rgba(255, 248, 231, 0.92); border-top-color: rgba(244, 197, 66, 0.95); }
 .dialogue-box.narrator .speaker-name { background: rgba(180, 130, 40, 0.9); color: #FFF8E7; }
 
@@ -385,9 +403,7 @@ body.title .bg-layer::after {
 }
 .dialogue-box.final-box .speaker-name { background: rgba(200, 150, 20, 0.9); color: #FFF8E7; }
 
-/* ============================================
-   КНОПКИ-ВЫБОРЫ
-   ============================================ */
+/* ===== КНОПКИ-ВЫБОРЫ ===== */
 .choice-box {
   position: fixed;
   top: auto;
@@ -428,9 +444,7 @@ body.title .bg-layer::after {
   box-shadow: 0 10px 30px rgba(255, 200, 100, 0.7);
 }
 
-/* ============================================
-   КНОПКА "ДАЛЬШЕ"
-   ============================================ */
+/* ===== КНОПКА "ДАЛЬШЕ" ===== */
 .next-box {
   position: fixed;
   bottom: 37vh;
@@ -502,7 +516,6 @@ body.title .bg-layer::after {
   will-change: transform, filter, opacity;
 }
 
-/* ===== ПОЗИЦИИ ===== */
 .sprite.pos-solo      { left: 50%; --tx: -50%; --sc: 1; }
 .sprite.pos-left      { left: 20%; --tx: -50%; --sc: 0.95; }
 .sprite.pos-right     { right: 20%; --tx: 50%;  --sc: 0.95; }
@@ -522,7 +535,6 @@ body.title .bg-layer::after {
   transform: translateX(50%) scale(var(--sc));
 }
 
-/* ===== АКТИВНЫЙ ===== */
 .sprite.active {
   opacity: 1;
   filter: 
@@ -534,7 +546,6 @@ body.title .bg-layer::after {
   animation: spriteJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ===== НЕАКТИВНЫЙ ===== */
 .sprite.inactive {
   opacity: 0.9;
   filter: 
@@ -544,7 +555,6 @@ body.title .bg-layer::after {
   z-index: 5;
 }
 
-/* ===== АНИМАЦИЯ ПОДПРЫГИВАНИЯ ===== */
 @keyframes spriteJump {
   0%   { transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1)); }
   25%  { transform: translateX(var(--tx, -50%)) translateY(-25px) scale(calc(var(--sc, 1) * 1.05)); }
@@ -689,6 +699,7 @@ body.title .bg-layer::after {
   .title-menu { width: 240px; gap: 9px; }
   .title-menu a.link-internal { font-size: 13px; padding: 10px 14px; }
   .title-footer { font-size: 11px; letter-spacing: 1px; }
+  .title-endings { font-size: 13px; padding: 10px 20px; bottom: 14vh; }
   .history-controls { top: 10px; left: 10px; gap: 8px; }
   .history-btn { width: 40px; height: 40px; font-size: 18px; }
 }
@@ -746,34 +757,26 @@ Setting.addList("sfxVolume", {
 });
 
 /* ============================================
-   МУЗЫКА И ЗВУКИ
+   МУЗЫКА (один трек на всю игру)
    ============================================ */
 
 SimpleAudio.tracks.add("main_theme", "audio/main_theme.mp3");
-SimpleAudio.tracks.add("start",      "audio/start.mp3");
-SimpleAudio.tracks.add("forest",     "audio/forest.mp3");
-SimpleAudio.tracks.add("bridge",     "audio/bridge.mp3");
-SimpleAudio.tracks.add("tower",      "audio/tower.mp3");
-SimpleAudio.tracks.add("final",      "audio/final.mp3");
-SimpleAudio.tracks.add("click",      "audio/click.mp3");
-SimpleAudio.tracks.add("chime",      "audio/chime.mp3");
 
-SimpleAudio.groups.add(":sfx", ["click", "chime"]);
+SimpleAudio.volume(0.6);
 
-SimpleAudio.volume(0.5);
-
-/* Применение настройки громкости */
+/* Настройка громкости музыки */
 Setting.onChange("musicVolume", function () {
   SimpleAudio.volume(this.value);
 });
 
-Setting.onChange("sfxVolume", function () {
-  SimpleAudio.select(":sfx").volume(this.value);
-});
-
-/* Звук клика */
-$(document).on('click', 'a.link-internal, button', function () {
-  try { SimpleAudio.select("click").play(); } catch (e) {}
+/* Автозапуск музыки при первом клике (обход блокировки браузера) */
+jQuery(document).one('click.main_theme', function () {
+  try {
+    var track = SimpleAudio.tracks.get("main_theme");
+    if (track && !track.isPlaying()) {
+      track.play();
+    }
+  } catch (e) {}
 });
 
 /* ============================================
@@ -1023,9 +1026,7 @@ $(document).on('click', 'a.link-internal, button', function () {
 
 &lt;div class=&quot;next-box&quot;&gt;
 [[Дальше-&gt;Start2]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="2" name="TitleStory" tags="" position="7000,100" size="100,100">&lt;&lt;audio &quot;main_theme&quot; play loop&gt;&gt;
-
-&lt;div class=&quot;title-screen&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="2" name="TitleStory" tags="" position="7000,100" size="100,100">&lt;div class=&quot;title-screen&quot;&gt;
 
   &lt;div class=&quot;title-logo&quot;&gt;
     &lt;h1 class=&quot;title-main&quot;&gt;Песнь Августа&lt;/h1&gt;
@@ -1036,6 +1037,15 @@ $(document).on('click', 'a.link-internal, button', function () {
     &lt;&lt;link &quot;▶ Начать историю&quot;&gt;&gt;&lt;&lt;goto &quot;Start1&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
     &lt;&lt;link &quot;💾 Загрузить&quot;&gt;&gt;&lt;&lt;script&gt;&gt;UI.saves();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
     &lt;&lt;link &quot;⚙ Настройки&quot;&gt;&gt;&lt;&lt;script&gt;&gt;UI.settings();&lt;&lt;/script&gt;&gt;&lt;&lt;/link&gt;&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;title-endings&quot;&gt;
+    &lt;&lt;set _count to 0&gt;&gt;
+    &lt;&lt;if $ending_harmony&gt;&gt;&lt;&lt;set _count to _count + 1&gt;&gt;&lt;&lt;/if&gt;&gt;
+    &lt;&lt;if $ending_mastery&gt;&gt;&lt;&lt;set _count to _count + 1&gt;&gt;&lt;&lt;/if&gt;&gt;
+    &lt;&lt;if $ending_science&gt;&gt;&lt;&lt;set _count to _count + 1&gt;&gt;&lt;&lt;/if&gt;&gt;
+    &lt;&lt;if $ending_unity&gt;&gt;&lt;&lt;set _count to _count + 1&gt;&gt;&lt;&lt;/if&gt;&gt;
+    Концовок открыто: _count / $endings_total
   &lt;/div&gt;
 
   &lt;p class=&quot;title-footer&quot;&gt;Верхний Шепоть · Праздник Осенней Звезды&lt;/p&gt;
@@ -1099,7 +1109,7 @@ $(document).on('click', 'a.link-internal, button', function () {
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="6" name="StoryInit" tags="" position="6900,325" size="100,100">&lt;&lt;set $textSpeed to 40&gt;&gt;
 &lt;&lt;set $musicVolume to 0.6&gt;&gt;
 &lt;&lt;set $sfxVolume to 0.6&gt;&gt;
-&lt;&lt;set $currentMusic to &quot;&quot;&gt;&gt;
+
 &lt;&lt;set $has_feather to false&gt;&gt;
 &lt;&lt;set $has_crystal to false&gt;&gt;
 &lt;&lt;set $has_key to false&gt;&gt;
@@ -1110,7 +1120,13 @@ $(document).on('click', 'a.link-internal, button', function () {
 &lt;&lt;set $has_secret_door to false&gt;&gt;
 &lt;&lt;set $has_clue to false&gt;&gt;
 &lt;&lt;set $door_opened to false&gt;&gt;
-&lt;&lt;set $inspected_mechanism to false&gt;&gt;</tw-passagedata><tw-passagedata pid="7" name="Start4" tags="start" position="6500,100" size="100,100">&lt;div class=&quot;dialogue-box narrator&quot;&gt;
+&lt;&lt;set $inspected_mechanism to false&gt;&gt;
+
+&lt;&lt;set $ending_harmony to false&gt;&gt;
+&lt;&lt;set $ending_mastery to false&gt;&gt;
+&lt;&lt;set $ending_science to false&gt;&gt;
+&lt;&lt;set $ending_unity to false&gt;&gt;
+&lt;&lt;set $endings_total to 4&gt;&gt;</tw-passagedata><tw-passagedata pid="7" name="Start4" tags="start" position="6500,100" size="100,100">&lt;div class=&quot;dialogue-box narrator&quot;&gt;
   &lt;div class=&quot;speaker-name&quot;&gt;Рассказчик&lt;/div&gt;
   &lt;div class=&quot;dialogue-text&quot;&gt;
 Скрипнула калитка. Во двор вошла Мира, держа под мышкой объёмистый кожаный чехол с инструментами. Её рыжие кудри были небрежно подвязаны медной проволокой, а в глазах плясали озорные искры.
