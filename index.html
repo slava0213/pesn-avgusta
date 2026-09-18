@@ -129,18 +129,19 @@ body {
 }
 
 /* ============================================
-   СЛОЙ ФОНА — только над диалогом
+   СЛОЙ ФОНА — фон НЕ обрезается, вписан целиком
    ============================================ */
 .bg-layer {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 50vh;
+  bottom: 35vh;
   width: 100vw;
-  background-size: cover;
+  background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
+  background-color: #1a1a2e;
   z-index: 1;
   pointer-events: none;
   transition: background-image 0.5s ease-in-out;
@@ -354,7 +355,7 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
 }
 
 /* ============================================
-   СИСТЕМА СПРАЙТОВ (выглядывают из-за диалога)
+   СИСТЕМА СПРАЙТОВ
    ============================================ */
 
 .sprite-stage {
@@ -370,7 +371,7 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
 
 .sprite {
   position: absolute;
-  bottom: 20vh;              /* спрайт опущен — низ уходит под диалог */
+  bottom: 20vh;
   height: 75vh;
   max-height: 900px;
   min-height: 300px;
@@ -443,7 +444,6 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   100% { transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1)); }
 }
 
-/* ===== ПОЯВЛЕНИЕ ===== */
 .sprite.entering {
   opacity: 0;
   transform: translateX(var(--tx, -50%)) translateY(40px) scale(var(--sc, 1));
@@ -454,7 +454,6 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   transform: translateX(var(--tx, -50%)) translateY(0) scale(var(--sc, 1));
 }
 
-/* ===== УХОД ===== */
 .sprite.leaving {
   opacity: 0;
   transform: translateX(var(--tx, -50%)) translateY(40px) scale(var(--sc, 1));
@@ -691,7 +690,7 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
   .choice-box a.link-internal { font-size: 20px; }
   .next-box a.link-internal { font-size: 18px; }
 }</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* ============================================
-   СОЗДАНИЕ СЛОЯ ФОНА (один раз при старте)
+   СОЗДАНИЕ СЛОЯ ФОНА
    ============================================ */
 jQuery(function () {
   if (!jQuery('.bg-layer').length) {
