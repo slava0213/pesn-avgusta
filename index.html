@@ -147,7 +147,6 @@ body {
   transition: background-image 0.5s ease-in-out;
 }
 
-/* ===== ФОНЫ ЛОКАЦИЙ ===== */
 body.title .bg-layer         { background-image: url("images/fon_title.png"); }
 body.start .bg-layer         { background-image: url("images/fon_start.png"); }
 body.most .bg-layer          { background-image: url("images/fon_most.png"); }
@@ -666,10 +665,6 @@ body.ending .bg-layer        { background-image: url("images/fon_ending.png"); }
 .endings-icon { font-size: 18px; line-height: 1; }
 .endings-text { letter-spacing: 1px; }
 
-/* ============================================
-   ПАНЕЛЬ СО СПИСКОМ КОНЦОВОК
-   ============================================ */
-
 .endings-panel {
   position: fixed;
   top: 70px;
@@ -918,17 +913,82 @@ Setting.addList("textSpeed", {
   default: 40,
 });
 
-Setting.addList("musicVolume", {
-  label: "Громкость музыки",
-  list: [0, 0.3, 0.6, 1],
-  default: 0.6,
-});
-
 Setting.addList("sfxVolume", {
   label: "Громкость звуков",
   list: [0, 0.3, 0.6, 1],
   default: 0.6,
 });
+
+/* ============================================
+   ФОНОВАЯ МУЗЫКА (играет всю игру)
+   ============================================ */
+
+(function () {
+  'use strict';
+
+  var MUSIC_TRACK = 'main_theme';
+  var MUSIC_VOLUME_DEFAULT = 0.4;
+  var musicStarted = false;
+
+  // Регистрируем трек
+  SimpleAudio.tracks.add(MUSIC_TRACK, 'audio/main_theme.mp3');
+
+  // Применяем громкость
+  SimpleAudio.volume(MUSIC_VOLUME_DEFAULT);
+
+  // Запуск музыки (один раз, после клика игрока)
+  function startMusic() {
+    if (musicStarted) return;
+    var track = SimpleAudio.tracks.get(MUSIC_TRACK);
+    if (!track) return;
+
+    track.loop(true);
+    track.volume(settings.musicVolume || MUSIC_VOLUME_DEFAULT);
+    track.play().then(function () {
+      musicStarted = true;
+    }).catch(function (ex) {
+      if (ex.name === 'NotAllowedError') {
+        // Браузер заблокировал — ждём следующего клика
+        jQuery(document).one('click.music-start touchstart.music-start', startMusic);
+      }
+    });
+  }
+
+  // Первый клик в любом месте — запуск
+  jQuery(document).one('click.music-start touchstart.music-start', startMusic);
+
+  // Настройка громкости музыки
+  Setting.addList("musicVolume", {
+    label: "Громкость музыки",
+    list: [0, 0.2, 0.4, 0.6, 0.8],
+    default: MUSIC_VOLUME_DEFAULT,
+    onChange: function () {
+      var vol = settings.musicVolume;
+      SimpleAudio.volume(vol);
+      var track = SimpleAudio.tracks.get(MUSIC_TRACK);
+      if (track) track.volume(vol);
+    }
+  });
+
+  // Публичный API
+  window.GameMusic = {
+    start: startMusic,
+    stop: function () {
+      var track = SimpleAudio.tracks.get(MUSIC_TRACK);
+      if (track) track.stop();
+    },
+    pause: function () {
+      var track = SimpleAudio.tracks.get(MUSIC_TRACK);
+      if (track) track.pause();
+    },
+    setVolume: function (v) {
+      SimpleAudio.volume(v);
+      var track = SimpleAudio.tracks.get(MUSIC_TRACK);
+      if (track) track.volume(v);
+    }
+  };
+
+})();
 
 /* ============================================
    СИСТЕМА СПРАЙТОВ ПЕРСОНАЖЕЙ
@@ -1178,10 +1238,10 @@ Setting.addList("sfxVolume", {
   'use strict';
 
   var ALL_ENDINGS = {
-    'КонецГармония':   { name: 'Финал Мелодии и Добра',       icon: '🎵' },
-    'КонецМастерство': { name: 'Финал Заботы и Изобилия',     icon: '🍎' },
-    'КонецНаука':      { name: 'Финал Инженерного Чуда',      icon: '⚙️' },
-    'КонецЕдинство':   { name: 'Финал Истинной Гармонии',     icon: '✨' }
+    'КонецГармония':   { name: 'Финал Мелодии и Добра',   icon: '🎵' },
+    'КонецМастерство': { name: 'Финал Заботы и Изобилия', icon: '🍎' },
+    'КонецНаука':      { name: 'Финал Инженерного Чуда',  icon: '⚙️' },
+    'КонецЕдинство':   { name: 'Финал Истинной Гармонии', icon: '✨' }
   };
 
   var STORAGE_KEY = 'pesn_augusta_endings';
@@ -1208,10 +1268,6 @@ Setting.addList("sfxVolume", {
     unlocked.push(passageName);
     saveUnlocked(unlocked);
     return true;
-  }
-
-  function isUnlocked(passageName) {
-    return loadUnlocked().indexOf(passageName) !== -1;
   }
 
   function totalCount() {
@@ -1425,7 +1481,7 @@ Setting.addList("sfxVolume", {
 
   &lt;/div&gt;
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="6" name="StoryInit" tags="" position="6900,325" size="100,100">&lt;&lt;set $textSpeed to 40&gt;&gt;
-&lt;&lt;set $musicVolume to 0.6&gt;&gt;
+&lt;&lt;set $musicVolume to 0.4&gt;&gt;
 &lt;&lt;set $sfxVolume to 0.6&gt;&gt;
 &lt;&lt;set $has_feather to false&gt;&gt;
 &lt;&lt;set $has_crystal to false&gt;&gt;
