@@ -611,15 +611,16 @@ html, body {
    ============================================ */
 
 const LOCATION_BG = {
-  title:        'images/fon_title.png',
-  start:        'images/fon_start.png',
-  most:         'images/fon_most.png',
-  lavka:        'images/fon_lavka.png',
-  tropa:        'images/fon_tropa.png',
-  tower:        'images/fon_tower.png',
-  tower_inside: 'images/fon_tower_inside.png',
-  final:        'images/fon_final.png',
-  ending:       'images/fon_ending.png'
+  title:         'images/fon_title.png',
+  start:         'images/fon_player_insite.png',
+  player_inside: 'images/fon_player_insite.png',
+  most:          'images/fon_most.png',
+  lavka:         'images/fon_lavka.png',
+  tropa:         'images/fon_tropa.png',
+  tower:         'images/fon_tower.png',
+  tower_inside:  'images/fon_tower_inside.png',
+  final:         'images/fon_final.png',
+  ending:        'images/fon_ending.png'
 };
 
 const SPRITE_MAP = {
@@ -654,11 +655,10 @@ const SPEAKER_MAP = {
 
 /* ============================================================
    СЛОВАРЬ УПОМИНАНИЙ: если в тексте рассказчика встречается
-   любое из этих слов — на сцену добавляется соответствующий спрайт.
-   Учитываются падежи и склонения.
+   любое из этих слов — на сцену добавляется спрайт.
    ============================================================ */
 const MENTION_MAP = [
-  { sprite: 'mira',      words: ['Мира', 'Миры', 'Мире', 'Миру', 'Мирой', 'Мирой', 'Мирою'] },
+  { sprite: 'mira',      words: ['Мира', 'Миры', 'Мире', 'Миру', 'Мирой', 'Мирою'] },
   { sprite: 'bruno',     words: ['Бруно'] },
   { sprite: 'shustik',   words: ['Шустик', 'Шустика', 'Шустику', 'Шустиком'] },
   { sprite: 'selesta',   words: ['Селеста', 'Селесты', 'Селесте', 'Селесту', 'Селестой', 'Селестою', 'Бабушка Селеста', 'Бабушки Селесты', 'Бабушке Селесте'] },
@@ -668,15 +668,13 @@ const MENTION_MAP = [
   { sprite: 'tik_tak',   words: ['Тик-Так', 'Тик-Така', 'Тик-Таку', 'Тик-Таком'] }
 ];
 
-/* Проверяет, упоминается ли персонаж в тексте (грубо, по вхождению слова) */
 function textMentionsSprite(text, spriteKey) {
   const entry = MENTION_MAP.find(e => e.sprite === spriteKey);
   if (!entry) return false;
-  const plain = text.replace(/<[^>]*>/g, ' '); // убираем теги
+  const plain = text.replace(/<[^>]*>/g, ' ');
   return entry.words.some(w => plain.includes(w));
 }
 
-/* Возвращает список ключей спрайтов, упомянутых в тексте */
 function findMentionedSprites(text) {
   const result = [];
   for (const entry of MENTION_MAP) {
@@ -687,12 +685,18 @@ function findMentionedSprites(text) {
 
 const PASSAGES = {
   title: { isTitle: true },
-  Start1: { location: 'start', speaker: 'Рассказчик', boxClass: 'narrator', text: `Утро в Верхнем Шепоте пахло сушёными яблоками, речной мятой и смолистыми сосновыми дровами. Солнце только коснулось шпилей ремесленных гильдий, а вы уже затягивали ремешок дорожной сумки травника.`, next: 'Start2' },
-  Start2: { location: 'start', speaker: 'Рассказчик', boxClass: 'narrator', text: `На столе лежало тяжёлое письмо из плотного пергамента, запечатанное золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.`, next: 'Start3' },
-  Start3: { location: 'start', speaker: 'Рассказчик', boxClass: 'narrator', text: `Сегодня в долине должен состояться ежегодный праздник Осенней Звезды. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков. Без его тёплого луча небесные светляки собьются с пути, а речные баржи с яблочным сидром и пряниками не найдут гавань.`, next: 'Start4' },
-  Start4: { location: 'start', speaker: 'Рассказчик', boxClass: 'narrator', text: `Скрипнула калитка. Во двор вошла Мира, держа под мышкой объёмистый кожаный чехол с инструментами. Её рыжие кудри были небрежно подвязаны медной проволокой, а в глазах плясали озорные искры.`, next: 'Start5' },
+  Start1: { location: 'player_inside', speaker: 'Рассказчик', boxClass: 'narrator', text: `Утро в Верхнем Шепоте пахло сушёными яблоками, речной мятой и смолистыми сосновыми дровами. Солнце только коснулось шпилей ремесленных гильдий, а вы уже затягивали ремешок дорожной сумки травника.`, next: 'Start2' },
+  Start2: { location: 'player_inside', speaker: 'Рассказчик', boxClass: 'narrator', text: `На столе лежало тяжёлое письмо из плотного пергамента, запечатанное золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.`, next: 'Start3' },
+  Start3: { location: 'player_inside', speaker: 'Рассказчик', boxClass: 'narrator', text: `Сегодня в долине должен состояться ежегодный праздник Осенней Звезды. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков. Без его тёплого луча небесные светляки собьются с пути, а речные баржи с яблочным сидром и пряниками не найдут гавань.`, next: 'Start4' },
+  Start4: {
+    location: 'player_inside',
+    sprites: [ { name: 'player', pos: 'left' }, { name: 'mira', pos: 'right' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Скрипнула входная дверь. На пороге показалась Мира, держа под мышкой объёмистый кожаный чехол с инструментами. Её рыжие кудри были небрежно подвязаны медной проволокой, а в глазах плясали озорные искры.`,
+    next: 'Start5'
+  },
   Start5: {
-    location: 'start',
+    location: 'player_inside',
     sprites: [ { name: 'player', pos: 'left' }, { name: 'mira', pos: 'right' } ],
     speaker: 'Мира', boxClass: 'mira',
     text: `— Подъём, Хранитель трав и ветров! — звонко бросила она, прислоняясь к перилам. — Мастер Олвен передал, что в маяке не просто перегорела свеча — там заклинило рунный резонатор. Я взяла отмычки, разводной ключ на двенадцать и банку лучшей графитовой смазки. А у тебя что в письме?`,
@@ -702,17 +706,17 @@ const PASSAGES = {
       { text: 'Пошутить над Мирой и её чехлом с инструментами', to: 'РазговорСМирой1' }
     ]
   },
-  ПисьмоОлвена: { location: 'start', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы ломаете восковую печать. Внутри обнаруживается не просто записка, а тщательно вычерченная схема линз с личными пометками мастера, сделанными серебряными чернилами.`, next: 'ПисьмоОлвена2' },
+  ПисьмоОлвена: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы ломаете восковую печать. Внутри обнаруживается не просто записка, а тщательно вычерченная схема линз с личными пометками мастера, сделанными серебряными чернилами.`, next: 'ПисьмоОлвена2' },
   ПисьмоОлвена2: {
-    location: 'start',
+    location: 'player_inside',
     sprites: [ { name: 'mira', pos: 'right' }, { name: 'olven', pos: 'left' } ],
     speaker: 'Мастер Олвен', boxClass: 'olven',
     text: `«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы и фальшивых нот. Если механизм замер, ищите причину не в поломке металла, а в нарушении гармонии. Возьмите с собой частицу стихии и помните: свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».`,
     next: 'ПисьмоОлвена3'
   },
-  ПисьмоОлвена3: { location: 'start', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира заглянула через ваше плечо.`, next: 'ПисьмоОлвена4' },
+  ПисьмоОлвена3: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира заглянула через ваше плечо.`, next: 'ПисьмоОлвена4' },
   ПисьмоОлвена4: {
-    location: 'start',
+    location: 'player_inside',
     sprites: [ { name: 'mira', pos: 'solo' } ],
     speaker: 'Мира', boxClass: 'mira',
     text: `«Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?`,
@@ -722,11 +726,11 @@ const PASSAGES = {
       { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
     ]
   },
-  ВыборПути: { location: 'start', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы прячете письмо во внутренний карман и хлопаете по нему ладонью.`, next: 'ВыборПути2' },
-  ВыборПути2: { location: 'start', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Разберёмся по дороге. Сначала — к маяку.`, next: 'ВыборПути3' },
-  ВыборПути3: { location: 'start', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира кивает и закидывает чехол на плечо.`, next: 'ВыборПути4' },
+  ВыборПути: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы прячете письмо во внутренний карман и хлопаете по нему ладонью.`, next: 'ВыборПути2' },
+  ВыборПути2: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Разберёмся по дороге. Сначала — к маяку.`, next: 'ВыборПути3' },
+  ВыборПути3: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира кивает и закидывает чехол на плечо.`, next: 'ВыборПути4' },
   ВыборПути4: {
-    location: 'start',
+    location: 'player_inside',
     sprites: [ { name: 'mira', pos: 'solo' } ],
     speaker: 'Мира', boxClass: 'mira',
     text: `Тогда решай, как пойдём. Через мост — дольше, но спокойнее. Через Грибную тропу — быстрее, но там сумрачно и можно встретить лесных духов. Или заглянем к бабушке Селесте — она всегда что-то подскажет.`,
@@ -736,10 +740,10 @@ const PASSAGES = {
       { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
     ]
   },
-  РазговорСМирой1: { location: 'start', sprites: [ { name: 'player', pos: 'left' }, { name: 'mira', pos: 'right' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы с улыбкой оглядываете её внушительный багаж.`, next: 'РазговорСМирой2' },
-  РазговорСМирой2: { location: 'start', sprites: [ { name: 'player', pos: 'left' }, { name: 'mira', pos: 'right' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`, next: 'РазговорСМирой3' },
-  РазговорСМирой3: { location: 'start', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира фыркнула и театрально постучала медным ключом по ладони.`, next: 'РазговорСМирой4' },
-  РазговорСМирой4: { location: 'start', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Или у Корнелиуса снова заржавел механизм для колки орехов? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?`, next: 'ПисьмоОлвена' },
+  РазговорСМирой1: { location: 'player_inside', sprites: [ { name: 'player', pos: 'left' }, { name: 'mira', pos: 'right' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы с улыбкой оглядываете её внушительный багаж.`, next: 'РазговорСМирой2' },
+  РазговорСМирой2: { location: 'player_inside', sprites: [ { name: 'player', pos: 'left' }, { name: 'mira', pos: 'right' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`, next: 'РазговорСМирой3' },
+  РазговорСМирой3: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира фыркнула и театрально постучала медным ключом по ладони.`, next: 'РазговорСМирой4' },
+  РазговорСМирой4: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Или у Корнелиуса снова заржавел механизм для колки орехов? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?`, next: 'ПисьмоОлвена' },
   СтарыйМост: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно. Его хвост с кисточкой мирно покачивался в воздухе.<br><br>Услышав ваши шаги, Бруно приоткрыл один янтарный глаз и зевнул так широко, что обнажились гладкие кремневые зубы.`, next: 'СтарыйМост2' },
   СтарыйМост2: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Ба, знакомые лица! — пробасил он гулким голосом, похожим на перекатывание гальки. — Куда путь держите в такой важный день? Уж не к маяку ли?`, next: 'СтарыйМост3' },
   СтарыйМост3: { location: 'most', sprites: [ { name: 'mira', pos: 'right' }, { name: 'bruno', pos: 'left' } ], speaker: 'Мира', boxClass: 'mira', text: `— Именно туда, Бруно, — шагнула вперёд Мира. — Время не ждёт, солнце перевалило за полдень. Пропустишь нас без долгих церемоний?`, next: 'СтарыйМост4' },
@@ -1122,7 +1126,6 @@ function typeText(element, html, speed, callback) {
   step();
 }
 
-/* Переход «дальше» — клик по экрану или клавиша */
 function advance() {
   const passage = PASSAGES[gameState.currentPassage];
   if (!passage || passage.isTitle) return;
@@ -1161,19 +1164,16 @@ function renderPassage(id, addToHistory = true) {
 
   setBackground(passage.location);
 
-  // ============================================================
-  // АВТО-ДОБАВЛЕНИЕ СПРАЙТОВ ПО УПОМИНАНИЯМ В ТЕКСТЕ
-  // ============================================================
+  // Автодобавление спрайтов по упоминаниям в тексте
   const explicitSprites = (passage.sprites || []).slice();
   const explicitNames = explicitSprites.map(s => s.name);
   const mentionedNames = findMentionedSprites(passage.text || '');
   const autoSprites = [];
   for (const name of mentionedNames) {
-    if (name === 'player') continue;                        // себя не показываем
-    if (explicitNames.includes(name)) continue;             // уже задан явно
+    if (name === 'player') continue;
+    if (explicitNames.includes(name)) continue;
     if (name === 'tower_outside' || name === 'tower_inside' ||
-        name === 'tower_hall'    || name === 'valley') continue; // объекты не считаем
-    // Подбираем свободную позицию
+        name === 'tower_hall'    || name === 'valley') continue;
     const used = explicitNames.concat(autoSprites.map(s => s.name));
     let pos = 'right';
     if (used.length === 0) pos = 'solo';
@@ -1189,14 +1189,10 @@ function renderPassage(id, addToHistory = true) {
   wanted.forEach(s => addSprite(s.name, s.pos));
   setTimeout(relayoutSprites, 50);
 
-  // Если есть выбор из нескольких вариантов, автор может захотеть,
-  // чтобы рассказчик не подсвечивал никого — но мы всё равно подсветим,
-  // если speaker указывает на персонажа.
   const speakerKey = SPEAKER_MAP[passage.speaker];
   if (speakerKey && activeSprites[speakerKey]) setActiveSprite(speakerKey);
   else if (wantedNames.length > 0) deactivateAllSprites();
 
-  // Навигация: только жёлтые кнопки выбора. Кнопки «Дальше» нет.
   let navHTML = '';
   if (passage.choices && passage.choices.length > 0) {
     navHTML = '<div class="choice-box">' + passage.choices.map(c => `<a data-to="${c.to}">${c.text}</a>`).join('') + '</div>';
@@ -1256,7 +1252,6 @@ function renderPassage(id, addToHistory = true) {
     typeText(textEl, text, gameState.settings.textSpeed, () => { gameState.isTyping = false; });
   } else { textEl.innerHTML = text; }
 
-  // Включаем слой кликов, если у пассажа нет выбора
   const clickLayer = document.getElementById('clickLayer');
   if (clickLayer) {
     if (passage.choices && passage.choices.length > 0) {
