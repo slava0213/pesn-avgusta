@@ -130,7 +130,7 @@ html, body {
 .click-layer {
   position: fixed;
   inset: 0;
-  z-index: 90;              /* ниже диалогового окна и кнопок, но выше спрайтов */
+  z-index: 90;              /* ниже диалогового окна, выше спрайтов */
   background: transparent;
   cursor: pointer;
   display: none;
@@ -279,7 +279,7 @@ html, body {
 .dialogue-box.final-box .speaker-name { background: linear-gradient(180deg, rgba(255,215,0,1) 0%, rgba(200,150,20,1) 100%); color: #2A1500; }
 
 /* ============================================
-   КНОПКИ ВЫБОРА (и одиночная жёлтая)
+   КНОПКИ ВЫБОРА (только когда есть choices)
    ============================================ */
 .choice-box {
   position: fixed;
@@ -322,12 +322,6 @@ html, body {
   box-shadow: 0 14px 34px rgba(255,200,100,0.6), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 .choice-box a:active { transform: translateY(0) scale(0.995); }
-
-/* Одиночная жёлтая кнопка — чуть пониже, по центру */
-.choice-box.single {
-  bottom: 42vh;
-  width: min(520px, 76vw);
-}
 
 /* ===== КНОПКИ ИСТОРИИ ===== */
 .history-controls {
@@ -576,7 +570,6 @@ html, body {
   .speaker-name { top: -1.6vh; left: 4vw; padding: 0.7vh 4vw; font-size: 15px; min-width: 120px; }
   .dialogue-text { font-size: 15px; padding: 3.2vh 5vw 2.4vh; min-height: 14vh; max-height: 32vh; }
   .choice-box { bottom: 47vh; width: 90vw; gap: 10px; }
-  .choice-box.single { bottom: 49vh; width: 86vw; }
   .choice-box a { padding: 12px 16px; font-size: 14px; }
   .sprite { height: 62vh; max-width: 62vw; bottom: 30vh; }
   .sprite.pos-left  { left: 28%; }
@@ -598,7 +591,7 @@ html, body {
 <div class="vignette-layer"></div>
 <div class="sprite-stage" id="spriteStage"></div>
 
-<!-- Слой для кликов по экрану (переход «дальше») -->
+<!-- Слой для кликов по экрану -->
 <div class="click-layer" id="clickLayer"></div>
 
 <div class="history-controls" id="historyControls" style="display:none;">
@@ -1075,12 +1068,11 @@ function typeText(element, html, speed, callback) {
   step();
 }
 
-/* Переход «дальше» — используется и кликом по экрану, и кликом по тексту */
+/* Переход «дальше» — клик по экрану или клавиша */
 function advance() {
   const passage = PASSAGES[gameState.currentPassage];
   if (!passage || passage.isTitle) return;
   if (gameState.isTyping) {
-    // Досрочно завершаем печать
     if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
     const textEl = document.getElementById('dialogueText');
     if (textEl) textEl.innerHTML = passage.text || '';
@@ -1125,12 +1117,10 @@ function renderPassage(id, addToHistory = true) {
   if (speakerKey && activeSprites[speakerKey]) setActiveSprite(speakerKey);
   else if (wantedNames.length > 0) deactivateAllSprites();
 
-  // Навигация: либо выбор (жёлтые кнопки), либо одиночная жёлтая кнопка с текстом «Дальше».
+  // Навигация: только жёлтые кнопки выбора. Кнопки «Дальше» больше нет.
   let navHTML = '';
   if (passage.choices && passage.choices.length > 0) {
     navHTML = '<div class="choice-box">' + passage.choices.map(c => `<a data-to="${c.to}">${c.text}</a>`).join('') + '</div>';
-  } else if (passage.next) {
-    navHTML = '<div class="choice-box single"><a data-to="' + passage.next + '">Дальше →</a></div>';
   }
 
   const gameMenuHTML = `
@@ -1154,7 +1144,7 @@ function renderPassage(id, addToHistory = true) {
   const gameArea = document.getElementById('gameArea');
   gameArea.innerHTML = boxHTML + navHTML + gameMenuHTML;
 
-  // Клики по кнопкам выбора / одиночной кнопке «Дальше»
+  // Клики по кнопкам выбора
   gameArea.querySelectorAll('[data-to]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -1188,12 +1178,14 @@ function renderPassage(id, addToHistory = true) {
     typeText(textEl, text, gameState.settings.textSpeed, () => { gameState.isTyping = false; });
   } else { textEl.innerHTML = text; }
 
-  // Включаем слой кликов только если у пассажа нет выбора
+  // Включаем слой кликов, если у пассажа нет выбора
   const clickLayer = document.getElementById('clickLayer');
-  if (passage.choices && passage.choices.length > 0) {
-    clickLayer.classList.remove('enabled');
-  } else {
-    clickLayer.classList.add('enabled');
+  if (clickLayer) {
+    if (passage.choices && passage.choices.length > 0) {
+      clickLayer.classList.remove('enabled');
+    } else {
+      clickLayer.classList.add('enabled');
+    }
   }
 }
 
@@ -1201,7 +1193,7 @@ function renderTitleScreen() {
   setBackground('title');
   clearSprites();
   const clickLayer = document.getElementById('clickLayer');
-  clickLayer.classList.remove('enabled');
+  if (clickLayer) clickLayer.classList.remove('enabled');
 
   const gameArea = document.getElementById('gameArea');
   const count = countEndings();
@@ -1306,14 +1298,12 @@ function init() {
   document.getElementById('btnForward').addEventListener('click', goForward);
 
   // Клик по слою — «дальше»
-  document.getElementById('clickLayer').addEventListener('click', advance);
+  const clickLayerEl = document.getElementById('clickLayer');
+  if (clickLayerEl) clickLayerEl.addEventListener('click', advance);
 
-  // Клик по самому диалоговому окну — тоже «дальше»
-  // (но кнопки выбора и меню обрабатываются отдельно и не всплывают сюда)
+  // Клик по диалоговому окну — тоже «дальше»
   document.addEventListener('click', (e) => {
-    const box = e.target.closest('.dialogue-box');
-    if (!box) return;
-    // Если кликнули по кнопке выбора — не считаем это за «дальше»
+    if (!e.target.closest('.dialogue-box')) return;
     if (e.target.closest('[data-to]')) return;
     if (e.target.closest('.game-menu')) return;
     if (e.target.closest('.history-controls')) return;
@@ -1327,10 +1317,7 @@ function init() {
     if (ev.ctrlKey || ev.altKey || ev.metaKey) return;
     if (ev.key === 'ArrowLeft') { ev.preventDefault(); goBack(); }
     else if (ev.key === 'ArrowRight') { ev.preventDefault(); goForward(); }
-    else if (ev.key === ' ' || ev.key === 'Enter') {
-      ev.preventDefault();
-      advance();
-    }
+    else if (ev.key === ' ' || ev.key === 'Enter') { ev.preventDefault(); advance(); }
   });
 
   document.getElementById('modalOverlay').addEventListener('click', ev => {
