@@ -130,7 +130,7 @@ html, body {
 .click-layer {
   position: fixed;
   inset: 0;
-  z-index: 90;              /* ниже диалогового окна, выше спрайтов */
+  z-index: 90;
   background: transparent;
   cursor: pointer;
   display: none;
@@ -279,7 +279,7 @@ html, body {
 .dialogue-box.final-box .speaker-name { background: linear-gradient(180deg, rgba(255,215,0,1) 0%, rgba(200,150,20,1) 100%); color: #2A1500; }
 
 /* ============================================
-   КНОПКИ ВЫБОРА (только когда есть choices)
+   КНОПКИ ВЫБОРА
    ============================================ */
 .choice-box {
   position: fixed;
@@ -826,11 +826,36 @@ const PASSAGES = {
       { text: 'План 4: Полная синхронизация: объединить травы, музыку и точные механизмы', to: 'ФиналТриумф' }
     ]
   },
-  БашняСнаружи: { location: 'tower', sprites: [ { name: 'tower_outside', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Перед вами вздымалась Башня Светлячков — величественное сооружение из белого резного известняка, увитое цветущим плющом. На самом верху под стеклянным куполом замер гигантский хрустальный шар, лишённый привычного золотистого сияния.<br><br>Массивные дубовые двери были заперты. На бронзовой накладке замка выделялся циферблат с четырьмя дисками, на которых были выбиты стихийные знаки: Солнце, Ветер, Вода и Росток.`, next: 'БашняСнаружи2' },
-  БашняСнаружи2: { location: 'tower', sprites: [ { name: 'tower_outside', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира провела пальцем по желобкам замка.`, next: 'БашняСнаружи3' },
+
+  /* ============================================================
+     ИЗМЕНЕНИЕ: добавлен спрайт Миры во все три пассажа у башни
+     ============================================================ */
+  БашняСнаружи: {
+    location: 'tower',
+    sprites: [
+      { name: 'tower_outside', pos: 'right' },
+      { name: 'mira', pos: 'left' }
+    ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Перед вами вздымалась Башня Светлячков — величественное сооружение из белого резного известняка, увитое цветущим плющом. На самом верху под стеклянным куполом замер гигантский хрустальный шар, лишённый привычного золотистого сияния.<br><br>Массивные дубовые двери были заперты. На бронзовой накладке замка выделялся циферблат с четырьмя дисками, на которых были выбиты стихийные знаки: Солнце, Ветер, Вода и Росток.`,
+    next: 'БашняСнаружи2'
+  },
+  БашняСнаружи2: {
+    location: 'tower',
+    sprites: [
+      { name: 'tower_outside', pos: 'right' },
+      { name: 'mira', pos: 'left' }
+    ],
+    speaker: 'Рассказчик', boxClass: 'mira',
+    text: `Мира провела пальцем по желобкам замка.`,
+    next: 'БашняСнаружи3'
+  },
   БашняСнаружи3: {
     location: 'tower',
-    sprites: [ { name: 'tower_outside', pos: 'solo' } ],
+    sprites: [
+      { name: 'tower_outside', pos: 'right' },
+      { name: 'mira', pos: 'left' }
+    ],
     speaker: 'Мира', boxClass: 'mira',
     text: `— Загадка гильдии архитекторов! Смотри, тут надпись: «Лишь союз тепла и движения пробудит спящий свет». Что крутить будем?`,
     choices: [
@@ -839,6 +864,8 @@ const PASSAGES = {
       { text: 'Осмотреть окрестности: вдруг есть другой проход?', to: 'ОсмотрСтенБашни' }
     ]
   },
+  /* ============================================================ */
+
   ДверьОткрыта: { location: 'tower', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Щёлк-щёлк-клац! Медные шестерни внутри створки весело зажужжали. Тяжёлые дубовые двери плавно распахнулись внутрь, пропуская вас в прохладный холл башни.`, set: { door_opened: true }, next: 'ВнутриБашни' },
   ДверьОшибкаДобро: { location: 'tower', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы поворачиваете диски на Воду и Росток. Замок издаёт мелодичный перелив, похожий на звон колокольчика, и из маленького сопла над дверью на вас брызгает освежающая струйка чистой родниковой воды с ароматом мяты!<br><br>Мира от неожиданности взвизгивает, а потом весело смеётся, вытирая лицо рукавом.`, next: 'ДверьОшибкаДобро2' },
   ДверьОшибкаДобро2: { location: 'tower', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Освежает! Механизм вежливый: вместо ядовитых стрел — умывание для рассеянных гостей. Но подсказка ведь гласила: «Тепло и движение»! Попробуем ещё раз?`, next: 'ДверьОткрыта' },
@@ -1117,7 +1144,7 @@ function renderPassage(id, addToHistory = true) {
   if (speakerKey && activeSprites[speakerKey]) setActiveSprite(speakerKey);
   else if (wantedNames.length > 0) deactivateAllSprites();
 
-  // Навигация: только жёлтые кнопки выбора. Кнопки «Дальше» больше нет.
+  // Навигация: только жёлтые кнопки выбора. Кнопки «Дальше» нет.
   let navHTML = '';
   if (passage.choices && passage.choices.length > 0) {
     navHTML = '<div class="choice-box">' + passage.choices.map(c => `<a data-to="${c.to}">${c.text}</a>`).join('') + '</div>';
@@ -1144,7 +1171,6 @@ function renderPassage(id, addToHistory = true) {
   const gameArea = document.getElementById('gameArea');
   gameArea.innerHTML = boxHTML + navHTML + gameMenuHTML;
 
-  // Клики по кнопкам выбора
   gameArea.querySelectorAll('[data-to]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -1297,11 +1323,9 @@ function init() {
   document.getElementById('btnBack').addEventListener('click', goBack);
   document.getElementById('btnForward').addEventListener('click', goForward);
 
-  // Клик по слою — «дальше»
   const clickLayerEl = document.getElementById('clickLayer');
   if (clickLayerEl) clickLayerEl.addEventListener('click', advance);
 
-  // Клик по диалоговому окну — тоже «дальше»
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.dialogue-box')) return;
     if (e.target.closest('[data-to]')) return;
