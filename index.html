@@ -19,12 +19,14 @@ html, body {
   overflow: hidden;
 }
 
-/* ===== ФОН ===== */
+/* ===== ФОН (на всю высоту экрана) ===== */
 .bg-layer {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 35vh;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
   background-size: 100% 100%;
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
   background-color: #0a0a14;
   z-index: 1;
@@ -32,7 +34,9 @@ html, body {
 }
 .vignette-layer {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 35vh;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   z-index: 2;
   background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
@@ -48,7 +52,7 @@ html, body {
 }
 .sprite {
   position: absolute;
-  bottom: 20vh;
+  bottom: 22vh;
   height: 75vh;
   max-height: 900px;
   min-height: 300px;
@@ -113,12 +117,13 @@ html, body {
   100% { transform: translateX(var(--tx,-50%)) translateY(0) scale(var(--sc,1)); }
 }
 
-/* ===== ДИАЛОГОВОЕ ОКНО ===== */
+/* ===== ДИАЛОГОВОЕ ОКНО (стало выше) ===== */
 .dialogue-box {
   position: fixed;
   bottom: 0; left: 0; right: 0;
   width: 100vw;
-  max-height: 35vh;
+  height: 40vh;
+  max-height: 40vh;
   overflow: hidden;
   background: linear-gradient(180deg, rgba(20,15,10,0.92) 0%, rgba(10,8,5,0.95) 100%);
   border-top: 3px solid rgba(244,197,66,0.95);
@@ -196,10 +201,10 @@ html, body {
 .dialogue-box.final-box { background: linear-gradient(180deg, rgba(40,35,15,0.92) 0%, rgba(20,18,8,0.95) 100%); border-top-color: rgba(255,215,0,1); box-shadow: 0 -10px 70px rgba(255,215,0,0.5); }
 .dialogue-box.final-box .speaker-name { background: linear-gradient(180deg, rgba(255,215,0,1) 0%, rgba(200,150,20,1) 100%); color: #2A1500; }
 
-/* ===== КНОПКИ ВЫБОРА ===== */
+/* ===== КНОПКИ ВЫБОРА (подняты над окном) ===== */
 .choice-box {
   position: fixed;
-  bottom: 37vh;
+  bottom: 42vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 101;
@@ -238,10 +243,10 @@ html, body {
   box-shadow: 0 12px 35px rgba(255,200,100,0.7);
 }
 
-/* ===== КНОПКА "ДАЛЬШЕ" ===== */
+/* ===== КНОПКА "ДАЛЬШЕ" (поднята над окном) ===== */
 .next-box {
   position: fixed;
-  bottom: 37vh;
+  bottom: 42vh;
   right: 3vw;
   width: 10vw;
   max-width: 150px;
@@ -514,13 +519,12 @@ html, body {
 
 /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ===== */
 @media (max-width: 768px) {
-  .bg-layer, .vignette-layer { bottom: 42vh; }
-  .dialogue-box { max-height: 42vh; }
+  .dialogue-box { height: 45vh; max-height: 45vh; }
   .speaker-name { font-size: 4vw; min-width: 130px; margin-left: 3vw; }
   .dialogue-text { font-size: 3.5vw; padding: 1.5vh 4vw; }
-  .choice-box { bottom: 44vh; width: 88%; }
+  .choice-box { bottom: 47vh; width: 88%; }
   .choice-box a { padding: 12px 16px; font-size: 13px; }
-  .next-box { bottom: 44vh; right: 3vw; width: 22vw; min-width: 90px; }
+  .next-box { bottom: 47vh; right: 3vw; width: 22vw; min-width: 90px; }
   .next-box a { font-size: 3.2vw; }
   .sprite { height: 60vh; max-width: 55vw; bottom: 25vh; }
   .sprite.pos-left { left: 24%; }
@@ -1483,7 +1487,6 @@ function startMusic() {
     p.then(() => {
       musicStarted = true;
     }).catch(() => {
-      // Автоплей заблокирован — ждём первого клика/клавиши
       const kick = () => {
         bgMusic.play().then(() => {
           musicStarted = true;
@@ -2025,17 +2028,13 @@ function init() {
   loadEndingsFromStorage();
   loadSettings();
 
-  // Применяем загруженную громкость
   if (bgMusic) bgMusic.volume = gameState.settings.musicVolume;
 
-  // Запускаем музыку
   startMusic();
 
-  // Кнопки истории
   document.getElementById('btnBack').addEventListener('click', goBack);
   document.getElementById('btnForward').addEventListener('click', goForward);
 
-  // Клавиатура
   document.addEventListener('keydown', ev => {
     const tag = (ev.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
@@ -2044,14 +2043,12 @@ function init() {
     else if (ev.key === 'ArrowRight') { ev.preventDefault(); goForward(); }
   });
 
-  // Модальное окно — закрытие по клику на фон
   document.getElementById('modalOverlay').addEventListener('click', ev => {
     if (ev.target.id === 'modalOverlay') {
       ev.target.classList.add('hidden');
     }
   });
 
-  // Старт
   renderPassage('title', false);
 }
 
