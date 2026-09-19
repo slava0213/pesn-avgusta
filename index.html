@@ -39,10 +39,10 @@ html, body {
   height: 100vh;
   pointer-events: none;
   z-index: 2;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%);
 }
 
-/* ===== СПРАЙТЫ (уходят под окно) ===== */
+/* ===== СПРАЙТЫ — полноэкранные, уходят за окно ===== */
 .sprite-stage {
   position: fixed;
   top: 0; left: 0;
@@ -53,11 +53,11 @@ html, body {
 .sprite {
   position: absolute;
   bottom: 0;
-  height: 90vh;
-  max-height: 1100px;
+  height: 95vh;
+  max-height: 1200px;
   min-height: 400px;
   width: auto;
-  max-width: 45vw;
+  max-width: 50vw;
   object-fit: contain;
   pointer-events: none;
   transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -65,7 +65,7 @@ html, body {
               opacity 0.4s ease-out,
               left 0.6s ease-out,
               right 0.6s ease-out;
-  filter: drop-shadow(0 0 15px rgba(0,0,0,0.7)) contrast(1.1) brightness(1.05);
+  filter: drop-shadow(0 0 15px rgba(0,0,0,0.7)) contrast(1.05) brightness(1.05);
   opacity: 1;
   will-change: transform, filter, opacity;
 }
@@ -92,8 +92,8 @@ html, body {
   animation: spriteJump 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .sprite.inactive {
-  opacity: 0.85;
-  filter: drop-shadow(0 0 12px rgba(0,0,0,0.7)) brightness(0.75) saturate(0.8);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 12px rgba(0,0,0,0.7)) brightness(0.7) saturate(0.75);
   z-index: 5;
 }
 .sprite.entering {
@@ -117,60 +117,70 @@ html, body {
   100% { transform: translateX(var(--tx,-50%)) translateY(0) scale(var(--sc,1)); }
 }
 
-/* ===== ДИАЛОГОВОЕ ОКНО ===== */
+/* ============================================
+   ДИАЛОГОВОЕ ОКНО — «плашка снизу» как в VN
+   ============================================ */
 .dialogue-box {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
-  width: 100vw;
-  max-height: 45vh;
-  overflow: visible;
-  background: linear-gradient(180deg, rgba(20,15,10,0.92) 0%, rgba(10,8,5,0.95) 100%);
-  border-top: 3px solid rgba(244,197,66,0.95);
-  box-shadow: 0 -10px 50px rgba(0,0,0,0.7), inset 0 1px 0 rgba(244,197,66,0.3);
-  backdrop-filter: blur(10px);
+  bottom: 3vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88vw;
+  max-width: 1400px;
+  max-height: 40vh;
+  overflow: hidden;
+  background: rgba(15, 12, 8, 0.72);
+  border: 2px solid rgba(255, 240, 200, 0.55);
+  border-radius: 4px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
   z-index: 100;
   display: flex;
   flex-direction: column;
-  animation: dialogueIn 0.5s ease-out;
+  animation: dialogueIn 0.4s ease-out;
 }
 @keyframes dialogueIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
+
+/* Имя говорящего — маленькая плашка СЛЕВА, чуть выше окна */
 .speaker-name {
-  display: flex;
+  position: absolute;
+  top: -1.9em;
+  left: 0;
+  display: inline-flex;
   align-items: center;
-  min-width: 160px;
-  max-width: 280px;
-  height: 4.5vh;
-  min-height: 32px;
-  padding: 0 1.5vw;
-  background: linear-gradient(180deg, rgba(217,119,6,0.95) 0%, rgba(180,83,9,0.95) 100%);
+  height: 1.9em;
+  padding: 0 1.2em;
+  background: rgba(15, 12, 8, 0.85);
   color: #FFF8E7;
-  font-size: 1.4vw;
+  font-size: 1.5vw;
   font-weight: bold;
-  border-radius: 0 0 6px 0;
-  border-right: 3px solid rgba(244,197,66,0.9);
-  border-bottom: 3px solid rgba(244,197,66,0.9);
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+  border: 2px solid rgba(255, 240, 200, 0.55);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
   letter-spacing: 1.5px;
-  margin-left: 2vw;
-  flex-shrink: 0;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+  white-space: nowrap;
+  pointer-events: none;
 }
+
+/* Текст диалога */
 .dialogue-text {
   width: 100%;
-  color: #f0e6d2;
-  font-size: 1.2vw;
-  line-height: 1.7;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-  padding: 1.5vh 3vw;
+  color: #f4ecd6;
+  font-size: 1.5vw;
+  line-height: 1.5;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  padding: 2.2vh 2.4vw 2.4vh 2.4vw;
   overflow-y: auto;
-  border-top: 1px solid rgba(244,197,66,0.3);
-  max-height: 32vh;
+  max-height: 34vh;
+  letter-spacing: 0.3px;
 }
 .type-cursor {
   display: inline-block;
-  color: #FFD700;
+  color: #FFE9A8;
   animation: cursorBlink 0.8s steps(2, start) infinite;
   font-weight: bold;
 }
@@ -179,27 +189,29 @@ html, body {
   50%      { opacity: 0; }
 }
 
-/* Типы диалогов */
-.dialogue-box.narrator { background: linear-gradient(180deg, rgba(30,25,15,0.92) 0%, rgba(15,12,8,0.95) 100%); }
-.dialogue-box.narrator .speaker-name { background: linear-gradient(180deg, rgba(180,130,40,0.95) 0%, rgba(140,100,30,0.95) 100%); }
-.dialogue-box.mira { background: linear-gradient(180deg, rgba(45,25,10,0.92) 0%, rgba(25,15,5,0.95) 100%); border-top-color: rgba(230,126,34,0.95); }
-.dialogue-box.mira .speaker-name { background: linear-gradient(180deg, rgba(230,126,34,0.95) 0%, rgba(200,100,20,0.95) 100%); }
-.dialogue-box.bruno { background: linear-gradient(180deg, rgba(30,30,30,0.92) 0%, rgba(15,15,15,0.95) 100%); border-top-color: rgba(150,150,150,0.95); }
-.dialogue-box.bruno .speaker-name { background: linear-gradient(180deg, rgba(100,100,100,0.95) 0%, rgba(70,70,70,0.95) 100%); }
-.dialogue-box.shustik { background: linear-gradient(180deg, rgba(15,35,20,0.92) 0%, rgba(8,20,12,0.95) 100%); border-top-color: rgba(80,200,100,0.95); }
-.dialogue-box.shustik .speaker-name { background: linear-gradient(180deg, rgba(60,160,80,0.95) 0%, rgba(40,120,60,0.95) 100%); }
-.dialogue-box.selesta { background: linear-gradient(180deg, rgba(30,20,40,0.92) 0%, rgba(18,12,25,0.95) 100%); border-top-color: rgba(150,110,200,0.95); }
-.dialogue-box.selesta .speaker-name { background: linear-gradient(180deg, rgba(130,90,180,0.95) 0%, rgba(100,70,140,0.95) 100%); }
-.dialogue-box.cornelius { background: linear-gradient(180deg, rgba(15,25,45,0.92) 0%, rgba(8,15,30,0.95) 100%); border-top-color: rgba(70,110,200,0.95); }
-.dialogue-box.cornelius .speaker-name { background: linear-gradient(180deg, rgba(60,100,180,0.95) 0%, rgba(40,70,140,0.95) 100%); }
-.dialogue-box.august { background: linear-gradient(180deg, rgba(60,45,10,0.92) 0%, rgba(35,25,5,0.95) 100%); border-top-color: rgba(255,200,50,1); box-shadow: 0 -10px 60px rgba(255,200,50,0.4), inset 0 1px 0 rgba(255,220,100,0.4); }
-.dialogue-box.august .speaker-name { background: linear-gradient(180deg, rgba(255,200,50,1) 0%, rgba(220,160,20,1) 100%); color: #2A1500; }
-.dialogue-box.olven { background: linear-gradient(180deg, rgba(40,32,18,0.92) 0%, rgba(22,18,10,0.95) 100%); border-top: 3px dashed rgba(160,120,60,0.95); }
-.dialogue-box.olven .speaker-name { background: linear-gradient(180deg, rgba(140,100,50,0.95) 0%, rgba(110,80,40,0.95) 100%); }
-.dialogue-box.final-box { background: linear-gradient(180deg, rgba(40,35,15,0.92) 0%, rgba(20,18,8,0.95) 100%); border-top-color: rgba(255,215,0,1); box-shadow: 0 -10px 70px rgba(255,215,0,0.5); }
-.dialogue-box.final-box .speaker-name { background: linear-gradient(180deg, rgba(255,215,0,1) 0%, rgba(200,150,20,1) 100%); color: #2A1500; }
+/* Цветные рамки для разных персонажей — тонкая полоска сверху */
+.dialogue-box.narrator { border-color: rgba(220, 200, 140, 0.55); }
+.dialogue-box.narrator .speaker-name { border-color: rgba(220, 200, 140, 0.55); }
+.dialogue-box.mira { border-color: rgba(255, 170, 80, 0.75); box-shadow: 0 8px 30px rgba(0,0,0,0.7), 0 0 24px rgba(255,170,80,0.25); }
+.dialogue-box.mira .speaker-name { border-color: rgba(255, 170, 80, 0.75); color: #FFD9A0; }
+.dialogue-box.bruno { border-color: rgba(180, 180, 180, 0.7); }
+.dialogue-box.bruno .speaker-name { border-color: rgba(180, 180, 180, 0.7); color: #DCDCDC; }
+.dialogue-box.shustik { border-color: rgba(120, 220, 140, 0.75); }
+.dialogue-box.shustik .speaker-name { border-color: rgba(120, 220, 140, 0.75); color: #B8F0C4; }
+.dialogue-box.selesta { border-color: rgba(200, 150, 240, 0.75); }
+.dialogue-box.selesta .speaker-name { border-color: rgba(200, 150, 240, 0.75); color: #E4CFFF; }
+.dialogue-box.cornelius { border-color: rgba(130, 170, 240, 0.75); }
+.dialogue-box.cornelius .speaker-name { border-color: rgba(130, 170, 240, 0.75); color: #C7DCFF; }
+.dialogue-box.august { border-color: rgba(255, 220, 90, 0.9); box-shadow: 0 8px 30px rgba(0,0,0,0.7), 0 0 30px rgba(255,220,90,0.35); }
+.dialogue-box.august .speaker-name { border-color: rgba(255, 220, 90, 0.9); color: #FFEEA0; }
+.dialogue-box.olven { border-color: rgba(200, 170, 100, 0.85); border-style: dashed; }
+.dialogue-box.olven .speaker-name { border-color: rgba(200, 170, 100, 0.85); border-style: dashed; border-bottom: none; color: #F0E0B0; }
+.dialogue-box.final-box { border-color: rgba(255, 230, 120, 1); box-shadow: 0 8px 30px rgba(0,0,0,0.7), 0 0 40px rgba(255,230,120,0.5); }
+.dialogue-box.final-box .speaker-name { border-color: rgba(255, 230, 120, 1); color: #FFEEA0; }
 
-/* ===== КНОПКИ ВЫБОРА — по центру экрана ===== */
+/* ============================================
+   КНОПКИ ВЫБОРА — плашки в центре экрана
+   ============================================ */
 .choice-box {
   position: fixed;
   top: 50%;
@@ -208,75 +220,107 @@ html, body {
   z-index: 150;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: 60%;
-  max-width: 700px;
-  animation: choicesIn 0.6s ease-out 0.3s backwards;
+  gap: 6px;
+  width: 62vw;
+  max-width: 780px;
+  animation: choicesIn 0.5s ease-out 0.15s backwards;
 }
 @keyframes choicesIn {
-  from { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
+  from { opacity: 0; transform: translate(-50%, -50%) translateY(12px); }
   to   { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
 }
 .choice-box a {
+  position: relative;
   width: 100%;
   display: block;
   text-align: center;
-  padding: 16px 24px;
-  background: linear-gradient(180deg, rgba(251,191,36,0.92) 0%, rgba(217,119,6,0.92) 100%);
-  color: #2A1500;
-  border: 3px solid rgba(180,83,9,0.95);
-  border-radius: 6px;
+  padding: 12px 60px 12px 24px;   /* справа оставляем место под чек-бокс */
+  background: rgba(240, 232, 210, 0.88);
+  color: #1c1610;
+  border: 2px solid rgba(60, 40, 20, 0.55);
+  border-radius: 2px;
   text-decoration: none;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 1.15vw;
+  font-weight: normal;
+  font-family: 'Georgia', serif;
   line-height: 1.3;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+  letter-spacing: 0.3px;
 }
 .choice-box a:hover {
-  background: linear-gradient(180deg, rgba(252,211,77,1) 0%, rgba(245,158,11,1) 100%);
-  color: #1a0d00;
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 12px 35px rgba(255,200,100,0.7);
+  background: rgba(255, 248, 230, 0.98);
+  border-color: rgba(120, 80, 30, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+/* Чек-бокс справа */
+.choice-box a::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(60, 40, 20, 0.75);
+  background: rgba(255,255,255,0.5);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
+}
+/* Галочка на hover */
+.choice-box a:hover::after {
+  background: rgba(255,255,255,0.9);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.9);
+}
+.choice-box a:hover::before {
+  content: '✓';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-52%);
+  font-size: 16px;
+  font-weight: bold;
+  color: #2a1c08;
+  z-index: 1;
 }
 
-/* ===== КНОПКА "ДАЛЬШЕ" — по центру справа ===== */
+/* ===== КНОПКА "ДАЛЬШЕ" — маленькая снизу справа от окна ===== */
 .next-box {
   position: fixed;
-  top: 50%;
-  right: 3vw;
-  transform: translateY(-50%);
-  width: 10vw;
-  max-width: 150px;
+  bottom: 5vh;
+  right: 4vw;
+  width: auto;
   min-width: 100px;
   z-index: 150;
-  animation: nextBoxIn 0.6s ease-out 0.4s backwards;
+  animation: nextBoxIn 0.4s ease-out 0.2s backwards;
 }
 @keyframes nextBoxIn {
-  from { opacity: 0; transform: translateY(-50%) translateY(15px); }
-  to   { opacity: 1; transform: translateY(-50%) translateY(0); }
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 .next-box a {
-  display: block;
-  background: linear-gradient(180deg, rgba(110,231,183,0.95) 0%, rgba(16,185,129,0.95) 100%);
-  color: #064E3B;
-  padding: 1.2vh 1vw;
-  border-radius: 6px;
-  border: 0.2vw solid rgba(5,150,105,0.95);
+  display: inline-block;
+  background: rgba(240, 232, 210, 0.88);
+  color: #1c1610;
+  padding: 10px 22px;
+  border-radius: 2px;
+  border: 2px solid rgba(60, 40, 20, 0.55);
   text-decoration: none;
-  font-size: 1.1vw;
+  font-size: 1vw;
   font-weight: bold;
+  font-family: 'Georgia', serif;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(16,185,129,0.5);
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.4);
   letter-spacing: 1px;
 }
 .next-box a:hover {
-  background: linear-gradient(180deg, rgba(167,243,208,1) 0%, rgba(52,211,153,1) 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(16,185,129,0.8);
+  background: rgba(255, 248, 230, 0.98);
+  border-color: rgba(120, 80, 30, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
 }
 
 /* ===== КНОПКИ ИСТОРИИ ===== */
@@ -288,26 +332,28 @@ html, body {
   z-index: 300;
 }
 .history-btn {
-  width: 50px; height: 50px;
+  width: 46px; height: 46px;
   border-radius: 50%;
-  border: 3px solid rgba(180,83,9,0.95);
-  background: linear-gradient(180deg, rgba(251,191,36,0.95) 0%, rgba(217,119,6,0.95) 100%);
-  color: #2A1500;
-  font-size: 22px;
+  border: 2px solid rgba(255, 240, 200, 0.6);
+  background: rgba(15, 12, 8, 0.7);
+  color: #F4ECD6;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   padding: 0;
+  backdrop-filter: blur(6px);
 }
 .history-btn:hover:not(:disabled) {
-  transform: translateY(-3px) scale(1.1);
-  box-shadow: 0 8px 25px rgba(255,200,100,0.7);
+  transform: translateY(-2px) scale(1.08);
+  background: rgba(30, 24, 16, 0.85);
+  border-color: rgba(255, 240, 200, 0.9);
 }
-.history-btn:disabled { opacity: 0.35; cursor: not-allowed; filter: grayscale(0.7); }
+.history-btn:disabled { opacity: 0.35; cursor: not-allowed; filter: grayscale(0.5); }
 
 /* ===== ИГРОВОЕ МЕНЮ ===== */
 .game-menu {
@@ -319,24 +365,26 @@ html, body {
   z-index: 300;
 }
 .game-menu button {
-  width: 50px;
-  height: 50px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  border: 3px solid rgba(180,83,9,0.95);
-  background: linear-gradient(180deg, rgba(251,191,36,0.95) 0%, rgba(217,119,6,0.95) 100%);
-  color: #2A1500;
-  font-size: 22px;
+  border: 2px solid rgba(255, 240, 200, 0.6);
+  background: rgba(15, 12, 8, 0.7);
+  color: #F4ECD6;
+  font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   padding: 0;
+  backdrop-filter: blur(6px);
 }
 .game-menu button:hover {
-  transform: translateY(-3px) scale(1.1);
-  box-shadow: 0 8px 25px rgba(255,200,100,0.7);
+  transform: translateY(-2px) scale(1.08);
+  background: rgba(30, 24, 16, 0.85);
+  border-color: rgba(255, 240, 200, 0.9);
 }
 
 /* ===== ТИТУЛЬНЫЙ ЭКРАН ===== */
@@ -390,24 +438,24 @@ html, body {
 }
 .title-menu button {
   display: block;
-  background: linear-gradient(180deg, rgba(251,191,36,0.95) 0%, rgba(217,119,6,0.95) 100%);
-  color: #2A1500;
+  background: rgba(240, 232, 210, 0.92);
+  color: #1c1610;
   padding: 14px 22px;
-  border-radius: 4px;
-  border: 3px solid rgba(180,83,9,0.95);
+  border-radius: 2px;
+  border: 2px solid rgba(60, 40, 20, 0.6);
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
   font-family: inherit;
   text-align: center;
   letter-spacing: 1.5px;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
 }
 .title-menu button:hover:not(:disabled) {
-  background: linear-gradient(180deg, rgba(252,211,77,1) 0%, rgba(245,158,11,1) 100%);
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 12px 30px rgba(255,200,100,0.7);
+  background: rgba(255, 248, 230, 1);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.6);
 }
 .title-menu button:disabled {
   opacity: 0.4;
@@ -507,38 +555,34 @@ html, body {
   letter-spacing: 1px;
 }
 .modal button:hover { background: linear-gradient(180deg, #57c, #258); }
-.modal button.danger { background: linear-gradient(180deg, #911, #600); border-color: #c33; }
-.modal button.danger:hover { background: linear-gradient(180deg, #c33, #811); }
 
 /* ===== СКРОЛЛБАР ===== */
 .dialogue-text::-webkit-scrollbar,
 .modal::-webkit-scrollbar { width: 8px; }
 .dialogue-text::-webkit-scrollbar-track,
-.modal::-webkit-scrollbar-track { background: rgba(255,243,196,0.2); }
+.modal::-webkit-scrollbar-track { background: rgba(255,243,196,0.15); }
 .dialogue-text::-webkit-scrollbar-thumb,
 .modal::-webkit-scrollbar-thumb { background: #FBBF24; border-radius: 4px; }
-.dialogue-text::-webkit-scrollbar-thumb:hover,
-.modal::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
 
 /* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ===== */
 @media (max-width: 768px) {
-  .dialogue-box { max-height: 55vh; }
-  .speaker-name { font-size: 4vw; min-width: 130px; margin-left: 3vw; }
-  .dialogue-text { font-size: 3.5vw; padding: 1.5vh 4vw; max-height: 40vh; }
-  .choice-box { width: 88%; }
-  .choice-box a { padding: 12px 16px; font-size: 13px; }
-  .next-box { width: 22vw; min-width: 90px; }
-  .next-box a { font-size: 3.2vw; }
-  .sprite { height: 70vh; max-width: 60vw; bottom: 0; }
-  .sprite.pos-left { left: 24%; }
-  .sprite.pos-right { right: 24%; }
+  .dialogue-box { width: 92vw; bottom: 2vh; max-height: 50vh; }
+  .speaker-name { font-size: 4vw; padding: 0 0.9em; height: 1.7em; top: -1.7em; }
+  .dialogue-text { font-size: 3.6vw; padding: 2vh 4vw; max-height: 42vh; }
+  .choice-box { width: 90vw; }
+  .choice-box a { padding: 12px 50px 12px 16px; font-size: 3.2vw; }
+  .choice-box a::after { width: 16px; height: 16px; right: 12px; }
+  .next-box { bottom: 3vh; right: 3vw; }
+  .next-box a { font-size: 3.2vw; padding: 10px 16px; }
+  .sprite { height: 75vh; max-width: 70vw; }
+  .sprite.pos-left { left: 26%; }
+  .sprite.pos-right { right: 26%; }
   .title-main { font-size: 34px; letter-spacing: 2px; }
   .title-sub { font-size: 13px; letter-spacing: 2px; }
   .title-menu { width: 240px; }
   .title-menu button { font-size: 13px; padding: 10px 14px; }
   .title-endings { font-size: 13px; padding: 10px 20px; bottom: 16vh; }
-  .history-btn { width: 42px; height: 42px; font-size: 18px; }
-  .game-menu button { width: 42px; height: 42px; font-size: 18px; }
+  .history-btn, .game-menu button { width: 40px; height: 40px; font-size: 17px; }
 }
 
 .hidden { display: none !important; }
@@ -546,26 +590,19 @@ html, body {
 </head>
 <body>
 
-<!-- Музыка -->
 <audio id="bgMusic" loop preload="auto" src="audio/main_theme.mp3"></audio>
 
-<!-- Фон и виньетка -->
 <div class="bg-layer" id="bgLayer"></div>
 <div class="vignette-layer"></div>
-
-<!-- Сцена для спрайтов -->
 <div class="sprite-stage" id="spriteStage"></div>
 
-<!-- Кнопки истории -->
 <div class="history-controls" id="historyControls" style="display:none;">
   <button class="history-btn" id="btnBack" title="Назад (←)">←</button>
   <button class="history-btn" id="btnForward" title="Вперёд (→)">→</button>
 </div>
 
-<!-- Игровая зона -->
 <div id="gameArea"></div>
 
-<!-- Модальное окно -->
 <div class="modal-overlay hidden" id="modalOverlay">
   <div class="modal" id="modalContent"></div>
 </div>
@@ -672,7 +709,6 @@ const PASSAGES = {
   РазговорСМирой2: { location: 'start', sprites: [ { name: 'player', pos: 'left' }, { name: 'mira', pos: 'right' } ], speaker: 'Вы', boxClass: 'narrator', text: `Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`, next: 'РазговорСМирой3' },
   РазговорСМирой3: { location: 'start', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира фыркнула и театрально постучала медным ключом по ладони.`, next: 'РазговорСМирой4' },
   РазговорСМирой4: { location: 'start', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Или у Корнелиуса снова заржавел механизм для колки орехов? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?`, next: 'ПисьмоОлвена' },
-
   СтарыйМост: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно. Его хвост с кисточкой мирно покачивался в воздухе.<br><br>Услышав ваши шаги, Бруно приоткрыл один янтарный глаз и зевнул так широко, что обнажились гладкие кремневые зубы.`, next: 'СтарыйМост2' },
   СтарыйМост2: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Бруно', boxClass: 'bruno', text: `Ба, знакомые лица! — пробасил он гулким голосом, похожим на перекатывание гальки. Куда путь держите в такой важный день? Уж не к маяку ли?`, next: 'СтарыйМост3' },
   СтарыйМост3: { location: 'most', sprites: [ { name: 'mira', pos: 'right' }, { name: 'bruno', pos: 'left' } ], speaker: 'Мира', boxClass: 'mira', text: `Именно туда, Бруно, — шагнула вперёд Мира. Время не ждёт, солнце перевалило за полдень. Пропустишь нас без долгих церемоний?`, next: 'СтарыйМост4' },
@@ -716,7 +752,6 @@ const PASSAGES = {
       { text: 'Угостить Бруно медовым лакомством', to: 'МостУгощение' }
     ]
   },
-
   ГрибнаяТропа: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Грибная тропа встретила вас мягким сумраком древних дубов и прохладой. Под ногами ковром стелился изумрудный мох, а вдоль стволов мягко мерцали фосфорные шляпки опят-фонариков, издавая тихое, баюкающее потрескивание.<br><br>Впереди, на развилке трёх корней, послышался отчаянный писк.<br><br>Крошечный лесной дух Шустик, похожий на ожившую пушистую еловую шишку в фетровом зелёном колпачке, дёргал за ручку крохотную тележку. Колесо тележки намертво заклинило между толстыми узловатыми корнями спящего древа-великана, а в кузове лежали мешочки с пыльцой.`, next: 'ГрибнаяТропа2' },
   ГрибнаяТропа2: {
     location: 'tropa',
@@ -742,7 +777,6 @@ const PASSAGES = {
   ГрибыМагия3: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Шустик', boxClass: 'shustik', text: `Вот это чудеса! Ты умеешь разговаривать с великанами! Спасибо тебе, Хранитель!`, next: 'ГрибыМагия4' },
   ГрибыМагия4: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'shustik', text: `Дух подбежал к вам и с поклоном протянул сияющую щепоть.`, next: 'ГрибыМагия5' },
   ГрибыМагия5: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Шустик', boxClass: 'shustik', text: `Возьми Пыльцу Звёздных Светляков. Её собирали семь полнолуний! Если её увидит Август — у него сразу запоёт сердце! А ещё я покажу вам старую калитку в скале под башней — срежете полсотни крутых ступенек!`, set: { has_pollen: true, has_secret_door: true }, next: 'ТайныйВход' },
-
   ЛавкаСелесты: { location: 'lavka', sprites: [ { name: 'selesta', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы решаете не спешить вслепую и сворачиваете на улочку Травников к круглому домику бабушки Селесты. Над дверью колышутся пучки вереска и лаванды, а из трубы поднимается синий дымок с ароматом корицы.<br><br>Селеста, сухонькая старушка с добрыми лучистыми глазами, как раз поливала подоконные колокольчики.`, next: 'ЛавкаСелесты2' },
   ЛавкаСелесты2: { location: 'lavka', sprites: [ { name: 'selesta', pos: 'solo' } ], speaker: 'Бабушка Селеста', boxClass: 'selesta', text: `Батюшки, юные мастера! — всплеснула она руками. — Беда с маяком, весь посёлок гудит! Чуяло моё сердце: Август вчера вечером слишком грустно пел. Вы на маяк?`, next: 'ЛавкаСелесты3' },
   ЛавкаСелесты3: { location: 'lavka', sprites: [ { name: 'mira', pos: 'right' }, { name: 'selesta', pos: 'left' } ], speaker: 'Мира', boxClass: 'mira', text: `Да, бабушка Селеста, — отвечает Мира. — Нам нужно оживить резонатор.`, next: 'ЛавкаСелесты4' },
@@ -757,9 +791,7 @@ const PASSAGES = {
       { text: 'Поблагодарить и пойти короткой Грибной тропой', to: 'ГрибнаяТропа' }
     ]
   },
-
   ТайныйВход: { location: 'tower', sprites: [ { name: 'tower_inside', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Шустик привёл вас к незаметному гроту в скале, замаскированному диким виноградом. Маленькая дубовая дверца легко поддалась нажатию тайного сучка.<br><br>Вы поднимаетесь по вырубленной в камне винтовой лестнице и выходите прямо в просторный центральный зал Башни.`, next: 'ВнутриБашни' },
-
   ВнутриБашни: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Главный зал башни поражал размахом: спиральная лестница взмывала под самый стеклянный свод. В воздухе летали редкие крошечные искорки света.<br><br>В центре зала, у подножия огромного постамента со сложной системой вращающихся хрустальных призм, в панике метался старый смотритель башни — господин Корнелиус. Его длинная седая борода была завязана узлом, круглые очки с тремя парами увеличительных стёкол сползли на кончик носа, а в руках дрожала маслёнка.<br><br>На круглом постаменте, свернувшись калачиком в шёлковом гнезде, спал Август — сказочный Звёздный Светляк размером с доброго сенбернара. Его стрекозиные крылья отливали тусклым перламутром, усики печально поникли, а из носика вылетали крошечные сонные пузыри.`, next: 'Корнелиус1' },
   Корнелиус1: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Корнелиус', boxClass: 'cornelius', text: `Беда! Катастрофа долины! — причитал Корнелиус, не замечая вашего приближения. — Фестиваль через два часа, а наш золотой мальчик спит без задних лапок! Колокола заглохли, шестерни застряли, нектар скис!`, next: 'Корнелиус2' },
   Корнелиус2: { location: 'tower_inside', sprites: [ { name: 'mira', pos: 'right' }, { name: 'cornelius', pos: 'left' } ], speaker: 'Мира', boxClass: 'mira', text: `Господин Корнелиус, спокойствие! — громко и уверенно позвала Мира. — Олвен прислал подкрепление!`, next: 'Корнелиус3' },
@@ -784,7 +816,6 @@ const PASSAGES = {
   ОсмотрАвгуста1: { location: 'tower_inside', sprites: [ { name: 'august', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы осторожно поднимаетесь по ступеням к шёлковому гнезду. Звёздный Светляк невероятно красив: бархатная золотистая шёрстка на груди, тончайшие прозрачные крылья с прожилками из чистого серебра.<br><br>Вы тихонько проводите ладонью по его пушистой голове между усиками. Август издаёт тихий звук, похожий на мурлыканье котёнка, и приоткрывает огромный фиолетовый глаз. В его взгляде нет злобы — только лёгкая грусть и дремота.`, next: 'ОсмотрАвгуста2' },
   ОсмотрАвгуста2: { location: 'tower_inside', sprites: [ { name: 'august', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира подошла рядом.`, next: 'ОсмотрАвгуста3' },
   ОсмотрАвгуста3: { location: 'tower_inside', sprites: [ { name: 'august', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `Он просто ждёт праздника, как и все мы. Ему нужна музыка и немного заботы!`, set: { has_met_august: true }, next: 'ГлавнаяПочинка' },
-
   ГлавнаяПочинка: {
     location: 'tower_inside',
     sprites: [ { name: 'tower_hall', pos: 'solo' } ],
@@ -797,7 +828,6 @@ const PASSAGES = {
       { text: 'План 4: Полная синхронизация: объединить травы, музыку и точные механизмы', to: 'ФиналТриумф' }
     ]
   },
-
   БашняСнаружи: { location: 'tower', sprites: [ { name: 'tower_outside', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Перед вами вздымалась Башня Светлячков — величественное сооружение из белого резного известняка, увитое цветущим плющом. На самом верху под стеклянным куполом замер гигантский хрустальный шар, лишённый привычного золотистого сияния.<br><br>Массивные дубовые двери были заперты. На бронзовой накладке замка выделялся циферблат с четырьмя дисками, на которых были выбиты стихийные знаки: Солнце, Ветер, Вода и Росток.`, next: 'БашняСнаружи2' },
   БашняСнаружи2: { location: 'tower', sprites: [ { name: 'tower_outside', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира провела пальцем по желобкам замка.`, next: 'БашняСнаружи3' },
   БашняСнаружи3: {
@@ -839,12 +869,10 @@ const PASSAGES = {
     ]
   },
   ВзятьКлюч: { location: 'tower', sprites: [ { name: 'tik_tak', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы аккуратно отстёгиваете лёгкий латунный ключик. Тик-Так довольно мурлычет шестерёнками и решает пойти с вами, деловито семеня металлическими лапками по ступенькам вниз.`, set: { has_key: true }, next: 'ВнутриБашни' },
-
   ФиналМузыка: { location: 'final', sprites: [ { name: 'mira', pos: 'right' }, { name: 'august', pos: 'left' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы достаёте бронзовый камертон Олвена и ударяете по нему деревянным молоточком. Чистая хрустальная нота «Ми» повисает под сводами башни.<br><br>Вы осторожно смахиваете Пером Лазурной Сойки пылинки с серебряных лепестков колоколов. Колокола оживают! Их перезвон подхватывает лёгкий сквозняк, струящийся из открытых витражей.<br><br>Мелодия чиста, как горный родник. Август сладко зевает, потягивает лапки и встаёт во весь рост. Его крылья начинают трепетать с немыслимой скоростью, заливая весь зал мягким, ласковым медовым светом!<br><br>Корнелиус в восторге подпрыгивает, роняя очки:<br><br>— Поёт! Он снова поёт!`, next: 'КонецГармония' },
   ФиналНектар: { location: 'final', sprites: [ { name: 'mira', pos: 'right' }, { name: 'august', pos: 'left' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы берётесь за систему питания. Смешав горную родниковую воду, экстракт лаванды и капли от бабушки Селесты, вы заливаете золотистый сироп в хрустальную чашу резонатора.<br><br>Сладкий, неописуемо упоительный аромат свежих цветов и карамели заполняет купол башни.<br><br>Носик Августа забавно дёргается. Светляк шумно втягивает воздух, его глаза распахиваются, и с довольным урчанием он припадает к чаше. С каждым глотком его тельце начинает светиться всё ярче — от нежно-розового до ослепительного сапфирового и золотого огня!<br><br>Мира ловко подкручивает регулировочный вентиль:<br><br>— Подача стабильна! Давление в норме! Он готов взлетать!`, next: 'КонецМастерство' },
   ФиналМеханика: { location: 'final', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Мира берёт дело в свои руки! Вооружившись ключом на двенадцать, она заменяет соскочивший шарнир, а вы устанавливаете в оправу оптической оси найденный у моста Кристалл Кварца.<br><br>Все шестерёнки встают на свои места с идеальным, ласкающим слух кликом: *тик-так, тик-так*.<br><br>Механическая карусель оживает без единого скрипа. Зеркала выстраиваются в идеальную геометрическую спираль. Август, очарованный безупречной гармонией движения шестерёнок, с радостным жужжанием взмывает в центр конструкции, занимая своё законное место живого фокуса!<br><br>— Гениально! Чистая механика и никакой мистики! — сияет Мира от гордости.`, next: 'КонецНаука' },
   ФиналТриумф: { location: 'final', sprites: [ { name: 'player', pos: 'far-left' }, { name: 'mira', pos: 'center' }, { name: 'august', pos: 'far-right' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `— Делаем всё сразу и сообща! — объявляете вы.<br><br>Это было похоже на слаженный праздничный танец:<br><br>- Корнелиус сдувал пыльцу и подавал прокладки;<br>- Мира виртуозно крутила гайки, настраивая зеркала по чертежу Олвена;<br>- Вы наполнили чашу ароматным нектаром и настроили колокола на ноту праздника.<br><br>Когда Август сделал первый глоток целебного сиропа, над башней раздался торжественный хрустальный звон, чистый и звонкий, как утренняя роса. Светляк взмыл под самый стеклянный купол. Его сияние было настолько тёплым и мощным, что вокруг башни закружились хороводы сотен диких лесных светлячков, слетевшихся со всей рощи!<br><br>Шестерёнки плавно вращали линзы, музыка наполняла воздух, а кот Тик-Так с упоением бил металлической лапкой по звенящему противовесу.`, next: 'КонецЕдинство' },
-
   КонецГармония: { location: 'ending', sprites: [ { name: 'valley', pos: 'solo' } ], speaker: 'Финал', boxClass: 'final-box', ending: 'harmony', text: `Вы с Мирой взялись за бронзовый штурвал и повернули зеркала в сторону долины.<br><br>Свет Августа, преломившись сквозь хрусталь, широким янтарным потоком устремился над кронами деревьев. Река внизу заискрилась миллионами золотых рыбок. До башни донёсся восторженный гул жителей Верхнего Шепота: на площади одна за другой вспыхнули праздничные гирлянды!<br><br>Корнелиус со слезами умиления пожал вам руки:<br><br>— Вы вернули нам не просто свет, вы вернули покой в сердца людей!<br><br>Внизу на мосту пушистый Бруно машет лапой, а мастер Олвен уже спешит навстречу, держа в руках почётные венки Хранителей праздника.<br><br><b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство.</i>`, next: 'title' },
   КонецМастерство: { location: 'ending', sprites: [ { name: 'valley', pos: 'solo' } ], speaker: 'Финал', boxClass: 'final-box', ending: 'mastery', text: `Сфокусированный луч рассек наступающие сумерки. Благодаря идеальному питанию свет Августа приобрёл изумительный изумрудно-бирюзовый оттенок. Небо над долиной вспыхнуло грандиозным северным сиянием!<br><br>— Ура! Получилось! — закричала Мира, бросаясь обнимать и вас, и Корнелиуса, и довольного сытого Августа.<br><br>Жители посёлка выкатили на площадь гигантский яблочный пирог. Аромат праздника поднялся до самых облаков. Корнелиус торжественно вручил вам с Мирой серебряные значки почётных Хранителей Маяка.<br><br>Праздник Осенней Звезды начался вовремя, и огни не погаснут до самого рассвета!<br><br><b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина! Ваша доброта подарила жителям самую красивую ночь в году.</i>`, next: 'title' },
   КонецНаука: { location: 'ending', sprites: [ { name: 'valley', pos: 'solo' } ], speaker: 'Финал', boxClass: 'final-box', ending: 'science', text: `Зеркала отразили свет с безупречной точностью до единого миллиметра. Лучи маяка начертили в небе над лесом гигантскую светящуюся геометрическую звезду, указывающую путь всем запоздалым караванам и путникам.<br><br>Мира с гордостью стёрла пятнышко смазки со щеки:<br><br>— Вот что бывает, когда наука служит добру! Мы идеальная команда!<br><br>Кот Тик-Так довольно мурлыкал у ваших ног, а Корнелиус записал ваши имена в Золотую Книгу Башни на первой странице. Долина праздновала триумф разума, дружбы и мастерства!<br><br><b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт, крепкая дружба и ключ на двенадцать творят чудеса почище древних заклятий.</i>`, next: 'title' },
@@ -884,11 +912,7 @@ function startMusic() {
     });
   } else { musicStarted = true; }
 }
-
-function setMusicVolume(v) {
-  gameState.settings.musicVolume = v;
-  if (bgMusic) bgMusic.volume = v;
-}
+function setMusicVolume(v) { gameState.settings.musicVolume = v; if (bgMusic) bgMusic.volume = v; }
 
 const SAVE_KEY = 'pesn_augusta_save';
 const ENDINGS_KEY = 'pesn_augusta_endings';
@@ -927,9 +951,7 @@ function loadEndingsFromStorage() {
 function saveEndingsToStorage() {
   try { localStorage.setItem(ENDINGS_KEY, JSON.stringify(gameState.endings)); } catch (e) {}
 }
-function countEndings() {
-  return ['harmony', 'mastery', 'science', 'unity'].filter(k => gameState.endings[k]).length;
-}
+function countEndings() { return ['harmony','mastery','science','unity'].filter(k => gameState.endings[k]).length; }
 
 function saveSettings() {
   try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(gameState.settings)); } catch (e) {}
@@ -1231,12 +1253,8 @@ function openSettings() {
     <div class="buttons"><button id="setClose">Закрыть</button></div>
   `;
   overlay.classList.remove('hidden');
-  document.getElementById('setSpeed').addEventListener('change', e => {
-    gameState.settings.textSpeed = Number(e.target.value); saveSettings();
-  });
-  document.getElementById('setTypewriter').addEventListener('change', e => {
-    gameState.settings.typewriter = e.target.value; saveSettings();
-  });
+  document.getElementById('setSpeed').addEventListener('change', e => { gameState.settings.textSpeed = Number(e.target.value); saveSettings(); });
+  document.getElementById('setTypewriter').addEventListener('change', e => { gameState.settings.typewriter = e.target.value; saveSettings(); });
   document.getElementById('setVolume').addEventListener('input', e => {
     const v = Number(e.target.value);
     setMusicVolume(v);
