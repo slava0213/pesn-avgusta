@@ -652,6 +652,39 @@ const SPEAKER_MAP = {
   'Вы':                 'player'
 };
 
+/* ============================================================
+   СЛОВАРЬ УПОМИНАНИЙ: если в тексте рассказчика встречается
+   любое из этих слов — на сцену добавляется соответствующий спрайт.
+   Учитываются падежи и склонения.
+   ============================================================ */
+const MENTION_MAP = [
+  { sprite: 'mira',      words: ['Мира', 'Миры', 'Мире', 'Миру', 'Мирой', 'Мирой', 'Мирою'] },
+  { sprite: 'bruno',     words: ['Бруно'] },
+  { sprite: 'shustik',   words: ['Шустик', 'Шустика', 'Шустику', 'Шустиком'] },
+  { sprite: 'selesta',   words: ['Селеста', 'Селесты', 'Селесте', 'Селесту', 'Селестой', 'Селестою', 'Бабушка Селеста', 'Бабушки Селесты', 'Бабушке Селесте'] },
+  { sprite: 'cornelius', words: ['Корнелиус', 'Корнелиуса', 'Корнелиусу', 'Корнелиусом', 'Господин Корнелиус', 'Господина Корнелиуса', 'Господину Корнелиусу'] },
+  { sprite: 'olven',     words: ['Олвен', 'Олвена', 'Олвену', 'Олвеном', 'Мастер Олвен', 'Мастера Олвена', 'Мастеру Олвену'] },
+  { sprite: 'august',    words: ['Август', 'Августа', 'Августу', 'Августом'] },
+  { sprite: 'tik_tak',   words: ['Тик-Так', 'Тик-Така', 'Тик-Таку', 'Тик-Таком'] }
+];
+
+/* Проверяет, упоминается ли персонаж в тексте (грубо, по вхождению слова) */
+function textMentionsSprite(text, spriteKey) {
+  const entry = MENTION_MAP.find(e => e.sprite === spriteKey);
+  if (!entry) return false;
+  const plain = text.replace(/<[^>]*>/g, ' '); // убираем теги
+  return entry.words.some(w => plain.includes(w));
+}
+
+/* Возвращает список ключей спрайтов, упомянутых в тексте */
+function findMentionedSprites(text) {
+  const result = [];
+  for (const entry of MENTION_MAP) {
+    if (textMentionsSprite(text, entry.sprite)) result.push(entry.sprite);
+  }
+  return result;
+}
+
 const PASSAGES = {
   title: { isTitle: true },
   Start1: { location: 'start', speaker: 'Рассказчик', boxClass: 'narrator', text: `Утро в Верхнем Шепоте пахло сушёными яблоками, речной мятой и смолистыми сосновыми дровами. Солнце только коснулось шпилей ремесленных гильдий, а вы уже затягивали ремешок дорожной сумки травника.`, next: 'Start2' },
@@ -826,10 +859,6 @@ const PASSAGES = {
       { text: 'План 4: Полная синхронизация: объединить травы, музыку и точные механизмы', to: 'ФиналТриумф' }
     ]
   },
-
-  /* ============================================================
-     ИЗМЕНЕНИЕ: добавлен спрайт Миры во все три пассажа у башни
-     ============================================================ */
   БашняСнаружи: {
     location: 'tower',
     sprites: [
@@ -864,8 +893,6 @@ const PASSAGES = {
       { text: 'Осмотреть окрестности: вдруг есть другой проход?', to: 'ОсмотрСтенБашни' }
     ]
   },
-  /* ============================================================ */
-
   ДверьОткрыта: { location: 'tower', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Щёлк-щёлк-клац! Медные шестерни внутри створки весело зажужжали. Тяжёлые дубовые двери плавно распахнулись внутрь, пропуская вас в прохладный холл башни.`, set: { door_opened: true }, next: 'ВнутриБашни' },
   ДверьОшибкаДобро: { location: 'tower', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы поворачиваете диски на Воду и Росток. Замок издаёт мелодичный перелив, похожий на звон колокольчика, и из маленького сопла над дверью на вас брызгает освежающая струйка чистой родниковой воды с ароматом мяты!<br><br>Мира от неожиданности взвизгивает, а потом весело смеётся, вытирая лицо рукавом.`, next: 'ДверьОшибкаДобро2' },
   ДверьОшибкаДобро2: { location: 'tower', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Освежает! Механизм вежливый: вместо ядовитых стрел — умывание для рассеянных гостей. Но подсказка ведь гласила: «Тепло и движение»! Попробуем ещё раз?`, next: 'ДверьОткрыта' },
@@ -1134,12 +1161,37 @@ function renderPassage(id, addToHistory = true) {
 
   setBackground(passage.location);
 
-  const wanted = passage.sprites || [];
+  // ============================================================
+  // АВТО-ДОБАВЛЕНИЕ СПРАЙТОВ ПО УПОМИНАНИЯМ В ТЕКСТЕ
+  // ============================================================
+  const explicitSprites = (passage.sprites || []).slice();
+  const explicitNames = explicitSprites.map(s => s.name);
+  const mentionedNames = findMentionedSprites(passage.text || '');
+  const autoSprites = [];
+  for (const name of mentionedNames) {
+    if (name === 'player') continue;                        // себя не показываем
+    if (explicitNames.includes(name)) continue;             // уже задан явно
+    if (name === 'tower_outside' || name === 'tower_inside' ||
+        name === 'tower_hall'    || name === 'valley') continue; // объекты не считаем
+    // Подбираем свободную позицию
+    const used = explicitNames.concat(autoSprites.map(s => s.name));
+    let pos = 'right';
+    if (used.length === 0) pos = 'solo';
+    else if (used.length === 1) pos = used.includes('left') ? 'right' : 'left';
+    else if (used.length === 2) pos = 'far-left';
+    else pos = 'far-right';
+    autoSprites.push({ name, pos });
+  }
+  const wanted = explicitSprites.concat(autoSprites);
   const wantedNames = wanted.map(s => s.name);
+
   Object.keys(activeSprites).forEach(name => { if (!wantedNames.includes(name)) removeSprite(name); });
   wanted.forEach(s => addSprite(s.name, s.pos));
   setTimeout(relayoutSprites, 50);
 
+  // Если есть выбор из нескольких вариантов, автор может захотеть,
+  // чтобы рассказчик не подсвечивал никого — но мы всё равно подсветим,
+  // если speaker указывает на персонажа.
   const speakerKey = SPEAKER_MAP[passage.speaker];
   if (speakerKey && activeSprites[speakerKey]) setActiveSprite(speakerKey);
   else if (wantedNames.length > 0) deactivateAllSprites();
