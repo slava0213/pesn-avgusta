@@ -61,6 +61,30 @@ html, body {
   100% { transform: translateY(-110vh) translateX(40px) scale(1.1); opacity: 0; }
 }
 
+/* ===== ВСТАВКИ-ЗАСТАВКИ ===== */
+.insert-layer {
+  position: fixed; inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+  background-color: #000;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1);
+}
+.insert-layer.active {
+  opacity: 1;
+  visibility: visible;
+  animation: insertZoom 6s ease-out forwards;
+}
+@keyframes insertZoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+
 /* ===== ВИНЬЕТКА ===== */
 .vignette-layer {
   position: fixed; inset: 0; pointer-events: none; z-index: 4;
@@ -147,7 +171,6 @@ html, body {
   -webkit-user-drag: none;
 }
 
-/* Появление */
 .sprite-icon.entering {
   opacity: 0;
   transform: translateY(40px) scale(0.95);
@@ -162,7 +185,6 @@ html, body {
   transition: all 0.5s ease-in;
 }
 
-/* ГОВОРЯЩИЙ — впереди, яркий, чуть крупнее */
 .sprite-icon.active {
   transform: translateY(0) scale(1.05);
   filter:
@@ -174,7 +196,6 @@ html, body {
   margin-right: -100px;
 }
 
-/* НЕ ГОВОРЯЩИЙ — позади, затемнён */
 .sprite-icon.inactive {
   transform: translateY(12px) scale(0.94);
   filter:
@@ -184,7 +205,6 @@ html, body {
   z-index: 5;
 }
 
-/* Дыхание говорящего */
 .sprite-icon.active img {
   animation: iconBreathe 3.5s ease-in-out infinite;
 }
@@ -193,7 +213,6 @@ html, body {
   50%     { transform: translateY(-4px) scale(1.008); }
 }
 
-/* Свечение под говорящим */
 .sprite-icon.active::after {
   content: '';
   position: absolute;
@@ -209,7 +228,6 @@ html, body {
   filter: blur(6px);
 }
 
-/* Подписи убираем */
 .sprite-label { display: none !important; }
 
 /* ===== CLICK LAYER ===== */
@@ -391,9 +409,19 @@ html, body {
 }
 .dialogue-box.august .speaker-name::after { border-top-color: rgba(220,160,20,1); }
 
-.dialogue-box.olven { border-style: dashed; border-color: rgba(170,130,70,0.9); }
-.dialogue-box.olven .speaker-name { background: linear-gradient(180deg, rgba(150,110,55,1) 0%, rgba(100,70,30,1) 100%); }
+.dialogue-box.olven {
+  border-style: dashed;
+  border-color: rgba(170,130,70,0.9);
+  background: linear-gradient(180deg, rgba(50,38,22,0.94) 0%, rgba(28,20,10,0.97) 100%);
+}
+.dialogue-box.olven .speaker-name {
+  background: linear-gradient(180deg, rgba(150,110,55,1) 0%, rgba(100,70,30,1) 100%);
+}
 .dialogue-box.olven .speaker-name::after { border-top-color: rgba(100,70,30,1); }
+.dialogue-box.olven .dialogue-text {
+  font-style: italic;
+  color: #f0e3c8;
+}
 
 .dialogue-box.final-box {
   border-color: rgba(255,215,0,1);
@@ -443,7 +471,6 @@ html, body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
-
 .choice-box a::before {
   content: '▸';
   position: absolute;
@@ -454,7 +481,6 @@ html, body {
   transition: all 0.3s ease;
   text-shadow: 0 0 10px rgba(255,200,80,0.7);
 }
-
 .choice-box a::after {
   content: '';
   position: absolute;
@@ -944,12 +970,10 @@ body.cutscene-active .particles-layer {
   .sprite-icon { width: 400px; margin-right: -120px; }
   .sprite-icon.active { margin-right: -85px; }
 }
-
 @media (max-width: 1024px) {
   .sprite-icon { width: 340px; margin-right: -105px; }
   .sprite-icon.active { margin-right: -75px; }
 }
-
 @media (max-width: 768px) {
   .sprite-stage { bottom: 28vh; height: 60vh; padding: 0 2vw; }
   .sprite-icon { width: 240px; margin-right: -75px; }
@@ -966,7 +990,6 @@ body.cutscene-active .particles-layer {
   .modal { padding: 22px; }
   .cs-btn { padding: 9px 16px; font-size: 12px; }
 }
-
 @media (max-width: 480px) {
   .sprite-stage { bottom: 32vh; height: 50vh; padding: 0; }
   .sprite-icon { width: 170px; margin-right: -52px; }
@@ -999,6 +1022,7 @@ body.cutscene-active .particles-layer {
 <audio id="bgMusic" loop preload="auto" src="audio/main_theme.mp3"></audio>
 
 <div class="bg-layer" id="bgLayer"></div>
+<div class="insert-layer" id="insertLayer"></div>
 <div class="particles-layer" id="particlesLayer"></div>
 <div class="vignette-layer"></div>
 <div class="sprite-stage" id="spriteStage"></div>
@@ -1030,7 +1054,7 @@ body.cutscene-active .particles-layer {
 
 <script>
    /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v5.0 (VN-стиль)
+   ПЕСНЬ АВГУСТА — движок v6.0 (начало по картинкам)
    ============================================================ */
 
 /* ============================================================
@@ -1040,8 +1064,11 @@ body.cutscene-active .particles-layer {
 const LOCATION_BG = {
   title:           'images/fon_title.png',
   start:           'images/fon_start.png',
-  player_outside:  'images/fon_player_insite.png',
-  player_inside:   'images/fon_player_inside_room.png',
+  player_outside:  'images/fon_player_outside.png',
+  player_inside:   'images/fon_player_inside.png',
+  player_letter:   'images/fon_player_letter.png',
+  player_table:    'images/fon_player_table.png',
+  parchment:       'images/fon_parchment.png',
   most:            'images/fon_most.png',
   lavka:           'images/fon_lavka.png',
   tropa:           'images/fon_tropa.png',
@@ -1136,40 +1163,99 @@ const SFX_VOLUME = 0.6;
 const PASSAGES = {
   title: { isTitle: true },
 
-  Start1: { location: 'start', speaker: 'Рассказчик', boxClass: 'narrator', text: `Утро в Верхнем Шепоте пахло сушёными яблоками, речной мятой и смолистыми сосновыми дровами. Солнце только коснулось шпилей ремесленных гильдий, а вы уже затягивали ремешок дорожной сумки травника.`, next: 'Start2' },
-  Start2: { location: 'start', speaker: 'Рассказчик', boxClass: 'narrator', text: `На столе лежало тяжёлое письмо из плотного пергамента, запечатанное золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.`, next: 'Start3' },
-  Start3: { location: 'player_outside', speaker: 'Рассказчик', boxClass: 'narrator', text: `Сегодня в долине должен состояться ежегодный праздник Осенней Звезды. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков. Без его тёплого луча небесные светляки собьются с пути, а речные баржи с яблочным сидром и пряниками не найдут гавань.`, next: 'Start4' },
-  Start4: { location: 'player_outside', speaker: 'Рассказчик', boxClass: 'narrator', text: `Скрипнула калитка. Во двор вошла Мира, держа под мышкой объёмистый кожаный чехол с инструментами. Её рыжие кудри были небрежно подвязаны медной проволокой, а в глазах плясали озорные искры.`, sprites: [{ name: 'mira' }], next: 'Start5' },
+  /* ====== НОВОЕ НАЧАЛО ПО КАРТИНКАМ ====== */
+  Start1: {
+    location: 'start',
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой — а по утрам солнце поднимается из-за маяка и заливает золотом черепичные крыши.`,
+    next: 'Start2'
+  },
+  Start2: {
+    location: 'start',
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Сегодня — особенный день. Праздник Осенней Звезды. Город украшен гирляндами из яблок, трактиры пекут пироги, а ремесленники развешивают флаги. Но что-то пошло не так.`,
+    next: 'Start3'
+  },
+  Start3: {
+    location: 'player_outside',
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы — молодой травник, ученик мастера Олвена. Ваш дом стоит на краю города, среди яблоневых садов. Этим утром вы проснулись от тишины: обычно в это время над озером уже гудели пчёлы и сновали лодки. Сегодня — тихо.`,
+    next: 'Start4'
+  },
+  Start4: {
+    location: 'player_outside',
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `На столе в доме лежало письмо: плотный пергамент, запечатанный красным воском с оттиском кленового листа — личный знак мастера Олвена.`,
+    next: 'Start5'
+  },
   Start5: {
+    location: 'player_inside',
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы вернулись в дом. За окном — знакомый вид на маяк. На столе — письмо и чашка остывшего травяного чая. И тут за спиной послышались лёгкие шаги.`,
+    next: 'Start6'
+  },
+  Start6: {
     location: 'player_inside',
     sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Мира', boxClass: 'mira',
-    text: `— Подъём, Хранитель трав и ветров! — звонко бросила она, прислоняясь к перилам. — Мастер Олвен передал, что в маяке не просто перегорела свеча — там заклинило рунный резонатор. Я взяла отмычки, разводной ключ на двенадцать и банку лучшей графитовой смазки. А у тебя что в письме?`,
+    text: `— Подъём, Хранитель трав и ветров! — звонко бросила Мира, заглядывая через плечо. Её рыжие кудри пахли машинным маслом и полевыми цветами. — Мастер Олвен передал, что в маяке заклинило рунный резонатор. Я взяла отмычки, разводной ключ и банку лучшей графитовой смазки. А у тебя что в письме?`,
     choices: [
-      { text: 'Вскрыть письмо мастера Олвена прямо сейчас', to: 'ПисьмоОлвена' },
-      { text: 'Спрятать письмо в карман и сразу обсудить маршрут', to: 'ВыборПути' },
+      { text: 'Вскрыть письмо мастера Олвена прямо сейчас', to: 'ОткрытьПисьмо' },
+      { text: 'Сначала обсудить маршрут к маяку', to: 'ВыборПути' },
       { text: 'Пошутить над Мирой и её чехлом с инструментами', to: 'РазговорСМирой1' }
     ]
   },
-  ПисьмоОлвена: { location: 'player_inside', sprites: [ { name: 'mira' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы ломаете восковую печать. Внутри обнаруживается не просто записка, а тщательно вычерченная схема линз с личными пометками мастера, сделанными серебряными чернилами.`, next: 'ПисьмоОлвена2' },
-  ПисьмоОлвена2: { location: 'player_inside', sprites: [ { name: 'mira' }, { name: 'olven' } ], speaker: 'Мастер Олвен', boxClass: 'olven', text: `«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы и фальшивых нот. Если механизм замер, ищите причину не в поломке металла, а в нарушении гармонии. Возьмите с собой частицу стихии и помните: свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».`, next: 'ПисьмоОлвена3' },
-  ПисьмоОлвена3: { location: 'player_inside', sprites: [ { name: 'mira' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира заглянула через ваше плечо.`, next: 'ПисьмоОлвена4' },
-  ПисьмоОлвена4: {
+  ОткрытьПисьмо: {
     location: 'player_inside',
+    insert: 'images/fon_player_letter.png',
+    insertDuration: 2200,
+    sprites: [ { name: 'mira' }, { name: 'player' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы берёте письмо. Красный воск тёплый на ощупь, оттиск кленового листа чёткий, будто только что сделан. За окном — солнце, тишина и далёкий маяк.`,
+    next: 'ПисьмоОлвена'
+  },
+  ПисьмоОлвена: {
+    location: 'parchment',
+    speaker: 'Мастер Олвен', boxClass: 'olven',
+    text: `«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы и фальшивых нот. Если механизм замер, ищите причину не в поломке металла, а в нарушении гармонии. Возьмите с собой частицу стихии и помните: свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».`,
+    next: 'ПисьмоОлвена2'
+  },
+  ПисьмоОлвена2: {
+    location: 'player_table',
     sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Мира', boxClass: 'mira',
-    text: `«Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?`,
+    text: `Мира заглянула через плечо и тихонько присвистнула. — «Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?`,
     choices: [
       { text: 'Пойти через Старый каменный мост', to: 'СтарыйМост' },
       { text: 'Срезать через тенистую Грибную тропу', to: 'ГрибнаяТропа' },
       { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
     ]
   },
-  ВыборПути: { location: 'player_inside', sprites: [ { name: 'mira' }, { name: 'player' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы прячете письмо во внутренний карман и хлопаете по нему ладонью.`, next: 'ВыборПути2' },
-  ВыборПути2: { location: 'player_inside', sprites: [ { name: 'mira' }, { name: 'player' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Разберёмся по дороге. Сначала — к маяку.`, next: 'ВыборПути3' },
-  ВыборПути3: { location: 'player_inside', sprites: [ { name: 'mira' }, { name: 'player' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира кивает и закидывает чехол на плечо.`, next: 'ВыборПути4' },
+
+  /* ====== ВЕТКА: ОБСУДИТЬ МАРШРУТ ====== */
+  ВыборПути: {
+    location: 'player_table',
+    sprites: [ { name: 'mira' }, { name: 'player' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы прячете письмо во внутренний карман и хлопаете по нему ладонью.`,
+    next: 'ВыборПути2'
+  },
+  ВыборПути2: {
+    location: 'player_table',
+    sprites: [ { name: 'mira' }, { name: 'player' } ],
+    speaker: 'Вы', boxClass: 'narrator',
+    text: `— Разберёмся по дороге. Сначала — к маяку.`,
+    next: 'ВыборПути3'
+  },
+  ВыборПути3: {
+    location: 'player_table',
+    sprites: [ { name: 'mira' }, { name: 'player' } ],
+    speaker: 'Рассказчик', boxClass: 'mira',
+    text: `Мира кивает и закидывает чехол на плечо.`,
+    next: 'ВыборПути4'
+  },
   ВыборПути4: {
-    location: 'player_inside',
+    location: 'player_table',
     sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Мира', boxClass: 'mira',
     text: `Тогда решай, как пойдём. Через мост — дольше, но спокойнее. Через Грибную тропу — быстрее, но там сумрачно и можно встретить лесных духов. Или заглянем к бабушке Селесте — она всегда что-то подскажет.`,
@@ -1179,14 +1265,59 @@ const PASSAGES = {
       { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
     ]
   },
-  РазговорСМирой1: { location: 'player_inside', sprites: [ { name: 'mira' }, { name: 'player' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы с улыбкой оглядываете её внушительный багаж.`, next: 'РазговорСМирой2' },
-  РазговорСМирой2: { location: 'player_inside', sprites: [ { name: 'mira' }, { name: 'player' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`, next: 'РазговорСМирой3' },
-  РазговорСМирой3: { location: 'player_inside', sprites: [ { name: 'mira' }, { name: 'player' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира фыркнула и театрально постучала медным ключом по ладони.`, next: 'РазговорСМирой4' },
-  РазговорСМирой4: { location: 'player_inside', sprites: [ { name: 'mira' }, { name: 'player' } ], speaker: 'Мира', boxClass: 'mira', text: `— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Или у Корнелиуса снова заржавел механизм для колки орехов? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?`, next: 'ПисьмоОлвена' },
 
-  СтарыйМост: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно. Его хвост с кисточкой мирно покачивался в воздухе.`, next: 'СтарыйМост2' },
-  СтарыйМост2: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Ба, знакомые лица! — пробасил он гулким голосом, похожим на перекатывание гальки. — Куда путь держите в такой важный день? Уж не к маяку ли?`, next: 'СтарыйМост3' },
-  СтарыйМост3: { location: 'most', sprites: [ { name: 'bruno' }, { name: 'mira' } ], speaker: 'Мира', boxClass: 'mira', text: `— Именно туда, Бруно, — шагнула вперёд Мира. — Время не ждёт, солнце перевалило за полдень. Пропустишь нас без долгих церемоний?`, next: 'СтарыйМост4' },
+  /* ====== ВЕТКА: ШУТКА ====== */
+  РазговорСМирой1: {
+    location: 'player_inside',
+    sprites: [ { name: 'mira' }, { name: 'player' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы с улыбкой оглядываете её внушительный багаж.`,
+    next: 'РазговорСМирой2'
+  },
+  РазговорСМирой2: {
+    location: 'player_inside',
+    sprites: [ { name: 'mira' }, { name: 'player' } ],
+    speaker: 'Вы', boxClass: 'narrator',
+    text: `— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`,
+    next: 'РазговорСМирой3'
+  },
+  РазговорСМирой3: {
+    location: 'player_inside',
+    sprites: [ { name: 'mira' }, { name: 'player' } ],
+    speaker: 'Рассказчик', boxClass: 'mira',
+    text: `Мира фыркнула и театрально постучала медным ключом по ладони.`,
+    next: 'РазговорСМирой4'
+  },
+  РазговорСМирой4: {
+    location: 'player_inside',
+    sprites: [ { name: 'mira' }, { name: 'player' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Или у Корнелиуса снова заржавел механизм для колки орехов? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?`,
+    next: 'ОткрытьПисьмо'
+  },
+
+  /* ====== СТАРЫЙ МОСТ ====== */
+  СтарыйМост: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно. Его хвост с кисточкой мирно покачивался в воздухе.`,
+    next: 'СтарыйМост2'
+  },
+  СтарыйМост2: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— Ба, знакомые лица! — пробасил он гулким голосом, похожим на перекатывание гальки. — Куда путь держите в такой важный день? Уж не к маяку ли?`,
+    next: 'СтарыйМост3'
+  },
+  СтарыйМост3: {
+    location: 'most',
+    sprites: [ { name: 'bruno' }, { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Именно туда, Бруно, — шагнула вперёд Мира. — Время не ждёт, солнце перевалило за полдень. Пропустишь нас без долгих церемоний?`,
+    next: 'СтарыйМост4'
+  },
   СтарыйМост4: {
     location: 'most',
     sprites: [ { name: 'mira' }, { name: 'bruno' } ],
@@ -1199,24 +1330,135 @@ const PASSAGES = {
       { text: 'Расспросить Бруно: не видел ли он, что стряслось с башней ночью?', to: 'МостРасспросы' }
     ]
   },
-  МостВетер: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Бруно хлопнул кожистыми крыльями, подняв облачко безвредной каменной пыли, и широко улыбнулся.`, next: 'МостВетер2' },
-  МостВетер2: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— В самую точку! Кому как не ученику Хранителя ветров знать повадки воздуха. Ты заслужил свободный проход!`, next: 'МостВетер3' },
-  МостВетер3: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Он полез лапой под мостовую плиту и выкатил вам под ноги диковинку.`, next: 'МостВетер4' },
-  МостВетер4: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Вот, держи. Это Перо Лазурной Сойки-Вестницы. Оно зачаровано на лёгкое дыхание. Если в механизмах башни застрянет пыль веков — взмахни им, и сквозняк сделает всю работу чисто и без поломок!`, set: { has_feather: true }, next: 'МостВетер5' },
-  МостВетер5: { location: 'most', sprites: [ { name: 'bruno' }, { name: 'mira' } ], speaker: 'Мира', boxClass: 'mira', text: `— Прекрасный подарок! — обрадовалась Мира. — Спасибо, Бруно!`, next: 'БашняСнаружи' },
-  МостЭхо: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Бруно басовито захохотал, сотрясая каменные перила.`, next: 'МостЭхо2' },
-  МостЭхо2: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Ох, молодёжь! Поэзии в тебе хоть отбавляй, а вот физика хромает! Разве эхо может ласкать в зной или жалить в стужу? Это ветер! Но за дерзость и красивый слог я не стану вас задерживать. Идите с миром, да смотрите под ноги на крутом подъёме.`, next: 'МостЭхо3' },
-  МостЭхо3: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Мира помахала гаргулю рукой, и вы поспешили дальше по вымощенной плитами дорожке.`, next: 'БашняСнаружи' },
-  МостУгощение: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы достаёте из мешочка крупный янтарный ломтик вяленого яблока, пропитанный густым липовым мёдом. Аромат пряностей мгновенно окутывает мост.`, next: 'МостУгощение2' },
-  МостУгощение2: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— О великие горы... Это то самое? С пасеки мастера Олвена?!`, next: 'МостУгощение3' },
-  МостУгощение3: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Специально для хранителя покоя долины, — с поклоном вручаете вы угощение.`, next: 'МостУгощение4' },
-  МостУгощение4: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Бруно бережно подхватил ломтик, сунул в пасть и зажмурился от блаженства.`, next: 'МостУгощение5' },
-  МостУгощение5: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Боги гранита, какая сладость! Забирайте мост, забирайте реку, проходите скорее! И погодите... вот, возьмите! На днях с карниза маяка упал чистейший Кристалл Горного Кварца. Я подобрал, чтобы не растоптали. В оптике маяка ему самое место!`, set: { has_crystal: true }, next: 'БашняСнаружи' },
-  МостРасспросы: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Бруно, ты ведь сидишь здесь круглые сутки, — говорите вы, присаживаясь рядом на корточки. — Скажи, ночью над башней ничего странного не происходило?`, next: 'МостРасспросы2' },
-  МостРасспросы2: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Гаргуль задумался, почесывая каменное ухо когтем.`, next: 'МостРасспросы3' },
-  МостРасспросы3: { location: 'most', sprites: [ { name: 'mira' }, { name: 'bruno' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Хм-м... Знаете, около полуночи с вершины башни сорвался лёгкий серебристый всполох. А потом послышался такой звук: динь-дон-хрясь! Ветер тогда дул с Заброшенной Обсерватории.`, set: { has_clue: true }, next: 'МостРасспросы4' },
-  МостРасспросы4: { location: 'most', sprites: [ { name: 'bruno' }, { name: 'mira' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира нахмурилась.`, next: 'МостРасспросы5' },
-  МостРасспросы5: { location: 'most', sprites: [ { name: 'bruno' }, { name: 'mira' } ], speaker: 'Мира', boxClass: 'mira', text: `— Сквозняк мог сбить настройку балансира! Спасибо, дядюшка Бруно, это важная зацепка.`, next: 'МостРасспросы6' },
+  МостВетер: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Бруно хлопнул кожистыми крыльями, подняв облачко безвредной каменной пыли, и широко улыбнулся.`,
+    next: 'МостВетер2'
+  },
+  МостВетер2: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— В самую точку! Кому как не ученику Хранителя ветров знать повадки воздуха. Ты заслужил свободный проход!`,
+    next: 'МостВетер3'
+  },
+  МостВетер3: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Он полез лапой под мостовую плиту и выкатил вам под ноги диковинку.`,
+    next: 'МостВетер4'
+  },
+  МостВетер4: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— Вот, держи. Это Перо Лазурной Сойки-Вестницы. Оно зачаровано на лёгкое дыхание. Если в механизмах башни застрянет пыль веков — взмахни им, и сквозняк сделает всю работу чисто и без поломок!`,
+    set: { has_feather: true },
+    next: 'МостВетер5'
+  },
+  МостВетер5: {
+    location: 'most',
+    sprites: [ { name: 'bruno' }, { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Прекрасный подарок! — обрадовалась Мира. — Спасибо, Бруно!`,
+    next: 'БашняСнаружи'
+  },
+  МостЭхо: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Бруно басовито захохотал, сотрясая каменные перила.`,
+    next: 'МостЭхо2'
+  },
+  МостЭхо2: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— Ох, молодёжь! Поэзии в тебе хоть отбавляй, а вот физика хромает! Разве эхо может ласкать в зной или жалить в стужу? Это ветер! Но за дерзость и красивый слог я не стану вас задерживать. Идите с миром, да смотрите под ноги на крутом подъёме.`,
+    next: 'МостЭхо3'
+  },
+  МостЭхо3: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Мира помахала гаргулю рукой, и вы поспешили дальше по вымощенной плитами дорожке.`,
+    next: 'БашняСнаружи'
+  },
+  МостУгощение: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы достаёте из мешочка крупный янтарный ломтик вяленого яблока, пропитанный густым липовым мёдом. Аромат пряностей мгновенно окутывает мост.`,
+    next: 'МостУгощение2'
+  },
+  МостУгощение2: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— О великие горы... Это то самое? С пасеки мастера Олвена?!`,
+    next: 'МостУгощение3'
+  },
+  МостУгощение3: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Вы', boxClass: 'narrator',
+    text: `— Специально для хранителя покоя долины, — с поклоном вручаете вы угощение.`,
+    next: 'МостУгощение4'
+  },
+  МостУгощение4: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Бруно бережно подхватил ломтик, сунул в пасть и зажмурился от блаженства.`,
+    next: 'МостУгощение5'
+  },
+  МостУгощение5: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— Боги гранита, какая сладость! Забирайте мост, забирайте реку, проходите скорее! И погодите... вот, возьмите! На днях с карниза маяка упал чистейший Кристалл Горного Кварца. Я подобрал, чтобы не растоптали. В оптике маяка ему самое место!`,
+    set: { has_crystal: true },
+    next: 'БашняСнаружи'
+  },
+  МостРасспросы: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Вы', boxClass: 'narrator',
+    text: `— Бруно, ты ведь сидишь здесь круглые сутки, — говорите вы, присаживаясь рядом на корточки. — Скажи, ночью над башней ничего странного не происходило?`,
+    next: 'МостРасспросы2'
+  },
+  МостРасспросы2: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Гаргуль задумался, почесывая каменное ухо когтем.`,
+    next: 'МостРасспросы3'
+  },
+  МостРасспросы3: {
+    location: 'most',
+    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— Хм-м... Знаете, около полуночи с вершины башни сорвался лёгкий серебристый всполох. А потом послышался такой звук: динь-дон-хрясь! Ветер тогда дул с Заброшенной Обсерватории.`,
+    set: { has_clue: true },
+    next: 'МостРасспросы4'
+  },
+  МостРасспросы4: {
+    location: 'most',
+    sprites: [ { name: 'bruno' }, { name: 'mira' } ],
+    speaker: 'Рассказчик', boxClass: 'mira',
+    text: `Мира нахмурилась.`,
+    next: 'МостРасспросы5'
+  },
+  МостРасспросы5: {
+    location: 'most',
+    sprites: [ { name: 'bruno' }, { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Сквозняк мог сбить настройку балансира! Спасибо, дядюшка Бруно, это важная зацепка.`,
+    next: 'МостРасспросы6'
+  },
   МостРасспросы6: {
     location: 'most',
     sprites: [ { name: 'mira' }, { name: 'bruno' } ],
@@ -1228,7 +1470,14 @@ const PASSAGES = {
     ]
   },
 
-  ГрибнаяТропа: { location: 'tropa', sprites: [ { name: 'mira' }, { name: 'shustik' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Грибная тропа встретила вас мягким сумраком древних дубов и прохладой. Крошечный лесной дух Шустик, похожий на ожившую пушистую еловую шишку, дёргал за ручку крохотную тележку.`, next: 'ГрибнаяТропа2' },
+  /* ====== ГРИБНАЯ ТРОПА ====== */
+  ГрибнаяТропа: {
+    location: 'tropa',
+    sprites: [ { name: 'mira' }, { name: 'shustik' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Грибная тропа встретила вас мягким сумраком древних дубов и прохладой. Крошечный лесной дух Шустик, похожий на ожившую пушистую еловую шишку, дёргал за ручку крохотную тележку.`,
+    next: 'ГрибнаяТропа2'
+  },
   ГрибнаяТропа2: {
     location: 'tropa',
     sprites: [ { name: 'mira' }, { name: 'shustik' } ],
@@ -1240,16 +1489,74 @@ const PASSAGES = {
       { text: 'Заговорить с древним деревом на языке ветров и шепотов', to: 'ГрибыМагия' }
     ]
   },
-  ГрибыМасло: { location: 'tropa', sprites: [ { name: 'mira' }, { name: 'shustik' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы достаёте из походной сумки флакон с вытяжкой из дикого миндаля.`, next: 'ГрибыМасло2' },
-  ГрибыМасло2: { location: 'tropa', sprites: [ { name: 'mira' }, { name: 'shustik' } ], speaker: 'Шустик', boxClass: 'shustik', text: `— Ура-а! Спасены! Держите горсть волшебной светящейся пыльцы!`, set: { has_pollen: true }, next: 'БашняСнаружи' },
-  ГрибыМеханика: { location: 'tropa', sprites: [ { name: 'shustik' }, { name: 'mira' } ], speaker: 'Мира', boxClass: 'mira', text: `— Раз, два — взяли! Рычаг первого рода — лучшее колдовство на свете!`, next: 'ГрибыМеханика2' },
-  ГрибыМеханика2: { location: 'tropa', sprites: [ { name: 'mira' }, { name: 'shustik' } ], speaker: 'Шустик', boxClass: 'shustik', text: `— Вот это ловкость! Возьмите мешочек искристой пыльцы!`, set: { has_pollen: true }, next: 'БашняСнаружи' },
-  ГрибыМагия: { location: 'tropa', sprites: [ { name: 'mira' }, { name: 'shustik' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы напеваете древний распев Верхнего Шепота. Корни мягко шевельнулись, тележка высвободилась.`, next: 'ГрибыМагия2' },
-  ГрибыМагия2: { location: 'tropa', sprites: [ { name: 'mira' }, { name: 'shustik' } ], speaker: 'Шустик', boxClass: 'shustik', text: `— Возьми Пыльцу Звёздных Светляков! А ещё я покажу вам старую калитку в скале под башней!`, set: { has_pollen: true, has_secret_door: true }, next: 'ТайныйВход' },
+  ГрибыМасло: {
+    location: 'tropa',
+    sprites: [ { name: 'mira' }, { name: 'shustik' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы достаёте из походной сумки флакон с вытяжкой из дикого миндаля.`,
+    next: 'ГрибыМасло2'
+  },
+  ГрибыМасло2: {
+    location: 'tropa',
+    sprites: [ { name: 'mira' }, { name: 'shustik' } ],
+    speaker: 'Шустик', boxClass: 'shustik',
+    text: `— Ура-а! Спасены! Держите горсть волшебной светящейся пыльцы!`,
+    set: { has_pollen: true },
+    next: 'БашняСнаружи'
+  },
+  ГрибыМеханика: {
+    location: 'tropa',
+    sprites: [ { name: 'shustik' }, { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Раз, два — взяли! Рычаг первого рода — лучшее колдовство на свете!`,
+    next: 'ГрибыМеханика2'
+  },
+  ГрибыМеханика2: {
+    location: 'tropa',
+    sprites: [ { name: 'mira' }, { name: 'shustik' } ],
+    speaker: 'Шустик', boxClass: 'shustik',
+    text: `— Вот это ловкость! Возьмите мешочек искристой пыльцы!`,
+    set: { has_pollen: true },
+    next: 'БашняСнаружи'
+  },
+  ГрибыМагия: {
+    location: 'tropa',
+    sprites: [ { name: 'mira' }, { name: 'shustik' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы напеваете древний распев Верхнего Шепота. Корни мягко шевельнулись, тележка высвободилась.`,
+    next: 'ГрибыМагия2'
+  },
+  ГрибыМагия2: {
+    location: 'tropa',
+    sprites: [ { name: 'mira' }, { name: 'shustik' } ],
+    speaker: 'Шустик', boxClass: 'shustik',
+    text: `— Возьми Пыльцу Звёздных Светляков! А ещё я покажу вам старую калитку в скале под башней!`,
+    set: { has_pollen: true, has_secret_door: true },
+    next: 'ТайныйВход'
+  },
 
-  ЛавкаСелесты: { location: 'lavka', sprites: [ { name: 'mira' }, { name: 'selesta' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы сворачиваете на улочку Травников к круглому домику бабушки Селесты.`, next: 'ЛавкаСелесты2' },
-  ЛавкаСелесты2: { location: 'lavka', sprites: [ { name: 'mira' }, { name: 'selesta' } ], speaker: 'Бабушка Селеста', boxClass: 'selesta', text: `— Батюшки, юные мастера! Беда с маяком, весь посёлок гудит! Вы на маяк?`, next: 'ЛавкаСелесты3' },
-  ЛавкаСелесты3: { location: 'lavka', sprites: [ { name: 'selesta' }, { name: 'mira' } ], speaker: 'Мира', boxClass: 'mira', text: `— Да, бабушка Селеста. Нам нужно оживить резонатор.`, next: 'ЛавкаСелесты4' },
+  /* ====== ЛАВКА СЕЛЕСТЫ ====== */
+  ЛавкаСелесты: {
+    location: 'lavka',
+    sprites: [ { name: 'mira' }, { name: 'selesta' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы сворачиваете на улочку Травников к круглому домику бабушки Селесты.`,
+    next: 'ЛавкаСелесты2'
+  },
+  ЛавкаСелесты2: {
+    location: 'lavka',
+    sprites: [ { name: 'mira' }, { name: 'selesta' } ],
+    speaker: 'Бабушка Селеста', boxClass: 'selesta',
+    text: `— Батюшки, юные мастера! Беда с маяком, весь посёлок гудит! Вы на маяк?`,
+    next: 'ЛавкаСелесты3'
+  },
+  ЛавкаСелесты3: {
+    location: 'lavka',
+    sprites: [ { name: 'selesta' }, { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Да, бабушка Селеста. Нам нужно оживить резонатор.`,
+    next: 'ЛавкаСелесты4'
+  },
   ЛавкаСелесты4: {
     location: 'lavka',
     sprites: [ { name: 'mira' }, { name: 'selesta' } ],
@@ -1262,12 +1569,117 @@ const PASSAGES = {
     ]
   },
 
-  ТайныйВход: { location: 'tower_inside', sprites: [], speaker: 'Рассказчик', boxClass: 'narrator', text: `Шустик привёл вас к незаметному гроту. Вы выходите прямо в центральный зал Башни.`, next: 'ВнутриБашни' },
-
-  ВнутриБашни: { location: 'tower_inside', sprites: [ { name: 'cornelius' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Главный зал башни поражал размахом. В центре метался старый смотритель Корнелиус. На постаменте спал Август — Звёздный Светляк размером с сенбернара.`, next: 'Корнелиус1' },
-  Корнелиус1: { location: 'tower_inside', sprites: [ { name: 'cornelius' } ], speaker: 'Корнелиус', boxClass: 'cornelius', text: `— Беда! Катастрофа долины! Фестиваль через два часа, а наш золотой мальчик спит без задних лапок!`, next: 'Корнелиус2' },
-  Корнелиус2: { location: 'tower_inside', sprites: [ { name: 'cornelius' }, { name: 'mira' } ], speaker: 'Мира', boxClass: 'mira', text: `— Господин Корнелиус, спокойствие! Олвен прислал подкрепление!`, next: 'Корнелиус3' },
-  Корнелиус3: { location: 'tower_inside', sprites: [ { name: 'mira' }, { name: 'cornelius' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Смотритель замер, развернулся и уставился на вас через тройные линзы.`, next: 'Корнелиус4' },
+  /* ====== БАШНЯ ====== */
+  ТайныйВход: {
+    location: 'tower_inside',
+    sprites: [],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Шустик привёл вас к незаметному гроту. Вы выходите прямо в центральный зал Башни.`,
+    next: 'ВнутриБашни'
+  },
+  БашняСнаружи: {
+    location: 'tower',
+    sprites: [ { name: 'mira' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Перед вами вздымалась Башня Светлячков. Массивные дубовые двери были заперты. На бронзовой накладке замка — циферблат с четырьмя стихийными знаками.`,
+    next: 'БашняСнаружи2'
+  },
+  БашняСнаружи2: {
+    location: 'tower',
+    sprites: [ { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Загадка гильдии архитекторов! «Лишь союз тепла и движения пробудит спящий свет». Что крутить будем?`,
+    next: 'БашняСнаружи3'
+  },
+  БашняСнаружи3: {
+    location: 'tower',
+    sprites: [ { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Что выбираем?`,
+    choices: [
+      { text: 'Выставить комбинацию: «Солнце и Ветер»', to: 'ДверьОткрыта' },
+      { text: 'Выставить комбинацию: «Вода и Росток»', to: 'ДверьОшибкаДобро' },
+      { text: 'Осмотреть окрестности: вдруг есть другой проход?', to: 'ОсмотрСтенБашни' }
+    ]
+  },
+  ДверьОткрыта: {
+    location: 'tower_inside',
+    sprites: [ { name: 'mira' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Щёлк-щёлк-клац! Медные шестерни весело зажужжали. Двери распахнулись.`,
+    set: { door_opened: true },
+    next: 'ВнутриБашни'
+  },
+  ДверьОшибкаДобро: {
+    location: 'tower',
+    sprites: [ { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Освежает! Но подсказка гласила: «Тепло и движение»! Попробуем ещё раз?`,
+    next: 'ДверьОткрыта'
+  },
+  ОсмотрСтенБашни: {
+    location: 'tower',
+    sprites: [ { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Окно приоткрыто. Можем подняться в Обсерваторию или открыть парадную дверь.`,
+    choices: [
+      { text: 'Открыть парадную дверь', to: 'ДверьОткрыта' },
+      { text: 'Залезть в окно Обсерватории', to: 'Обсерватория' }
+    ]
+  },
+  Обсерватория: {
+    location: 'tower_inside',
+    sprites: [ { name: 'mira' }, { name: 'tik_tak' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы оказались в комнате с медными звёздными картами. На столе спал заводной кот Тик-Так с латунным ключом на ошейнике.`,
+    next: 'Обсерватория2'
+  },
+  Обсерватория2: {
+    location: 'tower_inside',
+    sprites: [ { name: 'mira' }, { name: 'tik_tak' } ],
+    speaker: 'Рассказчик', boxClass: 'mira',
+    text: `Кот доверчиво протянул лапку.`,
+    choices: [
+      { text: 'Взять латунный ключ', to: 'ВзятьКлюч' },
+      { text: 'Оставить ключ и спуститься', to: 'ВнутриБашни' }
+    ]
+  },
+  ВзятьКлюч: {
+    location: 'tower_inside',
+    sprites: [ { name: 'mira' }, { name: 'tik_tak' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы аккуратно отстёгиваете ключ. Тик-Так следует за вами.`,
+    set: { has_key: true },
+    next: 'ВнутриБашни'
+  },
+  ВнутриБашни: {
+    location: 'tower_inside',
+    sprites: [ { name: 'cornelius' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Главный зал башни поражал размахом. В центре метался старый смотритель Корнелиус. На постаменте спал Август — Звёздный Светляк размером с сенбернара.`,
+    next: 'Корнелиус1'
+  },
+  Корнелиус1: {
+    location: 'tower_inside',
+    sprites: [ { name: 'cornelius' } ],
+    speaker: 'Корнелиус', boxClass: 'cornelius',
+    text: `— Беда! Катастрофа долины! Фестиваль через два часа, а наш золотой мальчик спит без задних лапок!`,
+    next: 'Корнелиус2'
+  },
+  Корнелиус2: {
+    location: 'tower_inside',
+    sprites: [ { name: 'cornelius' }, { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Господин Корнелиус, спокойствие! Олвен прислал подкрепление!`,
+    next: 'Корнелиус3'
+  },
+  Корнелиус3: {
+    location: 'tower_inside',
+    sprites: [ { name: 'mira' }, { name: 'cornelius' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Смотритель замер, развернулся и уставился на вас через тройные линзы.`,
+    next: 'Корнелиус4'
+  },
   Корнелиус4: {
     location: 'tower_inside',
     sprites: [ { name: 'mira' }, { name: 'cornelius' } ],
@@ -1279,10 +1691,30 @@ const PASSAGES = {
       { text: 'Подойти к Августу и тихо заговорить с ним', to: 'ОсмотрАвгуста1' }
     ]
   },
-  ПоказатьСхему1: { location: 'tower_inside', sprites: [ { name: 'mira' }, { name: 'cornelius' } ], speaker: 'Корнелиус', boxClass: 'cornelius', text: `— Батюшки! Да ведь это же настройка гармонического строя третьей октавы!`, set: { has_scheme: true }, next: 'ГлавнаяПочинка' },
-  ОсмотрМеханизма1: { location: 'tower_inside', sprites: [ { name: 'cornelius' }, { name: 'mira' } ], speaker: 'Мира', boxClass: 'mira', text: `— Работа ясна! Мы можем сделать это несколькими путями!`, set: { inspected_mechanism: true }, next: 'ГлавнаяПочинка' },
-  ОсмотрАвгуста1: { location: 'tower_inside', sprites: [ { name: 'cornelius' }, { name: 'august' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы тихонько проводите ладонью по его пушистой голове. Август приоткрывает огромный фиолетовый глаз.`, set: { has_met_august: true }, next: 'ГлавнаяПочинка' },
-
+  ПоказатьСхему1: {
+    location: 'tower_inside',
+    sprites: [ { name: 'mira' }, { name: 'cornelius' } ],
+    speaker: 'Корнелиус', boxClass: 'cornelius',
+    text: `— Батюшки! Да ведь это же настройка гармонического строя третьей октавы!`,
+    set: { has_scheme: true },
+    next: 'ГлавнаяПочинка'
+  },
+  ОсмотрМеханизма1: {
+    location: 'tower_inside',
+    sprites: [ { name: 'cornelius' }, { name: 'mira' } ],
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Работа ясна! Мы можем сделать это несколькими путями!`,
+    set: { inspected_mechanism: true },
+    next: 'ГлавнаяПочинка'
+  },
+  ОсмотрАвгуста1: {
+    location: 'tower_inside',
+    sprites: [ { name: 'cornelius' }, { name: 'august' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы тихонько проводите ладонью по его пушистой голове. Август приоткрывает огромный фиолетовый глаз.`,
+    set: { has_met_august: true },
+    next: 'ГлавнаяПочинка'
+  },
   ГлавнаяПочинка: {
     location: 'tower_inside',
     sprites: [ { name: 'mira' }, { name: 'cornelius' } ],
@@ -1296,35 +1728,60 @@ const PASSAGES = {
     ]
   },
 
-  БашняСнаружи: { location: 'tower', sprites: [ { name: 'mira' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Перед вами вздымалась Башня Светлячков. Массивные дубовые двери были заперты. На бронзовой накладке замка — циферблат с четырьмя стихийными знаками.`, next: 'БашняСнаружи2' },
-  БашняСнаружи2: { location: 'tower', sprites: [ { name: 'mira' } ], speaker: 'Мира', boxClass: 'mira', text: `— Загадка гильдии архитекторов! «Лишь союз тепла и движения пробудит спящий свет». Что крутить будем?`, next: 'БашняСнаружи3' },
-  БашняСнаружи3: {
-    location: 'tower',
-    sprites: [ { name: 'mira' } ],
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Что выбираем?`,
-    choices: [
-      { text: 'Выставить комбинацию: «Солнце и Ветер»', to: 'ДверьОткрыта' },
-      { text: 'Выставить комбинацию: «Вода и Росток»', to: 'ДверьОшибкаДобро' },
-      { text: 'Осмотреть окрестности: вдруг есть другой проход?', to: 'ОсмотрСтенБашни' }
-    ]
+  /* ====== ФИНАЛЫ ====== */
+  ФиналМузыка: {
+    location: 'final',
+    sprites: [ { name: 'mira' }, { name: 'august' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Колокола оживают! Август встаёт во весь рост, заливая зал мягким светом!`,
+    next: 'КонецГармония'
   },
-  ДверьОткрыта: { location: 'tower_inside', sprites: [ { name: 'mira' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Щёлк-щёлк-клац! Медные шестерни весело зажужжали. Двери распахнулись.`, set: { door_opened: true }, next: 'ВнутриБашни' },
-  ДверьОшибкаДобро: { location: 'tower', sprites: [ { name: 'mira' } ], speaker: 'Мира', boxClass: 'mira', text: `— Освежает! Но подсказка гласила: «Тепло и движение»! Попробуем ещё раз?`, next: 'ДверьОткрыта' },
-  ОсмотрСтенБашни: { location: 'tower', sprites: [ { name: 'mira' } ], speaker: 'Мира', boxClass: 'mira', text: `— Окно приоткрыто. Можем подняться в Обсерваторию или открыть парадную дверь.`, choices: [ { text: 'Открыть парадную дверь', to: 'ДверьОткрыта' }, { text: 'Залезть в окно Обсерватории', to: 'Обсерватория' } ] },
-  Обсерватория: { location: 'tower_inside', sprites: [ { name: 'mira' }, { name: 'tik_tak' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы оказались в комнате с медными звёздными картами. На столе спал заводной кот Тик-Так с латунным ключом на ошейнике.`, next: 'Обсерватория2' },
-  Обсерватория2: { location: 'tower_inside', sprites: [ { name: 'mira' }, { name: 'tik_tak' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Кот доверчиво протянул лапку.`, choices: [ { text: 'Взять латунный ключ', to: 'ВзятьКлюч' }, { text: 'Оставить ключ и спуститься', to: 'ВнутриБашни' } ] },
-  ВзятьКлюч: { location: 'tower_inside', sprites: [ { name: 'mira' }, { name: 'tik_tak' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы аккуратно отстёгиваете ключ. Тик-Так следует за вами.`, set: { has_key: true }, next: 'ВнутриБашни' },
+  ФиналНектар: {
+    location: 'final',
+    sprites: [ { name: 'mira' }, { name: 'august' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Август с довольным урчанием припадает к чаше с сиропом!`,
+    next: 'КонецМастерство'
+  },
+  ФиналМеханика: {
+    location: 'final',
+    sprites: [ { name: 'mira' }, { name: 'august' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Шестерёнки встают на место! Август взмывает в центр конструкции!`,
+    next: 'КонецНаука'
+  },
+  ФиналТриумф: {
+    location: 'final',
+    sprites: [ { name: 'mira' }, { name: 'august' } ],
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Слаженный праздничный танец! Светляк взмыл под стеклянный купол!`,
+    next: 'КонецЕдинство'
+  },
 
-  ФиналМузыка: { location: 'final', sprites: [ { name: 'mira' }, { name: 'august' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Колокола оживают! Август встаёт во весь рост, заливая зал мягким светом!`, next: 'КонецГармония' },
-  ФиналНектар: { location: 'final', sprites: [ { name: 'mira' }, { name: 'august' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Август с довольным урчанием припадает к чаше с сиропом!`, next: 'КонецМастерство' },
-  ФиналМеханика: { location: 'final', sprites: [ { name: 'mira' }, { name: 'august' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Шестерёнки встают на место! Август взмывает в центр конструкции!`, next: 'КонецНаука' },
-  ФиналТриумф: { location: 'final', sprites: [ { name: 'mira' }, { name: 'august' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Слаженный праздничный танец! Светляк взмыл под стеклянный купол!`, next: 'КонецЕдинство' },
-
-  КонецГармония: { location: 'ending', cutscene: 'ending_harmony', sprites: [], speaker: 'Финал', boxClass: 'final-box', ending: 'harmony', text: `<b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство.</i>`, next: 'title' },
-  КонецМастерство: { location: 'ending', cutscene: 'ending_mastery', sprites: [], speaker: 'Финал', boxClass: 'final-box', ending: 'mastery', text: `<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина!</i>`, next: 'title' },
-  КонецНаука: { location: 'ending', cutscene: 'ending_science', sprites: [], speaker: 'Финал', boxClass: 'final-box', ending: 'science', text: `<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>`, next: 'title' },
-  КонецЕдинство: { location: 'ending', cutscene: 'ending_unity', sprites: [], speaker: 'Финал', boxClass: 'final-box', ending: 'unity', text: `<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец.</i>`, next: 'title' }
+  КонецГармония: {
+    location: 'ending', cutscene: 'ending_harmony', sprites: [],
+    speaker: 'Финал', boxClass: 'final-box', ending: 'harmony',
+    text: `<b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство.</i>`,
+    next: 'title'
+  },
+  КонецМастерство: {
+    location: 'ending', cutscene: 'ending_mastery', sprites: [],
+    speaker: 'Финал', boxClass: 'final-box', ending: 'mastery',
+    text: `<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина!</i>`,
+    next: 'title'
+  },
+  КонецНаука: {
+    location: 'ending', cutscene: 'ending_science', sprites: [],
+    speaker: 'Финал', boxClass: 'final-box', ending: 'science',
+    text: `<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>`,
+    next: 'title'
+  },
+  КонецЕдинство: {
+    location: 'ending', cutscene: 'ending_unity', sprites: [],
+    speaker: 'Финал', boxClass: 'final-box', ending: 'unity',
+    text: `<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец.</i>`,
+    next: 'title'
+  }
 };
 
 /* ============================================================
@@ -1383,7 +1840,7 @@ function getCompletionPercent() {
 function saveGame() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
-      version: 5, timestamp: Date.now(),
+      version: 6, timestamp: Date.now(),
       currentPassage: gameState.currentPassage,
       history: gameState.history, historyIndex: gameState.historyIndex,
       variables: gameState.variables,
@@ -1526,7 +1983,7 @@ function showNotification(title, text) {
 }
 
 /* ============================================================
-   7. ФОН
+   7. ФОН + ВСТАВКИ
    ============================================================ */
 let bgSwapTimer = null;
 function setBackground(locationKey) {
@@ -1541,6 +1998,23 @@ function setBackground(locationKey) {
     bg.style.opacity = '1';
     bgSwapTimer = null;
   }, 500);
+}
+
+let insertTimer = null;
+function showInsert(imgUrl, duration) {
+  const layer = document.getElementById('insertLayer');
+  if (!layer || !imgUrl) return;
+  if (insertTimer) { clearTimeout(insertTimer); insertTimer = null; }
+  layer.style.backgroundImage = `url("${imgUrl}")`;
+  layer.classList.remove('active');
+  void layer.offsetWidth;
+  layer.classList.add('active');
+  insertTimer = setTimeout(() => {
+    layer.classList.remove('active');
+    insertTimer = setTimeout(() => {
+      layer.style.backgroundImage = '';
+    }, 700);
+  }, duration);
 }
 
 /* ============================================================
@@ -1574,7 +2048,6 @@ function addSprite(name) {
   if (activeSprites[name]) return;
   const stage = document.getElementById('spriteStage');
   if (!stage) return;
-
   const old = stage.querySelector(`[data-char="${name}"]`);
   if (old) old.remove();
 
@@ -1639,12 +2112,6 @@ function deactivateAllSprites() {
   });
 }
 
-function pruneSprites(wantedNames) {
-  Object.keys(activeSprites).forEach(name => {
-    if (!wantedNames.includes(name)) removeSprite(name);
-  });
-}
-
 /* ============================================================
    10. ПЕЧАТАЮЩИЙСЯ ТЕКСТ
    ============================================================ */
@@ -1691,7 +2158,6 @@ const CutscenePlayer = {
   play(sceneKey, onFinish) {
     const scene = CUTSCENES[sceneKey];
     if (!scene || !scene.frames || scene.frames.length === 0) {
-      console.warn('Кастсцена не найдена:', sceneKey);
       if (onFinish) onFinish();
       return;
     }
@@ -1888,11 +2354,15 @@ function renderPassage(id, addToHistory = true) {
 function renderPassageInner(id, passage) {
   setBackground(passage.location);
 
+  // === ВСТАВКА-ЗАСТАВКА ===
+  if (passage.insert) {
+    showInsert(passage.insert, passage.insertDuration || 2200);
+  }
+
   // === СПРАЙТЫ: ТОЛЬКО ЯВНО УКАЗАННЫЕ ===
   const explicitSprites = (passage.sprites || []).slice();
   const speakerKey = SPEAKER_MAP[passage.speaker];
 
-  // Сортируем: не-говорящие слева, говорящий справа
   const sortedSprites = explicitSprites.slice().sort((a, b) => {
     const aActive = a.name === speakerKey ? 1 : 0;
     const bActive = b.name === speakerKey ? 1 : 0;
@@ -1901,14 +2371,12 @@ function renderPassageInner(id, passage) {
 
   const wantedNames = sortedSprites.map(s => s.name);
 
-  // Полная пересборка сцены (чтобы порядок был правильный)
   const stage = document.getElementById('spriteStage');
   if (stage) stage.innerHTML = '';
   Object.keys(activeSprites).forEach(k => delete activeSprites[k]);
 
   wantedNames.forEach(name => addSprite(name));
 
-  // === АКТИВНЫЙ СПРАЙТ ===
   if (speakerKey && activeSprites[speakerKey]) {
     setActiveSprite(speakerKey);
   } else if (wantedNames.length > 0) {
