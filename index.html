@@ -1054,7 +1054,7 @@ body.cutscene-active .particles-layer {
 
 <script>
    /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v6.0 (начало по картинкам)
+   ПЕСНЬ АВГУСТА — движок v7.0 (спрайты только после выбора пути)
    ============================================================ */
 
 /* ============================================================
@@ -1163,7 +1163,7 @@ const SFX_VOLUME = 0.6;
 const PASSAGES = {
   title: { isTitle: true },
 
-  /* ====== НОВОЕ НАЧАЛО ПО КАРТИНКАМ ====== */
+  /* ====== НОВОЕ НАЧАЛО ПО КАРТИНКАМ — БЕЗ СПРАЙТОВ ====== */
   Start1: {
     location: 'start',
     speaker: 'Рассказчик', boxClass: 'narrator',
@@ -1196,7 +1196,6 @@ const PASSAGES = {
   },
   Start6: {
     location: 'player_inside',
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Мира', boxClass: 'mira',
     text: `— Подъём, Хранитель трав и ветров! — звонко бросила Мира, заглядывая через плечо. Её рыжие кудри пахли машинным маслом и полевыми цветами. — Мастер Олвен передал, что в маяке заклинило рунный резонатор. Я взяла отмычки, разводной ключ и банку лучшей графитовой смазки. А у тебя что в письме?`,
     choices: [
@@ -1209,7 +1208,6 @@ const PASSAGES = {
     location: 'player_inside',
     insert: 'images/fon_player_letter.png',
     insertDuration: 2200,
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Вы берёте письмо. Красный воск тёплый на ощупь, оттиск кленового листа чёткий, будто только что сделан. За окном — солнце, тишина и далёкий маяк.`,
     next: 'ПисьмоОлвена'
@@ -1222,7 +1220,6 @@ const PASSAGES = {
   },
   ПисьмоОлвена2: {
     location: 'player_table',
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Мира', boxClass: 'mira',
     text: `Мира заглянула через плечо и тихонько присвистнула. — «Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?`,
     choices: [
@@ -1232,31 +1229,27 @@ const PASSAGES = {
     ]
   },
 
-  /* ====== ВЕТКА: ОБСУДИТЬ МАРШРУТ ====== */
+  /* ====== ВЕТКА: ОБСУДИТЬ МАРШРУТ — БЕЗ СПРАЙТОВ ====== */
   ВыборПути: {
     location: 'player_table',
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Вы прячете письмо во внутренний карман и хлопаете по нему ладонью.`,
     next: 'ВыборПути2'
   },
   ВыборПути2: {
     location: 'player_table',
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Вы', boxClass: 'narrator',
     text: `— Разберёмся по дороге. Сначала — к маяку.`,
     next: 'ВыборПути3'
   },
   ВыборПути3: {
     location: 'player_table',
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Рассказчик', boxClass: 'mira',
     text: `Мира кивает и закидывает чехол на плечо.`,
     next: 'ВыборПути4'
   },
   ВыборПути4: {
     location: 'player_table',
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Мира', boxClass: 'mira',
     text: `Тогда решай, как пойдём. Через мост — дольше, но спокойнее. Через Грибную тропу — быстрее, но там сумрачно и можно встретить лесных духов. Или заглянем к бабушке Селесте — она всегда что-то подскажет.`,
     choices: [
@@ -1266,37 +1259,33 @@ const PASSAGES = {
     ]
   },
 
-  /* ====== ВЕТКА: ШУТКА ====== */
+  /* ====== ВЕТКА: ШУТКА — БЕЗ СПРАЙТОВ ====== */
   РазговорСМирой1: {
     location: 'player_inside',
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Вы с улыбкой оглядываете её внушительный багаж.`,
     next: 'РазговорСМирой2'
   },
   РазговорСМирой2: {
     location: 'player_inside',
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Вы', boxClass: 'narrator',
     text: `— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`,
     next: 'РазговорСМирой3'
   },
   РазговорСМирой3: {
     location: 'player_inside',
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Рассказчик', boxClass: 'mira',
     text: `Мира фыркнула и театрально постучала медным ключом по ладони.`,
     next: 'РазговорСМирой4'
   },
   РазговорСМирой4: {
     location: 'player_inside',
-    sprites: [ { name: 'mira' }, { name: 'player' } ],
     speaker: 'Мира', boxClass: 'mira',
     text: `— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Или у Корнелиуса снова заржавел механизм для колки орехов? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?`,
     next: 'ОткрытьПисьмо'
   },
 
-  /* ====== СТАРЫЙ МОСТ ====== */
+  /* ====== СТАРЫЙ МОСТ — СПРАЙТЫ ПОЯВЛЯЮТСЯ ЗДЕСЬ ====== */
   СтарыйМост: {
     location: 'most',
     sprites: [ { name: 'mira' }, { name: 'bruno' } ],
@@ -1840,7 +1829,7 @@ function getCompletionPercent() {
 function saveGame() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
-      version: 6, timestamp: Date.now(),
+      version: 7, timestamp: Date.now(),
       currentPassage: gameState.currentPassage,
       history: gameState.history, historyIndex: gameState.historyIndex,
       variables: gameState.variables,
@@ -2354,12 +2343,10 @@ function renderPassage(id, addToHistory = true) {
 function renderPassageInner(id, passage) {
   setBackground(passage.location);
 
-  // === ВСТАВКА-ЗАСТАВКА ===
   if (passage.insert) {
     showInsert(passage.insert, passage.insertDuration || 2200);
   }
 
-  // === СПРАЙТЫ: ТОЛЬКО ЯВНО УКАЗАННЫЕ ===
   const explicitSprites = (passage.sprites || []).slice();
   const speakerKey = SPEAKER_MAP[passage.speaker];
 
@@ -2383,7 +2370,6 @@ function renderPassageInner(id, passage) {
     deactivateAllSprites();
   }
 
-  // === UI ===
   let navHTML = '';
   if (passage.choices && passage.choices.length > 0) {
     navHTML = '<div class="choice-box">' + passage.choices.map(c =>
