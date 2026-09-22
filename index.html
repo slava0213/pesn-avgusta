@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Песнь Августа</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <style>
 /* ============================================
    БАЗОВЫЕ СТИЛИ
@@ -17,6 +17,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ===== ФОН ===== */
@@ -29,6 +30,7 @@ html, body {
   z-index: 1; pointer-events: none;
   opacity: 1;
   transition: opacity 0.4s ease-in-out;
+  will-change: opacity;
 }
 .vignette-layer {
   position: fixed; inset: 0; pointer-events: none; z-index: 2;
@@ -40,7 +42,7 @@ html, body {
 /* ===== ЭКРАН ЗАГРУЗКИ ===== */
 .loading-screen {
   position: fixed; inset: 0; z-index: 5000;
-  background: #0a0a14;
+  background: radial-gradient(ellipse at center, #14101e 0%, #0a0a14 100%);
   display: flex; align-items: center; justify-content: center;
   flex-direction: column; gap: 24px;
   transition: opacity 0.6s ease;
@@ -48,16 +50,18 @@ html, body {
 .loading-screen.hidden { opacity: 0; pointer-events: none; }
 .loading-spinner {
   width: 64px; height: 64px;
-  border: 4px solid rgba(251,191,36,0.2);
+  border: 4px solid rgba(251,191,36,0.15);
   border-top-color: #FBBF24;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  box-shadow: 0 0 30px rgba(251,191,36,0.3);
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text {
   color: #FBBF24; font-size: 16px;
   letter-spacing: 4px; text-transform: uppercase;
   animation: pulse 1.6s ease-in-out infinite;
+  text-shadow: 0 0 12px rgba(251,191,36,0.6);
 }
 @keyframes pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
 
@@ -157,6 +161,16 @@ html, body {
   display: flex; flex-direction: column;
   animation: dialogueIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   overflow: visible;
+  cursor: pointer;
+}
+.dialogue-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 20%; right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,220,120,0.7), transparent);
+  border-radius: 14px 14px 0 0;
+  pointer-events: none;
 }
 @keyframes dialogueIn {
   from { opacity: 0; transform: translateX(-50%) translateY(24px); }
@@ -176,6 +190,7 @@ html, body {
   text-shadow: 1px 1px 3px rgba(0,0,0,0.75);
   letter-spacing: 1.4px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  z-index: 2;
 }
 .dialogue-text {
   width: 100%; flex: 1;
@@ -194,6 +209,7 @@ html, body {
   display: inline-block; color: #FFD700;
   animation: cursorBlink 0.8s steps(2, start) infinite;
   font-weight: bold; margin-left: 2px;
+  text-shadow: 0 0 8px rgba(255,215,0,0.9);
 }
 @keyframes cursorBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 .next-hint {
@@ -203,6 +219,7 @@ html, body {
   opacity: 0.85;
   animation: nextPulse 1.4s ease-in-out infinite;
   pointer-events: none;
+  text-shadow: 0 0 10px rgba(255,215,0,0.8);
 }
 @keyframes nextPulse {
   0%,100% { transform: translateY(0);   opacity: 0.5; }
@@ -254,6 +271,7 @@ html, body {
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 .choice-box a {
+  position: relative;
   width: 100%; display: block; text-align: center;
   padding: 14px 22px;
   background: linear-gradient(180deg, rgba(251,191,36,0.95) 0%, rgba(217,119,6,0.95) 100%);
@@ -267,7 +285,22 @@ html, body {
   transition: all 0.25s ease;
   box-shadow: 0 8px 22px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.35);
   letter-spacing: 0.4px;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
+.choice-box a::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: rgba(255,255,255,0.35);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.5s ease, height 0.5s ease;
+  pointer-events: none;
+}
+.choice-box a:hover::after { width: 400px; height: 400px; }
+.choice-box a > span { position: relative; z-index: 1; }
 .choice-box a:hover {
   background: linear-gradient(180deg, rgba(252,211,77,1) 0%, rgba(245,158,11,1) 100%);
   color: #1a0d00;
@@ -296,6 +329,7 @@ html, body {
   user-select: none;
   font-family: 'Georgia', serif;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 .history-btn:hover:not(:disabled) { transform: translateY(-2px) scale(1.08); box-shadow: 0 8px 25px rgba(255,200,100,0.7); }
 .history-btn:disabled { opacity: 0.35; cursor: not-allowed; filter: grayscale(0.7); }
@@ -306,6 +340,7 @@ html, body {
   display: flex; gap: 10px; z-index: 300;
 }
 .game-menu button {
+  position: relative;
   width: 48px; height: 48px;
   border-radius: 50%;
   border: 2px solid rgba(180,83,9,0.95);
@@ -316,7 +351,19 @@ html, body {
   transition: all 0.25s ease;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   padding: 0;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
+.game-menu button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.4), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.game-menu button:hover::before { opacity: 1; }
 .game-menu button:hover { transform: translateY(-2px) scale(1.08); box-shadow: 0 8px 25px rgba(255,200,100,0.7); }
 
 /* ===== УВЕДОМЛЕНИЯ ===== */
@@ -324,8 +371,9 @@ html, body {
   position: fixed; top: 80px; right: 20px;
   background: linear-gradient(180deg, rgba(217,119,6,0.98) 0%, rgba(180,83,9,0.98) 100%);
   color: #FFF8E7;
-  padding: 14px 22px;
+  padding: 14px 22px 14px 26px;
   border: 2px solid rgba(244,197,66,0.9);
+  border-left: 5px solid #FBBF24;
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.25);
   font-size: 14px;
@@ -336,6 +384,14 @@ html, body {
   pointer-events: none;
   max-width: 320px;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.75);
+}
+.notification::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  border-radius: 10px 10px 0 0;
 }
 .notification.show { opacity: 1; transform: translateX(0); }
 .notification b { color: #FFE9A8; display: block; margin-bottom: 4px; font-size: 12px; letter-spacing: 1.5px; }
@@ -391,6 +447,7 @@ html, body {
   font-weight: bold; font-family: inherit; text-align: center;
   letter-spacing: 1.2px; transition: all 0.25s ease;
   box-shadow: 0 8px 22px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+  -webkit-tap-highlight-color: transparent;
 }
 .title-menu button:hover:not(:disabled) {
   background: linear-gradient(180deg, rgba(252,211,77,1) 0%, rgba(245,158,11,1) 100%);
@@ -428,20 +485,22 @@ html, body {
   z-index: 1000;
   display: flex; align-items: center; justify-content: center;
   animation: fadeIn 0.25s ease-out;
+  padding: 20px;
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .modal-overlay.hidden { display: none; }
 .modal {
   background: linear-gradient(180deg, #171310 0%, #0d0a08 100%);
   border: 2px solid rgba(244,197,66,0.6);
-  max-width: 620px; width: 92%; max-height: 82vh;
+  max-width: 620px; width: 100%; max-height: 82vh;
   overflow-y: auto; padding: 24px;
   border-radius: 14px;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 .modal h2 {
   margin: 0 0 16px; color: #FBBF24;
   text-transform: uppercase; font-size: 18px; letter-spacing: 2px;
+  text-shadow: 0 0 12px rgba(251,191,36,0.5);
 }
 .modal .row {
   display: flex; justify-content: space-between; align-items: center;
@@ -455,6 +514,7 @@ html, body {
   border: 1px solid #4a3f2f;
   padding: 6px 10px; border-radius: 6px;
   font-family: inherit; font-size: 14px;
+  cursor: pointer;
 }
 .modal .buttons { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap; }
 .modal button {
@@ -463,14 +523,21 @@ html, body {
   padding: 10px 20px; border-radius: 8px;
   cursor: pointer; font-family: inherit; font-size: 14px;
   font-weight: bold; letter-spacing: 1px; transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.modal button:hover { background: linear-gradient(180deg, #57c, #258); transform: translateY(-1px); }
+.modal button:hover { background: linear-gradient(180deg, #57c, #258); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(80,130,220,0.4); }
 .modal .ach-list { display: flex; flex-direction: column; gap: 8px; }
 .modal .ach {
   display: flex; align-items: center; gap: 12px;
   padding: 10px 14px; border-radius: 8px;
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.06);
+  transition: all 0.25s ease;
+}
+.modal .ach:not(.locked):hover {
+  background: rgba(251,191,36,0.08);
+  border-color: rgba(251,191,36,0.3);
+  transform: translateX(4px);
 }
 .modal .ach.locked { opacity: 0.4; filter: grayscale(1); }
 .modal .ach .icon { font-size: 22px; }
@@ -535,10 +602,16 @@ html, body {
   left: 0; bottom: 0;
   height: 4px;
   width: 0%;
-  background: linear-gradient(90deg, #FBBF24, #F59E0B);
+  background: linear-gradient(90deg, #FBBF24, #F59E0B, #FBBF24);
+  background-size: 200% 100%;
   box-shadow: 0 0 12px rgba(255,200,100,0.8);
   z-index: 4;
   transition: width 0.2s linear;
+  animation: progressShine 2s linear infinite;
+}
+@keyframes progressShine {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
 }
 .cutscene-controls {
   position: absolute;
@@ -560,6 +633,8 @@ html, body {
   letter-spacing: 1px; cursor: pointer;
   transition: all 0.25s ease;
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  -webkit-tap-highlight-color: transparent;
 }
 .cs-btn:hover {
   background: rgba(244,197,66,0.9);
@@ -617,10 +692,15 @@ body.cutscene-active .history-controls {
 }
 
 /* ===== СКРОЛЛБАР ===== */
-.dialogue-text::-webkit-scrollbar, .modal::-webkit-scrollbar { width: 8px; }
-.dialogue-text::-webkit-scrollbar-track, .modal::-webkit-scrollbar-track { background: rgba(255,243,196,0.12); border-radius: 4px; }
-.dialogue-text::-webkit-scrollbar-thumb, .modal::-webkit-scrollbar-thumb { background: #FBBF24; border-radius: 4px; }
-.dialogue-text::-webkit-scrollbar-thumb:hover, .modal::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
+.dialogue-text::-webkit-scrollbar, .modal::-webkit-scrollbar { width: 6px; }
+.dialogue-text::-webkit-scrollbar-track, .modal::-webkit-scrollbar-track { background: rgba(255,243,196,0.12); border-radius: 3px; }
+.dialogue-text::-webkit-scrollbar-thumb, .modal::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FBBF24, #F59E0B);
+  border-radius: 3px;
+}
+.dialogue-text::-webkit-scrollbar-thumb:hover, .modal::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FCD34D, #FBBF24);
+}
 
 /* ===== АДАПТАЦИЯ ===== */
 @media (max-width: 768px) {
@@ -636,9 +716,24 @@ body.cutscene-active .history-controls {
   .sprite.pos-far-right { right: 14%; }
   .history-btn, .game-menu button { width: 42px; height: 42px; font-size: 17px; }
   .title-endings { bottom: 15vh; }
-  .notification { top: 70px; right: 12px; font-size: 12px; padding: 10px 16px; max-width: 260px; }
+  .notification { top: 70px; right: 12px; font-size: 12px; padding: 10px 16px 10px 20px; max-width: 260px; }
   .modal { padding: 18px; }
   .cs-btn { padding: 8px 14px; font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+  .dialogue-box { width: 96vw; max-height: 48vh; bottom: 1.5vh; border-radius: 12px; }
+  .speaker-name { top: -1.4vh; left: 3vw; padding: 0.6vh 3vw; font-size: 13px; }
+  .dialogue-text { font-size: 14px; padding: 2.8vh 4vw 2vh; line-height: 1.65; }
+  .choice-box { bottom: 52vh; width: 94vw; gap: 8px; }
+  .choice-box a { padding: 11px 14px; font-size: 13px; }
+  .sprite { height: 55vh; max-width: 75vw; bottom: 32vh; }
+  .history-btn, .game-menu button { width: 38px; height: 38px; font-size: 15px; }
+  .title-main { font-size: 28px; letter-spacing: 3px; }
+  .title-sub { font-size: 11px; letter-spacing: 2px; }
+  .history-controls, .game-menu { top: 10px; }
+  .history-controls { left: 10px; }
+  .game-menu { right: 10px; }
 }
 
 .hidden { display: none !important; }
@@ -683,1644 +778,3 @@ body.cutscene-active .history-controls {
 <div class="modal-overlay hidden" id="modalOverlay">
   <div class="modal" id="modalContent"></div>
 </div>
-
-<script>
-/* ============================================================
-   ПЕСНЬ АВГУСТА — движок v3.0
-   ============================================================ */
-
-/* ============================================================
-   1. КОНСТАНТЫ ДАННЫХ
-   ============================================================ */
-
-const LOCATION_BG = {
-  title:           'images/fon_title.png',
-  start:           'images/fon_start.png',
-  player_outside:  'images/fon_player_insite.png',
-  player_inside:   'images/fon_player_inside_room.png',
-  most:            'images/fon_most.png',
-  lavka:           'images/fon_lavka.png',
-  tropa:           'images/fon_tropa.png',
-  tower:           'images/fon_tower.png',
-  tower_inside:    'images/fon_tower_inside.png',
-  final:           'images/fon_final.png',
-  ending:          'images/fon_ending.png'
-};
-
-const SPRITE_MAP = {
-  player:         'images/player.png',
-  mira:           'images/mira.png',
-  bruno:          'images/bruno.png',
-  shustik:        'images/shustik.png',
-  selesta:        'images/selesta.png',
-  cornelius:      'images/cornelius.png',
-  august:         'images/august.png',
-  olven:          'images/olven.png',
-  tik_tak:        'images/tik_tak.png',
-  tower_outside:  'images/tower_outside.png',
-  tower_inside:   'images/tower_inside.png',
-  tower_hall:     'images/tower_hall.png',
-  valley:         'images/valley.png'
-};
-
-const SPEAKER_MAP = {
-  'Мира':               'mira',
-  'Бруно':              'bruno',
-  'Шустик':             'shustik',
-  'Бабушка Селеста':    'selesta',
-  'Селеста':            'selesta',
-  'Корнелиус':          'cornelius',
-  'Господин Корнелиус': 'cornelius',
-  'Мастер Олвен':       'olven',
-  'Август':             'august',
-  'Тик-Так':            'tik_tak',
-  'Вы':                 'player'
-};
-
-const MENTION_MAP = [
-  { sprite: 'mira',      words: ['Мира', 'Миры', 'Мире', 'Миру', 'Мирой', 'Мирою'] },
-  { sprite: 'bruno',     words: ['Бруно'] },
-  { sprite: 'shustik',   words: ['Шустик', 'Шустика', 'Шустику', 'Шустиком'] },
-  { sprite: 'selesta',   words: ['Селеста', 'Селесты', 'Селесте', 'Селесту', 'Селестой', 'Селестою', 'Бабушка Селеста', 'Бабушки Селесты', 'Бабушке Селесте'] },
-  { sprite: 'cornelius', words: ['Корнелиус', 'Корнелиуса', 'Корнелиусу', 'Корнелиусом', 'Господин Корнелиус', 'Господина Корнелиуса', 'Господину Корнелиусу'] },
-  { sprite: 'olven',     words: ['Олвен', 'Олвена', 'Олвену', 'Олвеном', 'Мастер Олвен', 'Мастера Олвена', 'Мастеру Олвену'] },
-  { sprite: 'august',    words: ['Август', 'Августа', 'Августу', 'Августом'] },
-  { sprite: 'tik_tak',   words: ['Тик-Так', 'Тик-Така', 'Тик-Таку', 'Тик-Таком'] }
-];
-
-const ACHIEVEMENTS = {
-  feather:    { icon: '🪶', title: 'Перо Лазурной Сойки', desc: 'Получить перо у Бруно' },
-  crystal:    { icon: '💎', title: 'Кристалл Кварца',      desc: 'Получить кристалл у Бруно' },
-  pollen:     { icon: '✨', title: 'Пыльца Светляков',     desc: 'Получить пыльцу у Шустика' },
-  vial:       { icon: '🧪', title: 'Флакон Селесты',       desc: 'Получить флакон от Селесты' },
-  key:        { icon: '🔑', title: 'Латунный ключ',        desc: 'Взять ключ у Тик-Така' },
-  secret:     { icon: '🚪', title: 'Тайный вход',          desc: 'Найти секретный проход в башню' },
-  scheme:     { icon: '📜', title: 'Схема Олвена',         desc: 'Изучить чертёж мастера Олвена' },
-  allEndings: { icon: '👑', title: 'Все концовки',         desc: 'Открыть все четыре финала' }
-};
-
-/* ============================================================
-   РЕЕСТР КАСТСЦЕН (пока пустой — заполни своими файлами)
-   ============================================================ */
-const CUTSCENES = {
-  ending_harmony: {
-    frames: [
-      { img: 'images/cutscenes/harmony_01.png', duration: 3500, effect: 'fade' },
-      { img: 'images/cutscenes/harmony_02.png', duration: 3500, effect: 'zoom-in' },
-      { img: 'images/cutscenes/harmony_03.png', duration: 3500, effect: 'fade' },
-      { img: 'images/cutscenes/harmony_04.png', duration: 4500, effect: 'zoom-out' }
-    ]
-  },
-  ending_mastery: {
-    frames: [
-      { img: 'images/cutscenes/mastery_01.png', duration: 3500, effect: 'fade' },
-      { img: 'images/cutscenes/mastery_02.png', duration: 4500, effect: 'zoom-in' }
-    ]
-  },
-  ending_science: {
-    frames: [
-      { img: 'images/cutscenes/science_01.png', duration: 3200, effect: 'slide-left' },
-      { img: 'images/cutscenes/science_02.png', duration: 3200, effect: 'fade' },
-      { img: 'images/cutscenes/science_03.png', duration: 4200, effect: 'zoom-in' }
-    ]
-  },
-  ending_unity: {
-    frames: [
-      { img: 'images/cutscenes/unity_01.png', duration: 3200, effect: 'fade' },
-      { img: 'images/cutscenes/unity_02.png', duration: 3200, effect: 'fade' },
-      { img: 'images/cutscenes/unity_03.png', duration: 3200, effect: 'fade' },
-      { img: 'images/cutscenes/unity_04.png', duration: 3200, effect: 'zoom-in' },
-      { img: 'images/cutscenes/unity_05.png', duration: 5000, effect: 'fade' }
-    ]
-  }
-};
-
-/* ============================================================
-   ЗВУКОВЫЕ ЭФФЕКТЫ
-   ============================================================ */
-const SFX_MAP = {
-  click:        'audio/sfx/click.mp3',
-  choice:       'audio/sfx/choice.mp3',
-  achievement:  'audio/sfx/achievement.mp3',
-  transition:   'audio/sfx/transition.mp3',
-  notification: 'audio/sfx/notification.mp3'
-};
-const sfxCache = {};
-const SFX_VOLUME = 0.6;
-
-/* ============================================================
-   2. ПАССАЖИ (полный сюжет)
-   ============================================================ */
-const PASSAGES = {
-  title: { isTitle: true },
-
-  Start1: { location: 'start', speaker: 'Рассказчик', boxClass: 'narrator', text: `Утро в Верхнем Шепоте пахло сушёными яблоками, речной мятой и смолистыми сосновыми дровами. Солнце только коснулось шпилей ремесленных гильдий, а вы уже затягивали ремешок дорожной сумки травника.`, next: 'Start2' },
-  Start2: { location: 'start', speaker: 'Рассказчик', boxClass: 'narrator', text: `На столе лежало тяжёлое письмо из плотного пергамента, запечатанное золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.`, next: 'Start3' },
-  Start3: { location: 'player_outside', speaker: 'Рассказчик', boxClass: 'narrator', text: `Сегодня в долине должен состояться ежегодный праздник Осенней Звезды. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков. Без его тёплого луча небесные светляки собьются с пути, а речные баржи с яблочным сидром и пряниками не найдут гавань.`, next: 'Start4' },
-  Start4: { location: 'player_outside', speaker: 'Рассказчик', boxClass: 'narrator', text: `Скрипнула калитка. Во двор вошла Мира, держа под мышкой объёмистый кожаный чехол с инструментами. Её рыжие кудри были небрежно подвязаны медной проволокой, а в глазах плясали озорные искры.`, next: 'Start5' },
-  Start5: {
-    location: 'player_inside',
-    sprites: [ { name: 'player', pos: 'left' }, { name: 'mira', pos: 'right' } ],
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Подъём, Хранитель трав и ветров! — звонко бросила она, прислоняясь к перилам. — Мастер Олвен передал, что в маяке не просто перегорела свеча — там заклинило рунный резонатор. Я взяла отмычки, разводной ключ на двенадцать и банку лучшей графитовой смазки. А у тебя что в письме?`,
-    choices: [
-      { text: 'Вскрыть письмо мастера Олвена прямо сейчас', to: 'ПисьмоОлвена' },
-      { text: 'Спрятать письмо в карман и сразу обсудить маршрут', to: 'ВыборПути' },
-      { text: 'Пошутить над Мирой и её чехлом с инструментами', to: 'РазговорСМирой1' }
-    ]
-  },
-
-  ПисьмоОлвена: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы ломаете восковую печать. Внутри обнаруживается не просто записка, а тщательно вычерченная схема линз с личными пометками мастера, сделанными серебряными чернилами.`, next: 'ПисьмоОлвена2' },
-  ПисьмоОлвена2: {
-    location: 'player_inside',
-    sprites: [ { name: 'mira', pos: 'right' }, { name: 'olven', pos: 'left' } ],
-    speaker: 'Мастер Олвен', boxClass: 'olven',
-    text: `«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы и фальшивых нот. Если механизм замер, ищите причину не в поломке металла, а в нарушении гармонии. Возьмите с собой частицу стихии и помните: свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».`,
-    next: 'ПисьмоОлвена3'
-  },
-  ПисьмоОлвена3: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира заглянула через ваше плечо.`, next: 'ПисьмоОлвена4' },
-  ПисьмоОлвена4: {
-    location: 'player_inside',
-    sprites: [ { name: 'mira', pos: 'solo' } ],
-    speaker: 'Мира', boxClass: 'mira',
-    text: `«Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?`,
-    choices: [
-      { text: 'Пойти через Старый каменный мост', to: 'СтарыйМост' },
-      { text: 'Срезать через тенистую Грибную тропу', to: 'ГрибнаяТропа' },
-      { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
-    ]
-  },
-
-  ВыборПути: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы прячете письмо во внутренний карман и хлопаете по нему ладонью.`, next: 'ВыборПути2' },
-  ВыборПути2: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Разберёмся по дороге. Сначала — к маяку.`, next: 'ВыборПути3' },
-  ВыборПути3: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира кивает и закидывает чехол на плечо.`, next: 'ВыборПути4' },
-  ВыборПути4: {
-    location: 'player_inside',
-    sprites: [ { name: 'mira', pos: 'solo' } ],
-    speaker: 'Мира', boxClass: 'mira',
-    text: `Тогда решай, как пойдём. Через мост — дольше, но спокойнее. Через Грибную тропу — быстрее, но там сумрачно и можно встретить лесных духов. Или заглянем к бабушке Селесте — она всегда что-то подскажет.`,
-    choices: [
-      { text: 'Пойти через Старый каменный мост', to: 'СтарыйМост' },
-      { text: 'Срезать через тенистую Грибную тропу', to: 'ГрибнаяТропа' },
-      { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
-    ]
-  },
-
-  РазговорСМирой1: { location: 'player_inside', sprites: [ { name: 'player', pos: 'left' }, { name: 'mira', pos: 'right' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы с улыбкой оглядываете её внушительный багаж.`, next: 'РазговорСМирой2' },
-  РазговорСМирой2: { location: 'player_inside', sprites: [ { name: 'player', pos: 'left' }, { name: 'mira', pos: 'right' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`, next: 'РазговорСМирой3' },
-  РазговорСМирой3: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира фыркнула и театрально постучала медным ключом по ладони.`, next: 'РазговорСМирой4' },
-  РазговорСМирой4: { location: 'player_inside', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Или у Корнелиуса снова заржавел механизм для колки орехов? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?`, next: 'ПисьмоОлвена' },
-
-  СтарыйМост: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно. Его хвост с кисточкой мирно покачивался в воздухе.<br><br>Услышав ваши шаги, Бруно приоткрыл один янтарный глаз и зевнул так широко, что обнажились гладкие кремневые зубы.`, next: 'СтарыйМост2' },
-  СтарыйМост2: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Ба, знакомые лица! — пробасил он гулким голосом, похожим на перекатывание гальки. — Куда путь держите в такой важный день? Уж не к маяку ли?`, next: 'СтарыйМост3' },
-  СтарыйМост3: { location: 'most', sprites: [ { name: 'mira', pos: 'right' }, { name: 'bruno', pos: 'left' } ], speaker: 'Мира', boxClass: 'mira', text: `— Именно туда, Бруно, — шагнула вперёд Мира. — Время не ждёт, солнце перевалило за полдень. Пропустишь нас без долгих церемоний?`, next: 'СтарыйМост4' },
-  СтарыйМост4: {
-    location: 'most',
-    sprites: [ { name: 'bruno', pos: 'solo' } ],
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Церемонии — основа порядка в долине! Но ради праздника я не стану мучить вас тремя испытаниями. Одной загадки довольно. Слушайте: «Не имеет крыльев, а летает; не имеет голоса, а воет; в стужу жалит, в зной ласкает, а сожмёшь в кулак — исчезнет без следа».`,
-    choices: [
-      { text: 'Ответить с уверенностью: «Это горный ветер!»', to: 'МостВетер' },
-      { text: 'Попробовать поэтический ответ: «Это лесное эхо»', to: 'МостЭхо' },
-      { text: 'Достать из сумки медовое сушеное яблоко и угостить Бруно', to: 'МостУгощение' },
-      { text: 'Расспросить Бруно: не видел ли он, что стряслось с башней ночью?', to: 'МостРасспросы' }
-    ]
-  },
-  МостВетер: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Бруно хлопнул кожистыми крыльями, подняв облачко безвредной каменной пыли, и широко улыбнулся.`, next: 'МостВетер2' },
-  МостВетер2: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— В самую точку! Кому как не ученику Хранителя ветров знать повадки воздуха. Ты заслужил свободный проход!`, next: 'МостВетер3' },
-  МостВетер3: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Он полез лапой под мостовую плиту и выкатил вам под ноги диковинку.`, next: 'МостВетер4' },
-  МостВетер4: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Вот, держи. Это Перо Лазурной Сойки-Вестницы. Оно зачаровано на лёгкое дыхание. Если в механизмах башни застрянет пыль веков — взмахни им, и сквозняк сделает всю работу чисто и без поломок!`, set: { has_feather: true }, next: 'МостВетер5' },
-  МостВетер5: { location: 'most', sprites: [ { name: 'mira', pos: 'right' }, { name: 'bruno', pos: 'left' } ], speaker: 'Мира', boxClass: 'mira', text: `— Прекрасный подарок! — обрадовалась Мира. — Спасибо, Бруно!`, next: 'БашняСнаружи' },
-  МостЭхо: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Бруно басовито захохотал, сотрясая каменные перила.`, next: 'МостЭхо2' },
-  МостЭхо2: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Ох, молодёжь! Поэзии в тебе хоть отбавляй, а вот физика хромает! Разве эхо может ласкать в зной или жалить в стужу? Это ветер! Но за дерзость и красивый слог я не стану вас задерживать. Идите с миром, да смотрите под ноги на крутом подъёме.`, next: 'МостЭхо3' },
-  МостЭхо3: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Мира помахала гаргулю рукой, и вы поспешили дальше по вымощенной плитами дорожке.`, next: 'БашняСнаружи' },
-  МостУгощение: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы достаёте из мешочка крупный янтарный ломтик вяленого яблока, пропитанный густым липовым мёдом. Аромат пряностей мгновенно окутывает мост.<br><br>Каменные ноздри гаргуля затрепетали. Глаза загорелись неподдельным восторгом.`, next: 'МостУгощение2' },
-  МостУгощение2: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— О великие горы... Это то самое? С пасеки мастера Олвена?!`, next: 'МостУгощение3' },
-  МостУгощение3: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Специально для хранителя покоя долины, — с поклоном вручаете вы угощение.`, next: 'МостУгощение4' },
-  МостУгощение4: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Бруно бережно подхватил ломтик, сунул в пасть и зажмурился от блаженства.`, next: 'МостУгощение5' },
-  МостУгощение5: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Боги гранита, какая сладость! Забирайте мост, забирайте реку, проходите скорее! И погодите... вот, возьмите! На днях с карниза маяка упал чистейший Кристалл Горного Кварца. Я подобрал, чтобы не растоптали. В оптике маяка ему самое место!`, set: { has_crystal: true }, next: 'БашняСнаружи' },
-  МостРасспросы: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Вы', boxClass: 'narrator', text: `— Бруно, ты ведь сидишь здесь круглые сутки, — говорите вы, присаживаясь рядом на корточки. — Скажи, ночью над башней ничего странного не происходило?`, next: 'МостРасспросы2' },
-  МостРасспросы2: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Гаргуль задумался, почесывая каменное ухо когтем.`, next: 'МостРасспросы3' },
-  МостРасспросы3: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Бруно', boxClass: 'bruno', text: `— Хм-м... Знаете, около полуночи с вершины башни сорвался лёгкий серебристый всполох. А потом послышался такой звук: динь-дон-хрясь! Будто музыкальная шкатулка поперхнулась жёлудем. Старик Корнелиус бегал по балкону в ночном колпаке и кричал на сквозняки. Ветер тогда дул с Заброшенной Обсерватории.`, set: { has_clue: true }, next: 'МостРасспросы4' },
-  МостРасспросы4: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира нахмурилась.`, next: 'МостРасспросы5' },
-  МостРасспросы5: { location: 'most', sprites: [ { name: 'bruno', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Сквозняк мог сбить настройку балансира! Спасибо, дядюшка Бруно, это важная зацепка.`, next: 'МостРасспросы6' },
-  МостРасспросы6: {
-    location: 'most',
-    sprites: [ { name: 'bruno', pos: 'solo' } ],
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Ну а загадку отгадывать будете, сыщики? — хитро прищурился гаргуль.`,
-    choices: [
-      { text: 'Ответить: «Это горный ветер!»', to: 'МостВетер' },
-      { text: 'Угостить Бруно медовым лакомством', to: 'МостУгощение' }
-    ]
-  },
-
-  ГрибнаяТропа: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Грибная тропа встретила вас мягким сумраком древних дубов и прохладой. Под ногами ковром стелился изумрудный мох, а вдоль стволов мягко мерцали фосфорные шляпки опят-фонариков, издавая тихое, баюкающее потрескивание.<br><br>Впереди, на развилке трёх корней, послышался отчаянный писк.<br><br>Крошечный лесной дух Шустик, похожий на ожившую пушистую еловую шишку в фетровом зелёном колпачке, дёргал за ручку крохотную тележку. Колесо тележки намертво заклинило между толстыми узловатыми корнями спящего древа-великана, а в кузове лежали мешочки с пыльцой.`, next: 'ГрибнаяТропа2' },
-  ГрибнаяТропа2: {
-    location: 'tropa',
-    sprites: [ { name: 'shustik', pos: 'solo' } ],
-    speaker: 'Шустик', boxClass: 'shustik',
-    text: `— Ой-ой-ой! Беда-кручина! — причитал Шустик, размахивая лапками. — Скоро вечер, фестиваль без праздничных огней останется! Дерево уснуло и колесо зажало!`,
-    choices: [
-      { text: 'Осторожно смазать корни травяным смягчающим маслом', to: 'ГрибыМасло' },
-      { text: 'Предложить Мире использовать её разводной ключ и рычаг', to: 'ГрибыМеханика' },
-      { text: 'Заговорить с древним деревом на языке ветров и шепотов', to: 'ГрибыМагия' }
-    ]
-  },
-  ГрибыМасло: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы достаёте из походной сумки флакон с вытяжкой из дикого миндаля и бережно капаете на древесную кору. Корень размягчается, становится эластичным, и Мира лёгким движением вытягивает тележку на ровную тропу.`, next: 'ГрибыМасло2' },
-  ГрибыМасло2: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Шустик', boxClass: 'shustik', text: `— Ура-а! Спасены! — завопил Шустик, делая сальто через тележку. — Спасибо, добрые путники! Держите горсть волшебной светящейся пыльцы — она горит ярче факелов и не оставляет копоти! А к башне идите по этой тропке, она выведет прямо к парадным вратам!`, set: { has_pollen: true }, next: 'БашняСнаружи' },
-  ГрибыМеханика: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Мира оценивающе прищурилась, достала латунную монтировку и, подложив под неё дубовый брусок, навалилась всем весом.`, next: 'ГрибыМеханика2' },
-  ГрибыМеханика2: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Раз, два — взяли! Рычаг первого рода — лучшее колдовство на свете!`, next: 'ГрибыМеханика3' },
-  ГрибыМеханика3: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Раздался глухой щелчок, корень подался, и колесо освободилось целым и невредимым.`, next: 'ГрибыМеханика4' },
-  ГрибыМеханика4: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'shustik', text: `Шустик восторженно захлопал в ладоши.`, set: { has_pollen: true }, next: 'ГрибыМеханика5' },
-  ГрибыМеханика5: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Шустик', boxClass: 'shustik', text: `— Вот это ловкость! Вот это сила ума! Возьмите в награду мешочек искристой пыльцы, она пригодится, если нужно разжечь погасший фитиль!`, next: 'ГрибыМеханика6' },
-  ГрибыМеханика6: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Попрощавшись с благодарным малышом, вы выходите из лесной чащи прямо к скале, на которой высится маяк.`, next: 'БашняСнаружи' },
-  ГрибыМагия: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы подходите к узловатому стволу, прикладываете ладонь к тёплой коре и тихо напеваете древний распев Верхнего Шепота — песнь утреннего бриза, пробуждающего листья.<br><br>В кроне проносится ласковый вздох. Древесные корни мягко шевельнулись, потягиваясь, словно пальцы спросонья. Расщелина расширилась, и тележка Шустика плавно высвободилась сама собой.`, next: 'ГрибыМагия2' },
-  ГрибыМагия2: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'shustik', text: `Шустик вытаращил круглые пуговичные глаза.`, next: 'ГрибыМагия3' },
-  ГрибыМагия3: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Шустик', boxClass: 'shustik', text: `— Вот это чудеса! Ты умеешь разговаривать с великанами! Спасибо тебе, Хранитель!`, next: 'ГрибыМагия4' },
-  ГрибыМагия4: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'shustik', text: `Дух подбежал к вам и с поклоном протянул сияющую щепоть.`, next: 'ГрибыМагия5' },
-  ГрибыМагия5: { location: 'tropa', sprites: [ { name: 'shustik', pos: 'solo' } ], speaker: 'Шустик', boxClass: 'shustik', text: `— Возьми Пыльцу Звёздных Светляков. Её собирали семь полнолуний! Если её увидит Август — у него сразу запоёт сердце! А ещё я покажу вам старую калитку в скале под башней — срежете полсотни крутых ступенек!`, set: { has_pollen: true, has_secret_door: true }, next: 'ТайныйВход' },
-
-  ЛавкаСелесты: { location: 'lavka', sprites: [ { name: 'selesta', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы решаете не спешить вслепую и сворачиваете на улочку Травников к круглому домику бабушки Селесты. Над дверью колышутся пучки вереска и лаванды, а из трубы поднимается синий дымок с ароматом корицы.<br><br>Селеста, сухонькая старушка с добрыми лучистыми глазами, как раз поливала подоконные колокольчики.`, next: 'ЛавкаСелесты2' },
-  ЛавкаСелесты2: { location: 'lavka', sprites: [ { name: 'selesta', pos: 'solo' } ], speaker: 'Бабушка Селеста', boxClass: 'selesta', text: `— Батюшки, юные мастера! — всплеснула она руками. — Беда с маяком, весь посёлок гудит! Чуяло моё сердце: Август вчера вечером слишком грустно пел. Вы на маяк?`, next: 'ЛавкаСелесты3' },
-  ЛавкаСелесты3: { location: 'lavka', sprites: [ { name: 'mira', pos: 'right' }, { name: 'selesta', pos: 'left' } ], speaker: 'Мира', boxClass: 'mira', text: `— Да, бабушка Селеста, — отвечает Мира. — Нам нужно оживить резонатор.`, next: 'ЛавкаСелесты4' },
-  ЛавкаСелесты4: {
-    location: 'lavka',
-    sprites: [ { name: 'selesta', pos: 'solo' } ],
-    speaker: 'Бабушка Селеста', boxClass: 'selesta',
-    text: `— Возьмите-ка вот это, — Селеста сняла с полки маленький глиняный пузырёк с золотистым настоем. — Это капли лунного зверобоя и сладкой мелиссы. Если Август закапризничает или опечалится — пара капель на сахарную пластину вернут ему бодрость духа.`,
-    set: { has_selesta_vial: true },
-    choices: [
-      { text: 'Поблагодарить Селесту и отправиться к Старому мосту', to: 'СтарыйМост' },
-      { text: 'Поблагодарить и пойти короткой Грибной тропой', to: 'ГрибнаяТропа' }
-    ]
-  },
-
-  ТайныйВход: { location: 'tower', sprites: [ { name: 'tower_inside', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Шустик привёл вас к незаметному гроту в скале, замаскированному диким виноградом. Маленькая дубовая дверца легко поддалась нажатию тайного сучка.<br><br>Вы поднимаетесь по вырубленной в камне винтовой лестнице и выходите прямо в просторный центральный зал Башни.`, next: 'ВнутриБашни' },
-
-  ВнутриБашни: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Главный зал башни поражал размахом: спиральная лестница взмывала под самый стеклянный свод. В воздухе летали редкие крошечные искорки света.<br><br>В центре зала, у подножия огромного постамента со сложной системой вращающихся хрустальных призм, в панике метался старый смотритель башни — господин Корнелиус. Его длинная седая борода была завязана узлом, круглые очки с тремя парами увеличительных стёкол сползли на кончик носа, а в руках дрожала маслёнка.<br><br>На круглом постаменте, свернувшись калачиком в шёлковом гнезде, спал Август — сказочный Звёздный Светляк размером с доброго сенбернара. Его стрекозиные крылья отливали тусклым перламутром, усики печально поникли, а из носика вылетали крошечные сонные пузыри.`, next: 'Корнелиус1' },
-
-  Корнелиус1: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Корнелиус', boxClass: 'cornelius', text: `— Беда! Катастрофа долины! — причитал Корнелиус, не замечая вашего приближения. — Фестиваль через два часа, а наш золотой мальчик спит без задних лапок! Колокола заглохли, шестерни застряли, нектар скис!`, next: 'Корнелиус2' },
-  Корнелиус2: { location: 'tower_inside', sprites: [ { name: 'mira', pos: 'right' }, { name: 'cornelius', pos: 'left' } ], speaker: 'Мира', boxClass: 'mira', text: `— Господин Корнелиус, спокойствие! — громко и уверенно позвала Мира. — Олвен прислал подкрепление!`, next: 'Корнелиус3' },
-  Корнелиус3: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Смотритель замер, развернулся и уставился на вас через тройные линзы.`, next: 'Корнелиус4' },
-  Корнелиус4: {
-    location: 'tower_inside',
-    sprites: [ { name: 'cornelius', pos: 'solo' } ],
-    speaker: 'Корнелиус', boxClass: 'cornelius',
-    text: `— Ох... Хвала небесам и Олвену! Вы здесь! Спасите Августа! Он не болен, нет-нет! Ночью налетел порыв ветра, сбил настройку трёх резонансных колоколов, и Август просто уснул от скуки и тишины! А без колокольного звона он не начнёт вырабатывать звёздный свет!`,
-    choices: [
-      { text: 'Показать Корнелиусу письмо Олвена со схемой', to: 'ПоказатьСхему1' },
-      { text: 'Осмотреть колокольный механизм и хрустальные линзы', to: 'ОсмотрМеханизма1' },
-      { text: 'Подойти к Августу и тихо заговорить с ним', to: 'ОсмотрАвгуста1' }
-    ]
-  },
-
-  ПоказатьСхему1: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы разворачиваете чертёж мастера Олвена. Глаза Корнелиуса расширились от изумления.`, next: 'ПоказатьСхему2' },
-  ПоказатьСхему2: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Корнелиус', boxClass: 'cornelius', text: `— Батюшки! Да ведь это же настройка гармонического строя третьей октавы! Олвен вычислил точную частоту вибрации света! Смотрите: колокола нужно свести под углом сорок пять градусов к центральной линзе!`, next: 'ПоказатьСхему3' },
-  ПоказатьСхему3: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Мира сразу вскинула свой ключ.`, next: 'ПоказатьСхему4' },
-  ПоказатьСхему4: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Я могу выставить угол на шарнирах за пять минут! Но нам нужно что-то, чтобы очистить звуковые трубки и пробудить Августа правильным лакомством!`, set: { has_scheme: true }, next: 'ГлавнаяПочинка' },
-  ОсмотрМеханизма1: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `Вы вместе с Мирой обходите постамент. Механическая часть представляет собой чудо инженерной мысли:<br>1. Три резонансных колокола из лунного серебра (один из них заклинило на креплении).<br>2. Трубки подачи лунного сиропа (в них образовались сахарные пробки).<br>3. Оптическая карусель зеркал (требует точной фокусировки на шпиль башни).`, set: { inspected_mechanism: true }, next: 'ОсмотрМеханизма2' },
-  ОсмотрМеханизма2: { location: 'tower_inside', sprites: [ { name: 'cornelius', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Работа ясна! Мы можем сделать это несколькими путями в зависимости от того, какие ресурсы и идеи у нас есть!`, next: 'ГлавнаяПочинка' },
-  ОсмотрАвгуста1: { location: 'tower_inside', sprites: [ { name: 'august', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы осторожно поднимаетесь по ступеням к шёлковому гнезду. Звёздный Светляк невероятно красив: бархатная золотистая шёрстка на груди, тончайшие прозрачные крылья с прожилками из чистого серебра.<br><br>Вы тихонько проводите ладонью по его пушистой голове между усиками. Август издаёт тихий звук, похожий на мурлыканье котёнка, и приоткрывает огромный фиолетовый глаз. В его взгляде нет злобы — только лёгкая грусть и дремота.`, next: 'ОсмотрАвгуста2' },
-  ОсмотрАвгуста2: { location: 'tower_inside', sprites: [ { name: 'august', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира подошла рядом.`, next: 'ОсмотрАвгуста3' },
-  ОсмотрАвгуста3: { location: 'tower_inside', sprites: [ { name: 'august', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Он просто ждёт праздника, как и все мы. Ему нужна музыка и немного заботы!`, set: { has_met_august: true }, next: 'ГлавнаяПочинка' },
-
-  ГлавнаяПочинка: {
-    location: 'tower_inside',
-    sprites: [ { name: 'tower_hall', pos: 'solo' } ],
-    speaker: 'Мира', boxClass: 'mira',
-    text: `Корнелиус замер в ожидании с маслёнкой наготове. Мира разложила на ступеньках блестящие инструменты. Всё готово к главному действию.<br><br>Какой план действий вы выберете?`,
-    choices: [
-      { text: 'План 1: Настроить серебряные колокола чистым тоном камертона и силой ветра', to: 'ФиналМузыка' },
-      { text: 'План 2: Приготовить целебный лунный нектар и очистить питающие трубки', to: 'ФиналНектар' },
-      { text: 'План 3: Использовать инженерную смекалку Миры и дары долины', to: 'ФиналМеханика' },
-      { text: 'План 4: Полная синхронизация: объединить травы, музыку и точные механизмы', to: 'ФиналТриумф' }
-    ]
-  },
-
-  БашняСнаружи: {
-    location: 'tower',
-    sprites: [
-      { name: 'tower_outside', pos: 'right' },
-      { name: 'mira', pos: 'left' }
-    ],
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Перед вами вздымалась Башня Светлячков — величественное сооружение из белого резного известняка, увитое цветущим плющом. На самом верху под стеклянным куполом замер гигантский хрустальный шар, лишённый привычного золотистого сияния.<br><br>Массивные дубовые двери были заперты. На бронзовой накладке замка выделялся циферблат с четырьмя дисками, на которых были выбиты стихийные знаки: Солнце, Ветер, Вода и Росток.`,
-    next: 'БашняСнаружи2'
-  },
-  БашняСнаружи2: {
-    location: 'tower',
-    sprites: [
-      { name: 'tower_outside', pos: 'right' },
-      { name: 'mira', pos: 'left' }
-    ],
-    speaker: 'Рассказчик', boxClass: 'mira',
-    text: `Мира провела пальцем по желобкам замка.`,
-    next: 'БашняСнаружи3'
-  },
-  БашняСнаружи3: {
-    location: 'tower',
-    sprites: [
-      { name: 'tower_outside', pos: 'right' },
-      { name: 'mira', pos: 'left' }
-    ],
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Загадка гильдии архитекторов! Смотри, тут надпись: «Лишь союз тепла и движения пробудит спящий свет». Что крутить будем?`,
-    choices: [
-      { text: 'Выставить комбинацию: «Солнце и Ветер»', to: 'ДверьОткрыта' },
-      { text: 'Выставить комбинацию: «Вода и Росток»', to: 'ДверьОшибкаДобро' },
-      { text: 'Осмотреть окрестности: вдруг есть другой проход?', to: 'ОсмотрСтенБашни' }
-    ]
-  },
-  ДверьОткрыта: { location: 'tower', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Щёлк-щёлк-клац! Медные шестерни внутри створки весело зажужжали. Тяжёлые дубовые двери плавно распахнулись внутрь, пропуская вас в прохладный холл башни.`, set: { door_opened: true }, next: 'ВнутриБашни' },
-  ДверьОшибкаДобро: { location: 'tower', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы поворачиваете диски на Воду и Росток. Замок издаёт мелодичный перелив, похожий на звон колокольчика, и из маленького сопла над дверью на вас брызгает освежающая струйка чистой родниковой воды с ароматом мяты!<br><br>Мира от неожиданности взвизгивает, а потом весело смеётся, вытирая лицо рукавом.`, next: 'ДверьОшибкаДобро2' },
-  ДверьОшибкаДобро2: { location: 'tower', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Освежает! Механизм вежливый: вместо ядовитых стрел — умывание для рассеянных гостей. Но подсказка ведь гласила: «Тепло и движение»! Попробуем ещё раз?`, next: 'ДверьОткрыта' },
-  ОсмотрСтенБашни: { location: 'tower', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы обходите башню по кругу вдоль цветущих кустов шиповника. С северной стороны из скалы выступает железная пожарная лестница, ведущая к окну второго яруса — в Старую Обсерваторию.`, next: 'ОсмотрСтенБашни2' },
-  ОсмотрСтенБашни2: {
-    location: 'tower',
-    sprites: [ { name: 'mira', pos: 'solo' } ],
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Ого! — говорит Мира, задрав голову. — Окно приоткрыто. Мы можем подняться прямо туда или открыть парадную дверь. Что выбираем?`,
-    choices: [
-      { text: 'Вернуться и открыть парадную дверь комбинацией «Солнце и Ветер»', to: 'ДверьОткрыта' },
-      { text: 'Залезть по лестнице в окно Обсерватории', to: 'Обсерватория' }
-    ]
-  },
-  Обсерватория: { location: 'tower', sprites: [ { name: 'tik_tak', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы ловко поднимаетесь по лестнице и протискиваетесь в открытую створку окна.<br><br>Вы оказались в полукруглой комнате, заставленной медными звёздными картами, подзорными трубами и вращающимися глобусами созвездий. В центре на штативе стоял древний рунный телескоп, направленный прямо на вершину маяка.<br><br>Посреди стола мирно спал... металлический заводной кот с янтарными стеклянными глазками. При вашем появлении пружина внутри него зажужжала, кот сладко потянулся и потёрся металлической щекой о вашу руку.`, next: 'Обсерватория2' },
-  Обсерватория2: { location: 'tower', sprites: [ { name: 'tik_tak', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'mira', text: `Мира ахнула.`, next: 'Обсерватория3' },
-  Обсерватория3: { location: 'tower', sprites: [ { name: 'tik_tak', pos: 'solo' } ], speaker: 'Мира', boxClass: 'mira', text: `— Это же Тик-Так, заводной кот Корнелиуса! А на шее у него... смотри, на ошейнике висит запасной латунный ключ от панели главного механизма!`, next: 'Обсерватория4' },
-  Обсерватория4: {
-    location: 'tower',
-    sprites: [ { name: 'tik_tak', pos: 'solo' } ],
-    speaker: 'Рассказчик', boxClass: 'mira',
-    text: `Кот мелодично заурчал и доверчиво протянул лапку.`,
-    choices: [
-      { text: 'Погладить Тик-Така и взять латунный ключ', to: 'ВзятьКлюч' },
-      { text: 'Оставить ключ коту и спуститься по лестнице в главный зал', to: 'ВнутриБашни' }
-    ]
-  },
-  ВзятьКлюч: { location: 'tower', sprites: [ { name: 'tik_tak', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы аккуратно отстёгиваете лёгкий латунный ключик. Тик-Так довольно мурлычет шестерёнками и решает пойти с вами, деловито семеня металлическими лапками по ступенькам вниз.`, set: { has_key: true }, next: 'ВнутриБашни' },
-
-  ФиналМузыка: { location: 'final', sprites: [ { name: 'mira', pos: 'right' }, { name: 'august', pos: 'left' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы достаёте бронзовый камертон Олвена и ударяете по нему деревянным молоточком. Чистая хрустальная нота «Ми» повисает под сводами башни.<br><br>Вы осторожно смахиваете Пером Лазурной Сойки пылинки с серебряных лепестков колоколов. Колокола оживают! Их перезвон подхватывает лёгкий сквозняк, струящийся из открытых витражей.<br><br>Мелодия чиста, как горный родник. Август сладко зевает, потягивает лапки и встаёт во весь рост. Его крылья начинают трепетать с немыслимой скоростью, заливая весь зал мягким, ласковым медовым светом!<br><br>Корнелиус в восторге подпрыгивает, роняя очки:<br><br>— Поёт! Он снова поёт!`, next: 'КонецГармония' },
-  ФиналНектар: { location: 'final', sprites: [ { name: 'mira', pos: 'right' }, { name: 'august', pos: 'left' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Вы берётесь за систему питания. Смешав горную родниковую воду, экстракт лаванды и капли от бабушки Селесты, вы заливаете золотистый сироп в хрустальную чашу резонатора.<br><br>Сладкий, неописуемо упоительный аромат свежих цветов и карамели заполняет купол башни.<br><br>Носик Августа забавно дёргается. Светляк шумно втягивает воздух, его глаза распахиваются, и с довольным урчанием он припадает к чаше. С каждым глотком его тельце начинает светиться всё ярче — от нежно-розового до ослепительного сапфирового и золотого огня!<br><br>Мира ловко подкручивает регулировочный вентиль:<br><br>— Подача стабильна! Давление в норме! Он готов взлетать!`, next: 'КонецМастерство' },
-  ФиналМеханика: { location: 'final', sprites: [ { name: 'mira', pos: 'solo' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `Мира берёт дело в свои руки! Вооружившись ключом на двенадцать, она заменяет соскочивший шарнир, а вы устанавливаете в оправу оптической оси найденный у моста Кристалл Кварца.<br><br>Все шестерёнки встают на свои места с идеальным, ласкающим слух кликом: *тик-так, тик-так*.<br><br>Механическая карусель оживает без единого скрипа. Зеркала выстраиваются в идеальную геометрическую спираль. Август, очарованный безупречной гармонией движения шестерёнок, с радостным жужжанием взмывает в центр конструкции, занимая своё законное место живого фокуса!<br><br>— Гениально! Чистая механика и никакой мистики! — сияет Мира от гордости.`, next: 'КонецНаука' },
-  ФиналТриумф: { location: 'final', sprites: [ { name: 'player', pos: 'far-left' }, { name: 'mira', pos: 'center' }, { name: 'august', pos: 'far-right' } ], speaker: 'Рассказчик', boxClass: 'narrator', text: `— Делаем всё сразу и сообща! — объявляете вы.<br><br>Это было похоже на слаженный праздничный танец:<br><br>- Корнелиус сдувал пыльцу и подавал прокладки;<br>- Мира виртуозно крутила гайки, настраивая зеркала по чертежу Олвена;<br>- Вы наполнили чашу ароматным нектаром и настроили колокола на ноту праздника.<br><br>Когда Август сделал первый глоток целебного сиропа, над башней раздался торжественный хрустальный звон, чистый и звонкий, как утренняя роса. Светляк взмыл под самый стеклянный купол. Его сияние было настолько тёплым и мощным, что вокруг башни закружились хороводы сотен диких лесных светлячков, слетевшихся со всей рощи!<br><br>Шестерёнки плавно вращали линзы, музыка наполняла воздух, а кот Тик-Так с упоением бил металлической лапкой по звенящему противовесу.`, next: 'КонецЕдинство' },
-
-  КонецГармония: { location: 'ending', cutscene: 'ending_harmony', sprites: [ { name: 'valley', pos: 'solo' } ], speaker: 'Финал', boxClass: 'final-box', ending: 'harmony', text: `Вы с Мирой взялись за бронзовый штурвал и повернули зеркала в сторону долины.<br><br>Свет Августа, преломившись сквозь хрусталь, широким янтарным потоком устремился над кронами деревьев. Река внизу заискрилась миллионами золотых рыбок. До башни донёсся восторженный гул жителей Верхнего Шепота: на площади одна за другой вспыхнули праздничные гирлянды!<br><br>Корнелиус со слезами умиления пожал вам руки:<br><br>— Вы вернули нам не просто свет, вы вернули покой в сердца людей!<br><br>Внизу на мосту пушистый Бруно машет лапой, а мастер Олвен уже спешит навстречу, держа в руках почётные венки Хранителей праздника.<br><br><b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство.</i>`, next: 'title' },
-
-  КонецМастерство: { location: 'ending', cutscene: 'ending_mastery', sprites: [ { name: 'valley', pos: 'solo' } ], speaker: 'Финал', boxClass: 'final-box', ending: 'mastery', text: `Сфокусированный луч рассек наступающие сумерки. Благодаря идеальному питанию свет Августа приобрёл изумительный изумрудно-бирюзовый оттенок. Небо над долиной вспыхнуло грандиозным северным сиянием!<br><br>— Ура! Получилось! — закричала Мира, бросаясь обнимать и вас, и Корнелиуса, и довольного сытого Августа.<br><br>Жители посёлка выкатили на площадь гигантский яблочный пирог. Аромат праздника поднялся до самых облаков. Корнелиус торжественно вручил вам с Мирой серебряные значки почётных Хранителей Маяка.<br><br>Праздник Осенней Звезды начался вовремя, и огни не погаснут до самого рассвета!<br><br><b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина! Ваша доброта подарила жителям самую красивую ночь в году.</i>`, next: 'title' },
-
-  КонецНаука: { location: 'ending', cutscene: 'ending_science', sprites: [ { name: 'valley', pos: 'solo' } ], speaker: 'Финал', boxClass: 'final-box', ending: 'science', text: `Зеркала отразили свет с безупречной точностью до единого миллиметра. Лучи маяка начертили в небе над лесом гигантскую светящуюся геометрическую звезду, указывающую путь всем запоздалым караванам и путникам.<br><br>Мира с гордостью стёрла пятнышко смазки со щеки:<br><br>— Вот что бывает, когда наука служит добру! Мы идеальная команда!<br><br>Кот Тик-Так довольно мурлыкал у ваших ног, а Корнелиус записал ваши имена в Золотую Книгу Башни на первой странице. Долина праздновала триумф разума, дружбы и мастерства!<br><br><b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт, крепкая дружба и ключ на двенадцать творят чудеса почище древних заклятий.</i>`, next: 'title' },
-
-  КонецЕдинство: { location: 'ending', cutscene: 'ending_unity', sprites: [ { name: 'valley', pos: 'solo' } ], speaker: 'Финал', boxClass: 'final-box', ending: 'unity', text: `Это был самый грандиозный запуск маяка за последние три столетия!<br><br>Свет Августа соединил в себе сияние солнца, переливы музыки и точность механики. Луч переливался всеми цветами радуги: золотым, лазурным, аметистовым и рубиновым. Вся долина озарилась мягким дневным светом, в котором танцевали лесные духи во главе с сияющим Шустиком.<br><br>На мосту Бруно во всё горло распевал старинные баллады, бабушка Селеста угощала всех горячим мятным чаем, а мастер Олвен, поднявшись на балкон башни, с гордостью объявил вас и Миру Главными Мастерами Долины.<br><br>Август опустился на плечо к вам и Мире, ласково коснувшись щёк бархатными усиками, а ночное небо расцвело праздничными искрами.<br><br><b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку.</i>`, next: 'title' }
-};
-
-/* ============================================================
-   3. ФУНКЦИИ ПРОГРЕССА (объявлены ДО gameState!)
-   ============================================================ */
-
-const SAVE_KEY          = 'pesn_augusta_save';
-const PROGRESS_KEY      = 'pesn_augusta_progress';
-const ENDINGS_KEY       = 'pesn_augusta_endings';
-const ACHIEVEMENTS_KEY  = 'pesn_augusta_achievements';
-const SETTINGS_KEY      = 'pesn_augusta_settings';
-const QUICKSAVE_KEY     = 'pesn_augusta_quicksave';
-
-function createEmptyProgress() {
-  return {
-    passages: {},
-    cutscenes: {},
-    choices: {},
-    locations: {},
-    journal: [],
-    playCount: 0,
-    totalPlayTime: 0,
-    lastPassage: null,
-    firstPlaythrough: true
-  };
-}
-
-function loadProgress() {
-  try {
-    const raw = localStorage.getItem(PROGRESS_KEY);
-    if (!raw) return createEmptyProgress();
-    const p = JSON.parse(raw);
-    const empty = createEmptyProgress();
-    return Object.assign(empty, p);
-  } catch (e) {
-    return createEmptyProgress();
-  }
-}
-
-function saveProgress() {
-  try {
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify(gameState.progress));
-    return true;
-  } catch (e) {
-    console.warn('Не удалось сохранить прогресс:', e);
-    return false;
-  }
-}
-
-function markPassageVisited(passageId) {
-  if (!gameState.progress.passages[passageId]) {
-    gameState.progress.passages[passageId] = true;
-    gameState.progress.lastPassage = passageId;
-    saveProgress();
-
-    // Уведомление о вехах
-    const total = countTotalPassages();
-    const visited = countVisitedPassages();
-    const pc = Math.round((visited / total) * 100);
-    const prevPc = Math.round(((visited - 1) / total) * 100);
-    for (const m of [25, 50, 75, 100]) {
-      if (prevPc < m && pc >= m) {
-        showNotification('🗺 Прогресс', `Исследовано ${m}% сюжета!`);
-        playSfx('achievement');
-        break;
-      }
-    }
-  }
-}
-
-function markCutsceneWatched(sceneKey) {
-  if (!gameState.progress.cutscenes[sceneKey]) {
-    gameState.progress.cutscenes[sceneKey] = true;
-    saveProgress();
-  }
-}
-
-function markLocationVisited(locationKey) {
-  if (!locationKey) return;
-  if (!gameState.progress.locations[locationKey]) {
-    gameState.progress.locations[locationKey] = true;
-    saveProgress();
-  }
-}
-
-function markChoice(passageId, choiceTo) {
-  gameState.progress.choices[passageId] = choiceTo;
-  saveProgress();
-}
-
-function addJournalEntry(title, text) {
-  if (!gameState.progress.journal) gameState.progress.journal = [];
-  gameState.progress.journal.push({
-    title, text,
-    passage: gameState.currentPassage,
-    timestamp: Date.now()
-  });
-  saveProgress();
-}
-
-function isPassageVisited(id) { return !!gameState.progress.passages[id]; }
-function isCutsceneWatched(key) { return !!gameState.progress.cutscenes[key]; }
-function isLocationVisited(key) { return !!gameState.progress.locations[key]; }
-function wasChoiceMade(passageId) { return gameState.progress.choices[passageId] || null; }
-
-function countVisitedPassages() { return Object.keys(gameState.progress.passages).length; }
-function countTotalPassages() {
-  return Object.keys(PASSAGES).filter(k => !PASSAGES[k].isTitle).length;
-}
-function countWatchedCutscenes() { return Object.keys(gameState.progress.cutscenes).length; }
-function countVisitedLocations() { return Object.keys(gameState.progress.locations).length; }
-
-function getCompletionPercent() {
-  const total = countTotalPassages();
-  const visited = countVisitedPassages();
-  if (total === 0) return 0;
-  return Math.round((visited / total) * 100);
-}
-
-function saveGame() {
-  try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({
-      version: 3, timestamp: Date.now(),
-      currentPassage: gameState.currentPassage,
-      history: gameState.history,
-      historyIndex: gameState.historyIndex,
-      variables: gameState.variables,
-      endings: gameState.endings,
-      achievements: gameState.achievements
-    }));
-    saveProgress();
-    return true;
-  } catch (e) { return false; }
-}
-
-function loadGame() {
-  try {
-    const raw = localStorage.getItem(SAVE_KEY);
-    if (!raw) return false;
-    const save = JSON.parse(raw);
-    if (!save || !save.currentPassage) return false;
-    gameState.currentPassage = save.currentPassage;
-    gameState.history = save.history || [];
-    gameState.historyIndex = (typeof save.historyIndex === 'number')
-      ? save.historyIndex : gameState.history.length - 1;
-    gameState.variables = save.variables || {};
-    gameState.endings = save.endings || {};
-    gameState.achievements = save.achievements || {};
-    return true;
-  } catch (e) { return false; }
-}
-
-function hasSave() {
-  try { return !!localStorage.getItem(SAVE_KEY); } catch (e) { return false; }
-}
-
-function loadEndingsFromStorage() {
-  try {
-    const s = localStorage.getItem(ENDINGS_KEY);
-    if (s) {
-      const stored = JSON.parse(s);
-      gameState.endings = Object.assign({}, stored, gameState.endings);
-    }
-  } catch (e) {}
-}
-function saveEndingsToStorage() {
-  try { localStorage.setItem(ENDINGS_KEY, JSON.stringify(gameState.endings)); } catch (e) {}
-}
-function countEndings() {
-  return ['harmony','mastery','science','unity'].filter(k => gameState.endings[k]).length;
-}
-function loadAchievementsFromStorage() {
-  try {
-    const s = localStorage.getItem(ACHIEVEMENTS_KEY);
-    if (s) gameState.achievements = Object.assign({}, JSON.parse(s), gameState.achievements);
-  } catch (e) {}
-}
-function saveAchievementsToStorage() {
-  try { localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(gameState.achievements)); } catch (e) {}
-}
-function unlockAchievement(key) {
-  if (gameState.achievements[key]) return;
-  gameState.achievements[key] = true;
-  saveAchievementsToStorage();
-  const a = ACHIEVEMENTS[key];
-  if (a) {
-    showNotification('🏆 Достижение', `${a.icon} ${a.title}`);
-    playSfx('achievement');
-  }
-}
-
-function saveSettings() {
-  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(gameState.settings)); } catch (e) {}
-}
-function loadSettings() {
-  try { const s = localStorage.getItem(SETTINGS_KEY); if (s) Object.assign(gameState.settings, JSON.parse(s)); } catch (e) {}
-}
-
-function resetProgress() {
-  gameState.progress = createEmptyProgress();
-  gameState.endings = {};
-  gameState.achievements = {};
-  try {
-    localStorage.removeItem(PROGRESS_KEY);
-    localStorage.removeItem(ENDINGS_KEY);
-    localStorage.removeItem(ACHIEVEMENTS_KEY);
-    localStorage.removeItem(SAVE_KEY);
-    localStorage.removeItem(QUICKSAVE_KEY);
-  } catch (e) {}
-}
-
-function resetPassagesOnly() {
-  gameState.progress.passages = {};
-  gameState.progress.choices = {};
-  gameState.progress.locations = {};
-  saveProgress();
-}
-
-/* ============================================================
-   4. gameState — ПОСЛЕ функций, которые он использует
-   ============================================================ */
-const gameState = {
-  currentPassage: 'title',
-  history: [],
-  historyIndex: -1,
-  variables: {},
-  endings: {},
-  achievements: {},
-  progress: createEmptyProgress(),
-  settings: { textSpeed: 40, musicVolume: 0.6, typewriter: 'on', sfx: 'on' },
-  isTyping: false,
-  typewriterTimer: null,
-  isSwitching: false,
-  sessionStart: Date.now(),
-  skipRead: false
-};
-
-const bgMusic = document.getElementById('bgMusic');
-let musicStarted = false;
-
-/* ============================================================
-   5. ЗВУКОВЫЕ ЭФФЕКТЫ
-   ============================================================ */
-function playSfx(type) {
-  if (gameState.settings.sfx !== 'on') return;
-  const src = SFX_MAP[type];
-  if (!src) return;
-
-  if (!sfxCache[type]) {
-    const audio = new Audio(src);
-    audio.preload = 'auto';
-    audio.volume = SFX_VOLUME;
-    audio.onerror = () => console.warn('SFX не найден:', src);
-    sfxCache[type] = audio;
-  }
-  const sound = sfxCache[type].cloneNode();
-  sound.volume = SFX_VOLUME;
-  sound.play().catch(() => {});
-}
-
-function startMusic() {
-  if (musicStarted || !bgMusic) return;
-  bgMusic.volume = gameState.settings.musicVolume;
-  const p = bgMusic.play();
-  if (p && p.catch) {
-    p.then(() => { musicStarted = true; }).catch(() => {
-      const kick = () => {
-        bgMusic.play().then(() => {
-          musicStarted = true;
-          document.removeEventListener('click', kick);
-          document.removeEventListener('keydown', kick);
-        }).catch(() => {});
-      };
-      document.addEventListener('click', kick);
-      document.addEventListener('keydown', kick);
-    });
-  } else { musicStarted = true; }
-}
-function setMusicVolume(v) {
-  gameState.settings.musicVolume = v;
-  if (bgMusic) bgMusic.volume = v;
-}
-
-/* ============================================================
-   6. УВЕДОМЛЕНИЯ
-   ============================================================ */
-let notifyTimer = null;
-function showNotification(title, text) {
-  const el = document.getElementById('notification');
-  if (!el) return;
-  el.innerHTML = `<b>${title}</b>${text}`;
-  el.classList.add('show');
-  if (notifyTimer) clearTimeout(notifyTimer);
-  notifyTimer = setTimeout(() => el.classList.remove('show'), 3200);
-}
-
-/* ============================================================
-   7. ФОН
-   ============================================================ */
-let bgSwapTimer = null;
-function setBackground(locationKey) {
-  const bg = document.getElementById('bgLayer');
-  const url = LOCATION_BG[locationKey];
-  const currentUrl = bg.style.backgroundImage;
-
-  if (url && currentUrl && currentUrl.includes(url)) return;
-  if (bgSwapTimer) { clearTimeout(bgSwapTimer); bgSwapTimer = null; }
-
-  bg.style.opacity = '0';
-  bgSwapTimer = setTimeout(() => {
-    bg.style.backgroundImage = url ? `url("${url}")` : 'none';
-    bg.style.opacity = '1';
-    bgSwapTimer = null;
-  }, 400);
-}
-
-/* ============================================================
-   8. СПРАЙТЫ
-   ============================================================ */
-const activeSprites = {};
-
-function getSceneLayout(count) {
-  if (count === 1) return ['pos-solo'];
-  if (count === 2) return ['pos-left', 'pos-right'];
-  if (count === 3) return ['pos-far-left', 'pos-center', 'pos-far-right'];
-  return ['pos-far-left', 'pos-left', 'pos-right', 'pos-far-right'];
-}
-function relayoutSprites() {
-  const names = Object.keys(activeSprites);
-  const layout = getSceneLayout(names.length);
-  names.forEach((name, i) => {
-    const sprite = activeSprites[name];
-    const wasActive = sprite.el.classList.contains('active');
-    const wasInactive = sprite.el.classList.contains('inactive');
-    sprite.el.className = 'sprite ' + (layout[i] || 'pos-solo');
-    if (wasActive) sprite.el.classList.add('active');
-    else if (wasInactive) sprite.el.classList.add('inactive');
-  });
-}
-function addSprite(name, pos) {
-  if (activeSprites[name]) {
-    if (pos) {
-      activeSprites[name].el.classList.remove('pos-solo','pos-left','pos-right','pos-center','pos-far-left','pos-far-right');
-      activeSprites[name].el.classList.add('pos-' + pos);
-    }
-    return;
-  }
-  const stage = document.getElementById('spriteStage');
-  const img = document.createElement('img');
-  img.src = SPRITE_MAP[name];
-  img.alt = name;
-  img.dataset.char = name;
-  img.className = 'sprite entering ' + (pos ? 'pos-' + pos : 'pos-solo');
-  img.onerror = () => {
-    console.warn('Не удалось загрузить спрайт:', name, SPRITE_MAP[name]);
-    img.style.opacity = '0.3';
-    img.alt = '⚠ ' + name;
-  };
-  stage.appendChild(img);
-  activeSprites[name] = { el: img };
-  setTimeout(() => { img.classList.remove('entering'); img.classList.add('entered'); }, 50);
-}
-function removeSprite(name) {
-  if (!activeSprites[name]) return;
-  const el = activeSprites[name].el;
-  el.classList.add('leaving');
-  setTimeout(() => { el.remove(); delete activeSprites[name]; relayoutSprites(); }, 400);
-}
-function clearSprites() {
-  Object.keys(activeSprites).forEach(name => activeSprites[name].el.remove());
-  Object.keys(activeSprites).forEach(name => delete activeSprites[name]);
-}
-function setActiveSprite(name) {
-  Object.keys(activeSprites).forEach(key => {
-    const sprite = activeSprites[key];
-    if (key === name) {
-      sprite.el.classList.remove('inactive');
-      sprite.el.classList.add('active');
-      sprite.el.style.animation = 'none';
-      void sprite.el.offsetWidth;
-      sprite.el.style.animation = '';
-    } else {
-      sprite.el.classList.remove('active');
-      sprite.el.classList.add('inactive');
-    }
-  });
-}
-function deactivateAllSprites() {
-  Object.keys(activeSprites).forEach(key => {
-    activeSprites[key].el.classList.remove('active');
-    activeSprites[key].el.classList.add('inactive');
-  });
-}
-
-/* ============================================================
-   9. ПЕЧАТАЮЩИЙСЯ ТЕКСТ
-   ============================================================ */
-function typeText(element, html, speed, callback) {
-  const tokens = [];
-  let i = 0;
-  while (i < html.length) {
-    if (html[i] === '<') {
-      const end = html.indexOf('>', i);
-      if (end === -1) { tokens.push(html[i]); i++; continue; }
-      tokens.push(html.slice(i, end + 1));
-      i = end + 1;
-    } else { tokens.push(html[i]); i++; }
-  }
-  element.innerHTML = '';
-  const cursor = document.createElement('span');
-  cursor.className = 'type-cursor';
-  cursor.textContent = '▍';
-  element.appendChild(cursor);
-
-  let idx = 0;
-  function step() {
-    if (idx >= tokens.length) {
-      cursor.remove();
-      element.innerHTML = html;
-      gameState.isTyping = false;
-      if (callback) callback();
-      return;
-    }
-    const t = tokens[idx++];
-    cursor.insertAdjacentHTML('beforebegin', t);
-    if (t.startsWith('<')) step();
-    else gameState.typewriterTimer = setTimeout(step, speed);
-  }
-  step();
-}
-
-/* ============================================================
-   10. КАСТСЦЕНЫ
-   ============================================================ */
-const CutscenePlayer = {
-  current: null,
-  frameIndex: 0,
-  timer: null,
-  paused: false,
-  onFinish: null,
-
-  play(sceneKey, onFinish) {
-    const scene = CUTSCENES[sceneKey];
-    if (!scene || !scene.frames || scene.frames.length === 0) {
-      console.warn('Кастсцена не найдена:', sceneKey);
-      if (onFinish) onFinish();
-      return;
-    }
-
-    this.current = scene;
-    this.frameIndex = 0;
-    this.paused = false;
-    this.onFinish = onFinish;
-
-    // Отмечаем кастсцену как просмотренную
-    markCutsceneWatched(sceneKey);
-
-    const layer = document.getElementById('cutsceneLayer');
-    document.body.classList.add('cutscene-active');
-    layer.classList.add('active');
-
-    // Предзагрузка
-    scene.frames.forEach(f => { const img = new Image(); img.src = f.img; });
-
-    setTimeout(() => this.showFrame(0), 100);
-  },
-
-  showFrame(index) {
-    if (!this.current || index >= this.current.frames.length) {
-      this.finish();
-      return;
-    }
-    this.frameIndex = index;
-    const frame = this.current.frames[index];
-    const currentEl = document.getElementById('csFrameCurrent');
-    const nextEl    = document.getElementById('csFrameNext');
-    const effect = frame.effect || 'fade';
-
-    nextEl.className = 'cutscene-frame next effect-' + effect;
-    nextEl.style.backgroundImage = `url("${frame.img}")`;
-    nextEl.style.transform = '';
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        nextEl.classList.add('visible');
-      });
-    });
-
-    // Подпись
-    let captionEl = document.querySelector('.cutscene-caption');
-    if (captionEl) captionEl.remove();
-    if (frame.text) {
-      captionEl = document.createElement('div');
-      captionEl.className = 'cutscene-caption';
-      captionEl.textContent = frame.text;
-      document.getElementById('cutsceneLayer').appendChild(captionEl);
-    }
-
-    if (frame.sfx) playSfx(frame.sfx);
-
-    // Прогресс
-    const progress = document.getElementById('csProgress');
-    progress.style.transition = 'none';
-    const basePercent = (index / this.current.frames.length) * 100;
-    const targetPercent = ((index + 1) / this.current.frames.length) * 100;
-    progress.style.width = basePercent + '%';
-    requestAnimationFrame(() => {
-      progress.style.transition = `width ${frame.duration}ms linear`;
-      progress.style.width = targetPercent + '%';
-    });
-
-    this.clearTimer();
-    this.timer = setTimeout(() => {
-      currentEl.className = 'cutscene-frame current';
-      currentEl.style.backgroundImage = `url("${frame.img}")`;
-      nextEl.className = 'cutscene-frame next';
-      nextEl.style.backgroundImage = '';
-      nextEl.style.transform = '';
-      this.showFrame(index + 1);
-    }, frame.duration);
-  },
-
-  togglePause() {
-    if (!this.current) return;
-    if (this.paused) {
-      this.paused = false;
-      document.getElementById('csPause').textContent = '⏸';
-      this.showFrame(this.frameIndex);
-    } else {
-      this.paused = true;
-      document.getElementById('csPause').textContent = '▶';
-      this.clearTimer();
-    }
-  },
-
-  skip() { this.finish(); },
-
-  finish() {
-    this.clearTimer();
-    const layer = document.getElementById('cutsceneLayer');
-    layer.classList.remove('active');
-    document.body.classList.remove('cutscene-active');
-
-    const cap = document.querySelector('.cutscene-caption');
-    if (cap) cap.remove();
-
-    const cb = this.onFinish;
-    this.current = null;
-    this.onFinish = null;
-
-    setTimeout(() => {
-      document.getElementById('csFrameCurrent').style.backgroundImage = '';
-      document.getElementById('csFrameNext').style.backgroundImage = '';
-      if (cb) cb();
-    }, 600);
-  },
-
-  clearTimer() {
-    if (this.timer) { clearTimeout(this.timer); this.timer = null; }
-  }
-};
-
-/* Обработчики кастсцен */
-document.addEventListener('click', (e) => {
-  if (e.target.id === 'csSkip') { e.stopPropagation(); CutscenePlayer.skip(); }
-  if (e.target.id === 'csPause') { e.stopPropagation(); CutscenePlayer.togglePause(); }
-});
-document.addEventListener('click', (e) => {
-  const layer = document.getElementById('cutsceneLayer');
-  if (!layer.classList.contains('active')) return;
-  if (e.target.closest('.cs-btn')) return;
-  if (CutscenePlayer.current && !CutscenePlayer.paused) {
-    CutscenePlayer.clearTimer();
-    CutscenePlayer.showFrame(CutscenePlayer.frameIndex + 1);
-  }
-});
-document.addEventListener('keydown', (e) => {
-  const layer = document.getElementById('cutsceneLayer');
-  if (!layer.classList.contains('active')) return;
-  if (e.key === ' ' || e.key === 'Enter') {
-    e.preventDefault();
-    CutscenePlayer.clearTimer();
-    CutscenePlayer.showFrame(CutscenePlayer.frameIndex + 1);
-  }
-  if (e.key === 'Escape') { e.preventDefault(); CutscenePlayer.skip(); }
-});
-
-/* ============================================================
-   11. ПЕРЕХОДЫ
-   ============================================================ */
-function advance() {
-  if (gameState.isSwitching) return;
-  const passage = PASSAGES[gameState.currentPassage];
-  if (!passage || passage.isTitle) return;
-
-  if (gameState.isTyping) {
-    if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
-    const textEl = document.getElementById('dialogueText');
-    if (textEl) textEl.innerHTML = passage.text || '';
-    gameState.isTyping = false;
-    return;
-  }
-
-  if (passage.choices && passage.choices.length > 0) return;
-
-  if (passage.next) {
-    const to = passage.next;
-    if (to === 'title') {
-      gameState.history = []; gameState.historyIndex = -1;
-      renderPassage('title', false);
-    } else {
-      renderPassage(to);
-    }
-  }
-}
-
-function renderPassage(id, addToHistory = true) {
-  const passage = PASSAGES[id];
-  if (!passage) { console.error('Пассаж не найден:', id); return; }
-
-  if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
-  gameState.isTyping = false;
-  gameState.currentPassage = id;
-
-  if (passage.isTitle) { renderTitleScreen(); return; }
-
-  // Применяем set
-  if (passage.set) {
-    Object.assign(gameState.variables, passage.set);
-    const itemAchievements = {
-      has_feather: 'feather', has_crystal: 'crystal', has_pollen: 'pollen',
-      has_selesta_vial: 'vial', has_key: 'key', has_secret_door: 'secret',
-      has_scheme: 'scheme'
-    };
-    for (const [key, ach] of Object.entries(itemAchievements)) {
-      if (passage.set[key]) unlockAchievement(ach);
-    }
-    // Журнал
-    if (passage.set.has_feather) addJournalEntry('Получено', 'Перо Лазурной Сойки');
-    if (passage.set.has_crystal) addJournalEntry('Получено', 'Кристалл Горного Кварца');
-    if (passage.set.has_pollen)  addJournalEntry('Получено', 'Пыльца Звёздных Светляков');
-    if (passage.set.has_key)     addJournalEntry('Получено', 'Латунный ключ');
-    if (passage.set.has_selesta_vial) addJournalEntry('Получено', 'Флакон Селесты');
-  }
-
-  if (passage.ending) {
-    gameState.endings[passage.ending] = true;
-    saveEndingsToStorage();
-    if (countEndings() >= 4) unlockAchievement('allEndings');
-  }
-
-  if (addToHistory) {
-    gameState.history = gameState.history.slice(0, gameState.historyIndex + 1);
-    gameState.history.push(id);
-    gameState.historyIndex = gameState.history.length - 1;
-  }
-
-  // Отмечаем прогресс
-  markPassageVisited(id);
-  if (passage.location) markLocationVisited(passage.location);
-
-  // Если кастсцена — играем и ждём
-  if (passage.cutscene) {
-    const ga = document.getElementById('gameArea');
-    if (ga) ga.style.opacity = '0';
-    CutscenePlayer.play(passage.cutscene, () => {
-      if (ga) ga.style.opacity = '1';
-      renderPassageInner(id, passage, addToHistory);
-    });
-    return;
-  }
-
-  renderPassageInner(id, passage, addToHistory);
-}
-
-function renderPassageInner(id, passage, addToHistory) {
-  setBackground(passage.location);
-
-  // Спрайты
-  const explicitSprites = (passage.sprites || []).slice();
-  const explicitNames = explicitSprites.map(s => s.name);
-  const mentionedNames = findMentionedSprites(passage.text || '');
-  const autoSprites = [];
-  for (const name of mentionedNames) {
-    if (name === 'player') continue;
-    if (explicitNames.includes(name)) continue;
-    if (['tower_outside','tower_inside','tower_hall','valley'].includes(name)) continue;
-    const used = explicitNames.concat(autoSprites.map(s => s.name));
-    let pos = 'right';
-    if (used.length === 0) pos = 'solo';
-    else if (used.length === 1) pos = used.includes('left') ? 'right' : 'left';
-    else if (used.length === 2) pos = 'far-left';
-    else pos = 'far-right';
-    autoSprites.push({ name, pos });
-  }
-  const wanted = explicitSprites.concat(autoSprites);
-  const wantedNames = wanted.map(s => s.name);
-
-  Object.keys(activeSprites).forEach(name => { if (!wantedNames.includes(name)) removeSprite(name); });
-  wanted.forEach(s => addSprite(s.name, s.pos));
-  setTimeout(relayoutSprites, 50);
-
-  const speakerKey = SPEAKER_MAP[passage.speaker];
-  if (speakerKey && activeSprites[speakerKey]) setActiveSprite(speakerKey);
-  else if (wantedNames.length > 0) deactivateAllSprites();
-
-  // UI
-  let navHTML = '';
-  if (passage.choices && passage.choices.length > 0) {
-    navHTML = '<div class="choice-box">' + passage.choices.map(c =>
-      `<a data-to="${c.to}">${c.text}</a>`
-    ).join('') + '</div>';
-  }
-
-  const gameMenuHTML = `
-    <div class="game-menu">
-      <button id="btnJournal" title="Журнал">📖</button>
-      <button id="btnSave" title="Сохранить игру">💾</button>
-      <button id="btnMenu" title="В главное меню">🏠</button>
-    </div>
-  `;
-
-  const boxClass = passage.boxClass || 'narrator';
-  const speaker = passage.speaker || '';
-
-  const boxHTML = `
-    <div class="dialogue-box ${boxClass}">
-      ${speaker ? `<div class="speaker-name">${speaker}</div>` : ''}
-      <div class="dialogue-text" id="dialogueText"></div>
-      ${(!passage.choices || passage.choices.length === 0) && passage.next ? '<div class="next-hint">▼</div>' : ''}
-    </div>
-  `;
-
-  const gameArea = document.getElementById('gameArea');
-  gameArea.innerHTML = boxHTML + navHTML + gameMenuHTML;
-
-  // Сохраняем ID для обработчиков
-  const currentPassageId = id;
-
-  gameArea.querySelectorAll('[data-to]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      playSfx('choice');
-      const to = btn.dataset.to;
-
-      markChoice(currentPassageId, to);
-      saveGame();
-
-      if (to === 'title') {
-        gameState.history = []; gameState.historyIndex = -1;
-        renderPassage('title', false);
-      } else {
-        renderPassage(to);
-      }
-    });
-  });
-
-  const saveBtn = document.getElementById('btnSave');
-  if (saveBtn) saveBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (saveGame()) {
-      saveBtn.textContent = '✅';
-      showNotification('💾 Сохранено', 'Игра успешно сохранена');
-      setTimeout(() => { saveBtn.textContent = '💾'; }, 1000);
-    } else {
-      showNotification('⚠ Ошибка', 'Не удалось сохранить игру');
-    }
-  });
-
-  const menuBtn = document.getElementById('btnMenu');
-  if (menuBtn) menuBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (confirm('Вернуться в главное меню? Несохранённый прогресс будет потерян.')) {
-      gameState.history = []; gameState.historyIndex = -1;
-      renderPassage('title', false);
-    }
-  });
-
-  const journalBtn = document.getElementById('btnJournal');
-  if (journalBtn) journalBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openJournal();
-  });
-
-  updateHistoryButtons();
-
-  // Текст
-  const textEl = document.getElementById('dialogueText');
-  const text = passage.text || '';
-  const alreadyVisited = isPassageVisited(id);
-
-  if (gameState.skipRead && alreadyVisited) {
-    textEl.innerHTML = text;
-    gameState.isTyping = false;
-  } else if (gameState.settings.typewriter === 'on') {
-    gameState.isTyping = true;
-    typeText(textEl, text, gameState.settings.textSpeed, () => { gameState.isTyping = false; });
-  } else {
-    textEl.innerHTML = text;
-  }
-
-  const clickLayer = document.getElementById('clickLayer');
-  if (clickLayer) {
-    if (passage.choices && passage.choices.length > 0) {
-      clickLayer.classList.remove('enabled');
-    } else {
-      clickLayer.classList.add('enabled');
-    }
-  }
-}
-
-/* ============================================================
-   12. ТИТУЛЬНЫЙ ЭКРАН
-   ============================================================ */
-function renderTitleScreen() {
-  setBackground('title');
-  clearSprites();
-  const clickLayer = document.getElementById('clickLayer');
-  if (clickLayer) clickLayer.classList.remove('enabled');
-
-  const gameArea = document.getElementById('gameArea');
-  const count = countEndings();
-  const total = 4;
-  const canLoad = hasSave();
-
-  gameArea.innerHTML = `
-    <div class="title-screen">
-      <div class="title-logo">
-        <h1 class="title-main">Песнь Августа</h1>
-        <p class="title-sub">Интерактивная сказка</p>
-      </div>
-      <div class="title-menu">
-        <button id="btnStart">▶ Начать историю</button>
-        <button id="btnLoad" ${canLoad ? '' : 'disabled'}>📂 Загрузить</button>
-        <button id="btnProgress">🗺 Карта прогресса</button>
-        <button id="btnGallery">🖼 Галерея сцен</button>
-        <button id="btnAchievements">🏆 Достижения</button>
-        <button id="btnSettings">⚙ Настройки</button>
-        <button id="btnResetEndings">🔄 Сбросить прогресс</button>
-      </div>
-      <p class="title-footer">Верхний Шепоть · Праздник Осенней Звезды</p>
-    </div>
-    <div class="title-endings">🏆 Концовок открыто: <b>${count} / ${total}</b></div>
-  `;
-
-  document.getElementById('btnStart').addEventListener('click', () => {
-    gameState.history = []; gameState.historyIndex = -1;
-    gameState.variables = {};
-    renderPassage('Start1');
-  });
-  document.getElementById('btnLoad').addEventListener('click', () => {
-    if (loadGame()) renderPassage(gameState.currentPassage, false);
-    else showNotification('⚠ Ошибка', 'Сохранение не найдено');
-  });
-  document.getElementById('btnProgress').addEventListener('click', openProgress);
-  document.getElementById('btnGallery').addEventListener('click', openGallery);
-  document.getElementById('btnAchievements').addEventListener('click', openAchievements);
-  document.getElementById('btnSettings').addEventListener('click', openSettings);
-  document.getElementById('btnResetEndings').addEventListener('click', () => {
-    if (confirm('Сбросить весь прогресс: концовки, достижения и открытые пассажи?')) {
-      resetProgress();
-      renderTitleScreen();
-    }
-  });
-  updateHistoryButtons();
-}
-
-/* ============================================================
-   13. ИСТОРИЯ
-   ============================================================ */
-function updateHistoryButtons() {
-  const back = document.getElementById('btnBack');
-  const fwd = document.getElementById('btnForward');
-  const controls = document.getElementById('historyControls');
-  if (gameState.currentPassage === 'title') { controls.style.display = 'none'; return; }
-  controls.style.display = 'flex';
-  back.disabled = gameState.historyIndex <= 0;
-  fwd.disabled = gameState.historyIndex >= gameState.history.length - 1;
-}
-function goBack() {
-  if (gameState.historyIndex <= 0) return;
-  gameState.historyIndex--;
-  renderPassage(gameState.history[gameState.historyIndex], false);
-}
-function goForward() {
-  if (gameState.historyIndex >= gameState.history.length - 1) return;
-  gameState.historyIndex++;
-  renderPassage(gameState.history[gameState.historyIndex], false);
-}
-
-/* ============================================================
-   14. МОДАЛЬНЫЕ ОКНА
-   ============================================================ */
-function openSettings() {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  content.innerHTML = `
-    <h2>⚙ Настройки</h2>
-    <div class="row"><label>Скорость текста</label>
-      <select id="setSpeed">
-        <option value="20" ${gameState.settings.textSpeed==20?'selected':''}>Медленно</option>
-        <option value="40" ${gameState.settings.textSpeed==40?'selected':''}>Обычно</option>
-        <option value="60" ${gameState.settings.textSpeed==60?'selected':''}>Быстро</option>
-        <option value="80" ${gameState.settings.textSpeed==80?'selected':''}>Мгновенно</option>
-      </select>
-    </div>
-    <div class="row"><label>Печатающийся текст</label>
-      <select id="setTypewriter">
-        <option value="on" ${gameState.settings.typewriter=='on'?'selected':''}>Включён</option>
-        <option value="off" ${gameState.settings.typewriter=='off'?'selected':''}>Выключен</option>
-      </select>
-    </div>
-    <div class="row"><label>Звуковые эффекты</label>
-      <select id="setSfx">
-        <option value="on" ${gameState.settings.sfx=='on'?'selected':''}>Включены</option>
-        <option value="off" ${gameState.settings.sfx=='off'?'selected':''}>Выключены</option>
-      </select>
-    </div>
-    <div class="row"><label>Пропускать прочитанное</label>
-      <select id="setSkipRead">
-        <option value="on" ${gameState.skipRead ? 'selected' : ''}>Включено</option>
-        <option value="off" ${gameState.skipRead ? '' : 'selected'}>Выключено</option>
-      </select>
-    </div>
-    <div class="row"><label>Громкость музыки: <span id="volLabel">${Math.round(gameState.settings.musicVolume*100)}%</span></label>
-      <input type="range" id="setVolume" min="0" max="1" step="0.05" value="${gameState.settings.musicVolume}" style="width:180px;">
-    </div>
-    <div class="buttons"><button id="setClose">Закрыть</button></div>
-  `;
-  overlay.classList.remove('hidden');
-  document.getElementById('setSpeed').addEventListener('change', e => { gameState.settings.textSpeed = Number(e.target.value); saveSettings(); });
-  document.getElementById('setTypewriter').addEventListener('change', e => { gameState.settings.typewriter = e.target.value; saveSettings(); });
-  document.getElementById('setSfx').addEventListener('change', e => { gameState.settings.sfx = e.target.value; saveSettings(); });
-  document.getElementById('setSkipRead').addEventListener('change', e => {
-    gameState.skipRead = (e.target.value === 'on');
-    try { localStorage.setItem('pesn_augusta_skipread', gameState.skipRead ? '1' : '0'); } catch(e) {}
-  });
-  document.getElementById('setVolume').addEventListener('input', e => {
-    const v = Number(e.target.value);
-    setMusicVolume(v);
-    document.getElementById('volLabel').textContent = Math.round(v*100) + '%';
-    saveSettings();
-  });
-  document.getElementById('setClose').addEventListener('click', () => overlay.classList.add('hidden'));
-}
-
-function openAchievements() {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  let html = '<h2>🏆 Достижения</h2><div class="ach-list">';
-  for (const [key, a] of Object.entries(ACHIEVEMENTS)) {
-    const unlocked = !!gameState.achievements[key];
-    html += `
-      <div class="ach ${unlocked ? '' : 'locked'}">
-        <div class="icon">${unlocked ? a.icon : '🔒'}</div>
-        <div class="info">
-          <div class="title">${a.title}</div>
-          <div class="desc">${a.desc}</div>
-        </div>
-      </div>
-    `;
-  }
-  html += '</div><div class="buttons"><button id="achClose">Закрыть</button></div>';
-  content.innerHTML = html;
-  overlay.classList.remove('hidden');
-  document.getElementById('achClose').addEventListener('click', () => overlay.classList.add('hidden'));
-}
-
-function openJournal() {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  let html = '<h2>📖 Журнал</h2>';
-
-  const items = [
-    { key: 'has_feather',   icon: '🪶', name: 'Перо Лазурной Сойки' },
-    { key: 'has_crystal',   icon: '💎', name: 'Кристалл Горного Кварца' },
-    { key: 'has_pollen',    icon: '✨', name: 'Пыльца Звёздных Светляков' },
-    { key: 'has_selesta_vial', icon: '🧪', name: 'Флакон Селесты' },
-    { key: 'has_key',       icon: '🔑', name: 'Латунный ключ' }
-  ];
-  const owned = items.filter(i => gameState.variables[i.key]);
-  html += '<div style="margin-bottom:16px;"><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">ПРЕДМЕТЫ</div>';
-  if (owned.length === 0) html += '<div style="color:#888;font-style:italic;">Пока ничего не найдено</div>';
-  else owned.forEach(i => { html += `<div style="padding:6px 0;color:#eee;">${i.icon} ${i.name}</div>`; });
-  html += '</div>';
-
-  const flags = [
-    { key: 'has_clue',        name: 'Зацепка от Бруно о ночном всполохе' },
-    { key: 'has_secret_door', name: 'Тайный вход в башню' },
-    { key: 'has_scheme',      name: 'Схема Олвена изучена' },
-    { key: 'has_met_august',  name: 'Знакомство с Августом' },
-    { key: 'inspected_mechanism', name: 'Механизм башни осмотрен' },
-    { key: 'door_opened',     name: 'Парадная дверь башни открыта' }
-  ];
-  const activeFlags = flags.filter(f => gameState.variables[f.key]);
-  html += '<div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">СОБЫТИЯ</div>';
-  if (activeFlags.length === 0) html += '<div style="color:#888;font-style:italic;">Пока ничего не произошло</div>';
-  else activeFlags.forEach(f => { html += `<div style="padding:6px 0;color:#eee;">• ${f.name}</div>`; });
-  html += '</div>';
-
-  html += '<div class="buttons"><button id="journalClose">Закрыть</button></div>';
-  content.innerHTML = html;
-  overlay.classList.remove('hidden');
-  document.getElementById('journalClose').addEventListener('click', () => overlay.classList.add('hidden'));
-}
-
-function openProgress() {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  const p = gameState.progress;
-
-  const totalPassages = countTotalPassages();
-  const visitedPassages = countVisitedPassages();
-  const percent = getCompletionPercent();
-  const totalLocations = LOCATION_BG ? Object.keys(LOCATION_BG).filter(k => k !== 'title').length : 0;
-  const visitedLocations = countVisitedLocations();
-  const totalCutscenes = Object.keys(CUTSCENES || {}).length;
-  const watchedCutscenes = countWatchedCutscenes();
-  const endingsCount = countEndings();
-
-  const totalSec = p.totalPlayTime || 0;
-  const hours = Math.floor(totalSec / 3600);
-  const minutes = Math.floor((totalSec % 3600) / 60);
-
-  const bar = (val, max) => {
-    const pc = max > 0 ? Math.round((val / max) * 100) : 0;
-    return `
-      <div style="background:#1c1813;border-radius:6px;height:12px;overflow:hidden;margin-top:6px;">
-        <div style="background:linear-gradient(90deg,#FBBF24,#F59E0B);height:100%;width:${pc}%;transition:width 0.4s ease;box-shadow:0 0 8px rgba(255,200,100,0.6);"></div>
-      </div>
-      <div style="color:#888;font-size:11px;margin-top:4px;">${val} / ${max} (${pc}%)</div>
-    `;
-  };
-
-  const branches = [
-    { name: 'Через Старый мост',       passages: ['СтарыйМост', 'МостВетер', 'МостЭхо', 'МостУгощение', 'МостРасспросы'] },
-    { name: 'Через Грибную тропу',     passages: ['ГрибнаяТропа', 'ГрибыМасло', 'ГрибыМеханика', 'ГрибыМагия', 'ТайныйВход'] },
-    { name: 'Через лавку Селесты',     passages: ['ЛавкаСелесты', 'ЛавкаСелесты2', 'ЛавкаСелесты3', 'ЛавкаСелесты4'] },
-    { name: 'Парадная дверь башни',    passages: ['БашняСнаружи', 'БашняСнаружи2', 'БашняСнаружи3', 'ДверьОткрыта', 'ДверьОшибкаДобро'] },
-    { name: 'Обсерватория (Тик-Так)',  passages: ['ОсмотрСтенБашни', 'ОсмотрСтенБашни2', 'Обсерватория', 'Обсерватория2', 'Обсерватория3', 'Обсерватория4', 'ВзятьКлюч'] },
-    { name: 'Знакомство с Августом',   passages: ['ОсмотрАвгуста1', 'ОсмотрАвгуста2', 'ОсмотрАвгуста3'] },
-    { name: 'Схема Олвена',            passages: ['ПоказатьСхему1', 'ПоказатьСхему2', 'ПоказатьСхему3', 'ПоказатьСхему4'] },
-    { name: 'Осмотр механизма',        passages: ['ОсмотрМеханизма1', 'ОсмотрМеханизма2'] }
-  ];
-
-  const branchesHTML = branches.map(b => {
-    const visited = b.passages.filter(pid => isPassageVisited(pid)).length;
-    const total = b.passages.length;
-    const pc = total > 0 ? Math.round((visited / total) * 100) : 0;
-    const isComplete = pc === 100;
-    return `
-      <div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid ${isComplete ? 'rgba(251,191,36,0.5)' : 'rgba(255,255,255,0.06)'};">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="color:${isComplete ? '#FBBF24' : '#ccc'};font-size:13px;">
-            ${isComplete ? '✅' : '◻'} ${b.name}
-          </span>
-          <span style="color:#888;font-size:11px;">${visited} / ${total}</span>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  const endingList = [
-    { key: 'harmony',  name: 'Финал Мелодии и Добра',     icon: '🎵' },
-    { key: 'mastery',  name: 'Финал Заботы и Изобилия',   icon: '🍎' },
-    { key: 'science',  name: 'Финал Инженерного Чуда',    icon: '⚙' },
-    { key: 'unity',    name: 'Финал Истинной Гармонии',   icon: '🌈' }
-  ];
-  const endingsHTML = endingList.map(e => {
-    const opened = !!gameState.endings[e.key];
-    return `
-      <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;background:rgba(255,255,255,0.03);opacity:${opened ? '1' : '0.4'};">
-        <span style="font-size:20px;">${opened ? e.icon : '🔒'}</span>
-        <span style="color:${opened ? '#FBBF24' : '#888'};font-size:13px;">${e.name}</span>
-      </div>
-    `;
-  }).join('');
-
-  content.innerHTML = `
-    <h2>🗺 Карта прогресса</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-      <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">📖 ПАССАЖИ</div>${bar(visitedPassages, totalPassages)}</div>
-      <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🎬 КАСТСЦЕНЫ</div>${bar(watchedCutscenes, totalCutscenes)}</div>
-      <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🌄 ЛОКАЦИИ</div>${bar(visitedLocations, totalLocations)}</div>
-      <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🏁 КОНЦОВКИ</div>${bar(endingsCount, 4)}</div>
-    </div>
-
-    <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:12px 16px;margin-bottom:20px;text-align:center;">
-      <div style="font-size:26px;color:#FBBF24;font-weight:bold;letter-spacing:2px;">${percent}%</div>
-      <div style="color:#ccc;font-size:12px;letter-spacing:1px;">ОБЩЕЕ ПРОХОЖДЕНИЕ</div>
-      <div style="color:#888;font-size:11px;margin-top:8px;">🎮 Игр начато: ${p.playCount || 1} · ⏱ Время в игре: ${hours}ч ${minutes}м</div>
-    </div>
-
-    <div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🌿 ВЕТКИ СЮЖЕТА</div>
-    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;">${branchesHTML}</div>
-
-    <div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🏁 ОТКРЫТЫЕ ФИНАЛЫ</div>
-    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">${endingsHTML}</div>
-
-    <div class="buttons">
-      <button id="progReset">Сбросить прохождение</button>
-      <button id="progClose">Закрыть</button>
-    </div>
-  `;
-
-  overlay.classList.remove('hidden');
-  document.getElementById('progClose').addEventListener('click', () => overlay.classList.add('hidden'));
-  document.getElementById('progReset').addEventListener('click', () => {
-    if (confirm('Сбросить только карту прохождения? Концовки и достижения останутся.')) {
-      resetPassagesOnly();
-      openProgress();
-    }
-  });
-}
-
-function openGallery() {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-
-  const allCutscenes = Object.keys(CUTSCENES || {});
-  if (allCutscenes.length === 0) {
-    content.innerHTML = `
-      <h2>🖼 Галерея сцен</h2>
-      <p style="color:#888;font-style:italic;">Пока нет доступных сцен.</p>
-      <div class="buttons"><button id="galClose">Закрыть</button></div>
-    `;
-    overlay.classList.remove('hidden');
-    document.getElementById('galClose').addEventListener('click', () => overlay.classList.add('hidden'));
-    return;
-  }
-
-  const cardsHTML = allCutscenes.map(key => {
-    const watched = isCutsceneWatched(key);
-    const scene = CUTSCENES[key];
-    const thumb = watched && scene.frames && scene.frames[0] ? scene.frames[0].img : '';
-    const title = key.replace(/_/g, ' ');
-    return `
-      <div class="gallery-card ${watched ? '' : 'locked'}"
-           data-key="${key}"
-           style="background-image:${thumb ? `url('${thumb}')` : 'none'};">
-        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,0.85) 100%);"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;color:${watched ? '#FFD700' : '#888'};font-size:12px;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,0,0.9);">
-          ${watched ? '▶ ' : '🔒 '} ${title}
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  content.innerHTML = `
-    <h2>🖼 Галерея сцен</h2>
-    <p style="color:#888;font-size:12px;margin-bottom:16px;">
-      Просмотрено: <b style="color:#FBBF24;">${countWatchedCutscenes()} / ${allCutscenes.length}</b>
-    </p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">${cardsHTML}</div>
-    <div class="buttons"><button id="galClose">Закрыть</button></div>
-  `;
-
-  overlay.classList.remove('hidden');
-
-  content.querySelectorAll('.gallery-card:not(.locked)').forEach(card => {
-    card.addEventListener('click', () => {
-      const key = card.dataset.key;
-      overlay.classList.add('hidden');
-      CutscenePlayer.play(key, () => openGallery());
-    });
-  });
-
-  document.getElementById('galClose').addEventListener('click', () => overlay.classList.add('hidden'));
-}
-
-/* ============================================================
-   15. ИНИЦИАЛИЗАЦИЯ
-   ============================================================ */
-let playTimeInterval = null;
-
-function init() {
-  loadEndingsFromStorage();
-  loadAchievementsFromStorage();
-  loadSettings();
-  gameState.progress = loadProgress();
-  gameState.progress.playCount = (gameState.progress.playCount || 0) + 1;
-  saveProgress();
-
-  // Настройка «пропускать прочитанное»
-  try {
-    gameState.skipRead = localStorage.getItem('pesn_augusta_skipread') === '1';
-  } catch (e) { gameState.skipRead = false; }
-
-  if (bgMusic) bgMusic.volume = gameState.settings.musicVolume;
-  startMusic();
-
-  // Отслеживание времени игры
-  if (playTimeInterval) clearInterval(playTimeInterval);
-  playTimeInterval = setInterval(() => {
-    gameState.progress.totalPlayTime = (gameState.progress.totalPlayTime || 0) + 1;
-    if (gameState.progress.totalPlayTime % 30 === 0) saveProgress();
-  }, 1000);
-
-  // Сохранение при закрытии
-  window.addEventListener('beforeunload', () => {
-    saveProgress();
-    if (gameState.currentPassage && gameState.currentPassage !== 'title') {
-      saveGame();
-    }
-  });
-
-  document.getElementById('btnBack').addEventListener('click', goBack);
-  document.getElementById('btnForward').addEventListener('click', goForward);
-
-  const clickLayerEl = document.getElementById('clickLayer');
-  if (clickLayerEl) clickLayerEl.addEventListener('click', advance);
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.dialogue-box')) return;
-    if (e.target.closest('[data-to]')) return;
-    if (e.target.closest('.game-menu')) return;
-    if (e.target.closest('.history-controls')) return;
-    if (e.target.closest('.modal-overlay')) return;
-    playSfx('click');
-    advance();
-  });
-
-  document.addEventListener('keydown', ev => {
-    const tag = (ev.target.tagName || '').toLowerCase();
-    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
-    if (ev.ctrlKey || ev.altKey || ev.metaKey) return;
-    if (ev.key === 'ArrowLeft') { ev.preventDefault(); goBack(); }
-    else if (ev.key === 'ArrowRight') { ev.preventDefault(); goForward(); }
-    else if (ev.key === ' ' || ev.key === 'Enter') { ev.preventDefault(); playSfx('click'); advance(); }
-    else if (ev.key === 'Escape') {
-      const overlay = document.getElementById('modalOverlay');
-      if (!overlay.classList.contains('hidden')) overlay.classList.add('hidden');
-    }
-  });
-
-  document.getElementById('modalOverlay').addEventListener('click', ev => {
-    if (ev.target.id === 'modalOverlay') ev.target.classList.add('hidden');
-  });
-
-  setTimeout(() => {
-    const loading = document.getElementById('loadingScreen');
-    if (loading) loading.classList.add('hidden');
-  }, 600);
-
-  renderPassage('title', false);
-}
-
-document.addEventListener('DOMContentLoaded', init);
-</script>
-</body>
-</html>
