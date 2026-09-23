@@ -5,9 +5,6 @@
 <title>Песнь Августа</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-/* ============================================
-   БАЗОВЫЕ СТИЛИ
-   ============================================ */
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0; height: 100%;
@@ -19,7 +16,6 @@ html, body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
-
 .bg-layer {
   position: fixed; inset: 0;
   background-size: cover;
@@ -36,7 +32,6 @@ html, body {
   0%   { transform: scale(1)    translate(0, 0); }
   100% { transform: scale(1.08) translate(-1.2%, -1%); }
 }
-
 .particles-layer {
   position: fixed; inset: 0;
   pointer-events: none;
@@ -58,7 +53,6 @@ html, body {
   90%  { opacity: 0.65; }
   100% { transform: translateY(-110vh) translateX(40px) scale(1.1); opacity: 0; }
 }
-
 .insert-layer {
   position: fixed; inset: 0;
   z-index: 80;
@@ -81,14 +75,12 @@ html, body {
   from { transform: scale(1); }
   to   { transform: scale(1.06); }
 }
-
 .vignette-layer {
   position: fixed; inset: 0; pointer-events: none; z-index: 4;
   background:
     radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0,0,0,0.7) 100%),
     linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 25%, transparent 65%, rgba(0,0,0,0.7) 100%);
 }
-
 .loading-screen {
   position: fixed; inset: 0; z-index: 5000;
   background: radial-gradient(ellipse at center, #14101e 0%, #0a0a14 100%);
@@ -194,7 +186,6 @@ html, body {
 }
 .click-layer.enabled { display: block; }
 
-/* ДИАЛОГ */
 .dialogue-box {
   position: fixed; left: 50%; bottom: 3vh;
   transform: translateX(-50%);
@@ -308,7 +299,6 @@ html, body {
   0%,100% { transform: translateY(0); opacity: 0.4; }
   50%     { transform: translateY(6px); opacity: 1; }
 }
-
 .dialogue-box.narrator { border-color: rgba(200,160,80,0.55); }
 .dialogue-box.narrator .speaker-name { background: linear-gradient(180deg, rgba(180,130,40,1) 0%, rgba(130,90,25,1) 100%); }
 .dialogue-box.narrator .speaker-name::after { border-top-color: rgba(130,90,25,1); }
@@ -943,7 +933,7 @@ body.cutscene-active .particles-layer {
 
 <script>
    /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v8.0 (с вашими картинками)
+   ПЕСНЬ АВГУСТА — движок v9.0 (с мостом Бруно)
    ============================================================ */
 
 const LOCATION_BG = {
@@ -956,6 +946,8 @@ const LOCATION_BG = {
   player_table:       'images/fon_player_inside.png',
   parchment:          'images/fon_parchment.png',
   most:               'images/fon_most.png',
+  most_empty:         'images/fon_most_empty.png',
+  most_blocked:       'images/fon_most_blocked.png',
   lavka:              'images/fon_lavka.png',
   tropa:              'images/fon_tropa.png',
   tropa_2:            'images/fon_tropa_2.png',
@@ -1051,7 +1043,7 @@ const sfxCache = {};
 const SFX_VOLUME = 0.6;
 
 /* ============================================================
-   ПАССАЖИ — с новыми локациями
+   ПАССАЖИ
    ============================================================ */
 const PASSAGES = {
   title: { isTitle: true },
@@ -1179,12 +1171,12 @@ const PASSAGES = {
     next: 'ОткрытьПисьмо'
   },
 
-  /* СТАРЫЙ МОСТ */
+  /* СТАРЫЙ МОСТ — НОВАЯ СЦЕНА */
   СтарыйМост: {
     location: 'most',
-    insert: 'images/fon_most.png',
-    insertDuration: 2000,
-    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    insert: 'images/fon_most_blocked.png',
+    insertDuration: 2500,
+    sprites: [ { name: 'mira' } ],
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно. Его хвост с кисточкой мирно покачивался в воздухе.`,
     next: 'СтарыйМост2'
@@ -1245,10 +1237,12 @@ const PASSAGES = {
     next: 'МостВетер5'
   },
   МостВетер5: {
-    location: 'most',
-    sprites: [ { name: 'bruno' }, { name: 'mira' } ],
+    location: 'most_empty',
+    insert: 'images/fon_most_empty.png',
+    insertDuration: 2200,
+    sprites: [ { name: 'mira' } ],
     speaker: 'Мира', boxClass: 'mira',
-    text: `— Прекрасный подарок! — обрадовалась Мира. — Спасибо, Бруно!`,
+    text: `— Прекрасный подарок! — обрадовалась Мира. — Спасибо, Бруно! Дорога свободна — идём к маяку!`,
     next: 'БашняСнаружи'
   },
   МостЭхо: {
@@ -1266,8 +1260,10 @@ const PASSAGES = {
     next: 'МостЭхо3'
   },
   МостЭхо3: {
-    location: 'most',
-    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    location: 'most_empty',
+    insert: 'images/fon_most_empty.png',
+    insertDuration: 2000,
+    sprites: [ { name: 'mira' } ],
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Мира помахала гаргулю рукой, и вы поспешили дальше по вымощенной плитами дорожке.`,
     next: 'БашняСнаружи'
@@ -1301,8 +1297,10 @@ const PASSAGES = {
     next: 'МостУгощение5'
   },
   МостУгощение5: {
-    location: 'most',
-    sprites: [ { name: 'mira' }, { name: 'bruno' } ],
+    location: 'most_empty',
+    insert: 'images/fon_most_empty.png',
+    insertDuration: 2200,
+    sprites: [ { name: 'mira' } ],
     speaker: 'Бруно', boxClass: 'bruno',
     text: `— Боги гранита, какая сладость! Забирайте мост, забирайте реку, проходите скорее! И погодите... вот, возьмите! На днях с карниза маяка упал чистейший Кристалл Горного Кварца. Я подобрал, чтобы не растоптали. В оптике маяка ему самое место!`,
     set: { has_crystal: true },
@@ -1749,7 +1747,7 @@ function getCompletionPercent() {
 function saveGame() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
-      version: 8, timestamp: Date.now(),
+      version: 9, timestamp: Date.now(),
       currentPassage: gameState.currentPassage,
       history: gameState.history, historyIndex: gameState.historyIndex,
       variables: gameState.variables,
@@ -2373,7 +2371,6 @@ function renderPassageInner(id, passage) {
 }
 
 function renderTitleScreen() {
-  // Чередуем фон в зависимости от прогресса
   const useNight = (countEndings() >= 2);
   setBackground(useNight ? 'title_night' : 'title');
   clearSprites();
