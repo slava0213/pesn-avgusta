@@ -107,8 +107,6 @@ html, body {
 }
 @keyframes pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
 
-.sprite-stage { display: none !important; }
-
 .click-layer {
   position: fixed; inset: 0; z-index: 90;
   background: transparent; cursor: pointer; display: none;
@@ -846,57 +844,61 @@ body.cutscene-active .particles-layer {
 
 <script>
    /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v10.0 (без спрайтов, фоны по порядку)
+   ПЕСНЬ АВГУСТА — движок v11.0 (8 картинок)
    ============================================================ */
 
-/* ===== ФОНЫ (bg_01 ... bg_20) ===== */
+/* ===== ФОНЫ (bg_01 ... bg_08) ===== */
 const LOCATION_BG = {
-  title:              'images/bg_19.png',   // Панорама города
-  title_night:        'images/bg_20.png',   // Сияние ночью
+  // === ВАШИ 8 КАРТИНОК ===
+  epilogue:           'images/bg_01.png',   // Мира + герой в поле
+  player_outside:     'images/bg_02.png',   // Дом снаружи
+  player_inside:      'images/bg_03.png',   // Комната героя
+  letter_close:       'images/bg_04.png',   // Письмо крупно
+  player_table:       'images/bg_05.png',   // Мира за плечом
+  letter_hand:        'images/bg_06.png',   // Рука ломает сургуч
+  parchment:          'images/bg_07.png',   // Чистый пергамент
+  player_table2:      'images/bg_08.png',   // Герой и Мира за столом
 
-  start:              'images/bg_01.png',   // Улочка города
-  player_inside:      'images/bg_02.png',   // Комната героя
-  parchment:          'images/bg_03.png',   // Пергамент
-  lavka:              'images/bg_04.png',   // Лавка Селесты
-
-  most:               'images/bg_05.png',   // Мост (диалог)
-  most_empty:         'images/bg_06.png',   // Пустая терраса
-  most_blocked:       'images/bg_07.png',   // Бруно преграждает путь
-
-  tropa:              'images/bg_08.png',   // Грибная тропа
-  tropa_2:            'images/bg_09.png',   // Тропа 2
-  tropa_3:            'images/bg_10.png',   // Тропа 3
-
-  tower:              'images/bg_11.png',   // Башня снаружи
-  tower_inside:       'images/bg_12.png',   // Башня внутри
-  observatory:        'images/bg_13.png',   // Обсерватория
-  august_sleep:       'images/bg_14.png',   // Август спит
-
-  final:              'images/bg_15.png',   // Август взлетает
-  festival:           'images/bg_16.png',   // Праздник
-  festival_night:     'images/bg_17.png',   // Ночной праздник
-  festival_sunset:    'images/bg_18.png'    // Закат с маяком
+  // === ЗАГЛУШКИ (заменим, когда пришлёшь следующие) ===
+  title:              'images/bg_01.png',
+  title_night:        'images/bg_01.png',
+  start:              'images/bg_02.png',
+  most:               'images/bg_05.png',
+  most_empty:         'images/bg_05.png',
+  most_blocked:       'images/bg_05.png',
+  lavka:              'images/bg_02.png',
+  tropa:              'images/bg_02.png',
+  tropa_2:            'images/bg_02.png',
+  tropa_3:            'images/bg_02.png',
+  tower:              'images/bg_02.png',
+  tower_inside:       'images/bg_03.png',
+  observatory:        'images/bg_03.png',
+  august_sleep:       'images/bg_03.png',
+  final:              'images/bg_01.png',
+  festival:           'images/bg_01.png',
+  festival_night:     'images/bg_01.png',
+  festival_sunset:    'images/bg_01.png'
 };
 
-/* ===== ВСТАВКИ (insert_01 ... insert_14) ===== */
+/* ===== ВСТАВКИ ===== */
 const INSERT_IMG = {
-  city:        'images/insert_01.png',   // Панорама города
-  sunset:      'images/insert_02.png',   // Закат с маяком
-  letter_open: 'images/insert_03.png',   // Письмо крупно
-  letter_wax:  'images/insert_04.png',   // Письмо с сургучом
-  bruno_block: 'images/insert_05.png',   // Бруно преграждает путь
-  most_free:   'images/insert_06.png',   // Пустая терраса
-  tropa_start: 'images/insert_07.png',   // Мира + Шустик
-  tropa_stuck: 'images/insert_08.png',   // Шустик у дерева
-  tropa_pull:  'images/insert_09.png',   // Мира тянет
-  selesta:     'images/insert_10.png',   // Селеста даёт флакон
-  tower:       'images/insert_11.png',   // Башня-маяк
-  observatory: 'images/insert_12.png',   // Обсерватория
-  august_sleep:'images/insert_13.png',   // Август спит
-  august_fly:  'images/insert_14.png'    // Август взлетает
+  city:        'images/bg_02.png',   // ← заглушка (дом снаружи)
+  sunset:      'images/bg_01.png',   // ← заглушка (поле)
+  letter_wax:  'images/bg_04.png',   // Письмо крупно
+  letter_open: 'images/bg_06.png',   // Рука ломает сургуч
+  epilogue:    'images/bg_01.png',   // Поле
+  bruno_block: 'images/bg_05.png',
+  most_free:   'images/bg_05.png',
+  tropa_start: 'images/bg_02.png',
+  tropa_stuck: 'images/bg_02.png',
+  tropa_pull:  'images/bg_02.png',
+  selesta:     'images/bg_02.png',
+  tower:       'images/bg_02.png',
+  observatory: 'images/bg_03.png',
+  august_sleep:'images/bg_03.png',
+  august_fly:  'images/bg_01.png'
 };
 
-/* Спрайты отключены — SPEAKER_MAP нужен только для логики, но не отображается */
 const SPEAKER_MAP = {
   'Мира': 'mira', 'Бруно': 'bruno', 'Шустик': 'shustik',
   'Бабушка Селеста': 'selesta', 'Селеста': 'selesta',
@@ -918,26 +920,26 @@ const ACHIEVEMENTS = {
 
 const CUTSCENES = {
   ending_harmony: { frames: [
-    { img: 'images/cutscenes/harmony_01.png', duration: 3500, effect: 'fade' },
-    { img: 'images/cutscenes/harmony_02.png', duration: 3500, effect: 'zoom-in' },
-    { img: 'images/cutscenes/harmony_03.png', duration: 3500, effect: 'fade' },
-    { img: 'images/cutscenes/harmony_04.png', duration: 4500, effect: 'zoom-out' }
+    { img: 'images/bg_01.png', duration: 3500, effect: 'fade' },
+    { img: 'images/bg_08.png', duration: 3500, effect: 'zoom-in' },
+    { img: 'images/bg_01.png', duration: 3500, effect: 'fade' },
+    { img: 'images/bg_08.png', duration: 4500, effect: 'zoom-out' }
   ]},
   ending_mastery: { frames: [
-    { img: 'images/cutscenes/mastery_01.png', duration: 3500, effect: 'fade' },
-    { img: 'images/cutscenes/mastery_02.png', duration: 4500, effect: 'zoom-in' }
+    { img: 'images/bg_01.png', duration: 3500, effect: 'fade' },
+    { img: 'images/bg_08.png', duration: 4500, effect: 'zoom-in' }
   ]},
   ending_science: { frames: [
-    { img: 'images/cutscenes/science_01.png', duration: 3200, effect: 'slide-left' },
-    { img: 'images/cutscenes/science_02.png', duration: 3200, effect: 'fade' },
-    { img: 'images/cutscenes/science_03.png', duration: 4200, effect: 'zoom-in' }
+    { img: 'images/bg_05.png', duration: 3200, effect: 'slide-left' },
+    { img: 'images/bg_08.png', duration: 3200, effect: 'fade' },
+    { img: 'images/bg_01.png', duration: 4200, effect: 'zoom-in' }
   ]},
   ending_unity: { frames: [
-    { img: 'images/cutscenes/unity_01.png', duration: 3200, effect: 'fade' },
-    { img: 'images/cutscenes/unity_02.png', duration: 3200, effect: 'fade' },
-    { img: 'images/cutscenes/unity_03.png', duration: 3200, effect: 'fade' },
-    { img: 'images/cutscenes/unity_04.png', duration: 3200, effect: 'zoom-in' },
-    { img: 'images/cutscenes/unity_05.png', duration: 5000, effect: 'fade' }
+    { img: 'images/bg_01.png', duration: 3200, effect: 'fade' },
+    { img: 'images/bg_05.png', duration: 3200, effect: 'fade' },
+    { img: 'images/bg_08.png', duration: 3200, effect: 'fade' },
+    { img: 'images/bg_02.png', duration: 3200, effect: 'zoom-in' },
+    { img: 'images/bg_01.png', duration: 5000, effect: 'fade' }
   ]}
 };
 
@@ -973,13 +975,13 @@ const PASSAGES = {
     next: 'Start3'
   },
   Start3: {
-    location: 'start',
+    location: 'player_outside',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Вы — молодой травник, ученик мастера Олвена. Ваш дом стоит на краю города, среди яблоневых садов. Этим утром вы проснулись от тишины: обычно в это время над озером уже гудели пчёлы и сновали лодки. Сегодня — тихо.`,
     next: 'Start4'
   },
   Start4: {
-    location: 'start',
+    location: 'player_outside',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `На столе в доме лежало письмо: плотный пергамент, запечатанный красным воском с оттиском кленового листа — личный знак мастера Олвена.`,
     next: 'Start5'
@@ -991,7 +993,7 @@ const PASSAGES = {
     next: 'Start6'
   },
   Start6: {
-    location: 'player_inside',
+    location: 'player_table',
     speaker: 'Мира', boxClass: 'mira',
     text: `— Подъём, Хранитель трав и ветров! — звонко бросила Мира, заглядывая через плечо. Её рыжие кудри пахли машинным маслом и полевыми цветами. — Мастер Олвен передал, что в маяке заклинило рунный резонатор. Я взяла отмычки, разводной ключ и банку лучшей графитовой смазки. А у тебя что в письме?`,
     choices: [
@@ -1001,7 +1003,7 @@ const PASSAGES = {
     ]
   },
   ОткрытьПисьмо: {
-    location: 'player_inside',
+    location: 'letter_close',
     insert: INSERT_IMG.letter_open,
     insertDuration: 2500,
     speaker: 'Рассказчик', boxClass: 'narrator',
@@ -1015,7 +1017,7 @@ const PASSAGES = {
     next: 'ПисьмоОлвена2'
   },
   ПисьмоОлвена2: {
-    location: 'player_inside',
+    location: 'player_table2',
     speaker: 'Мира', boxClass: 'mira',
     text: `Мира заглянула через плечо и тихонько присвистнула. — «Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?`,
     choices: [
@@ -1026,25 +1028,25 @@ const PASSAGES = {
   },
 
   ВыборПути: {
-    location: 'player_inside',
+    location: 'player_table2',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Вы прячете письмо во внутренний карман и хлопаете по нему ладонью.`,
     next: 'ВыборПути2'
   },
   ВыборПути2: {
-    location: 'player_inside',
+    location: 'player_table2',
     speaker: 'Вы', boxClass: 'narrator',
     text: `— Разберёмся по дороге. Сначала — к маяку.`,
     next: 'ВыборПути3'
   },
   ВыборПути3: {
-    location: 'player_inside',
+    location: 'player_table2',
     speaker: 'Рассказчик', boxClass: 'mira',
     text: `Мира кивает и закидывает чехол на плечо.`,
     next: 'ВыборПути4'
   },
   ВыборПути4: {
-    location: 'player_inside',
+    location: 'player_table2',
     speaker: 'Мира', boxClass: 'mira',
     text: `Тогда решай, как пойдём. Через мост — дольше, но спокойнее. Через Грибную тропу — быстрее, но там сумрачно и можно встретить лесных духов. Или заглянем к бабушке Селесте — она всегда что-то подскажет.`,
     choices: [
@@ -1055,25 +1057,25 @@ const PASSAGES = {
   },
 
   РазговорСМирой1: {
-    location: 'player_inside',
+    location: 'player_table2',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Вы с улыбкой оглядываете её внушительный багаж.`,
     next: 'РазговорСМирой2'
   },
   РазговорСМирой2: {
-    location: 'player_inside',
+    location: 'player_table2',
     speaker: 'Вы', boxClass: 'narrator',
     text: `— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`,
     next: 'РазговорСМирой3'
   },
   РазговорСМирой3: {
-    location: 'player_inside',
+    location: 'player_table2',
     speaker: 'Рассказчик', boxClass: 'mira',
     text: `Мира фыркнула и театрально постучала медным ключом по ладони.`,
     next: 'РазговорСМирой4'
   },
   РазговорСМирой4: {
-    location: 'player_inside',
+    location: 'player_table2',
     speaker: 'Мира', boxClass: 'mira',
     text: `— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Или у Корнелиуса снова заржавел механизм для колки орехов? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?`,
     next: 'ОткрытьПисьмо'
@@ -1516,25 +1518,29 @@ const PASSAGES = {
   },
 
   КонецГармония: {
-    location: 'festival_night', cutscene: 'ending_harmony',
+    location: 'epilogue',
+    cutscene: 'ending_harmony',
     speaker: 'Финал', boxClass: 'final-box', ending: 'harmony',
     text: `<b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство.</i>`,
     next: 'title'
   },
   КонецМастерство: {
-    location: 'festival_sunset', cutscene: 'ending_mastery',
+    location: 'epilogue',
+    cutscene: 'ending_mastery',
     speaker: 'Финал', boxClass: 'final-box', ending: 'mastery',
     text: `<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина!</i>`,
     next: 'title'
   },
   КонецНаука: {
-    location: 'festival', cutscene: 'ending_science',
+    location: 'epilogue',
+    cutscene: 'ending_science',
     speaker: 'Финал', boxClass: 'final-box', ending: 'science',
     text: `<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>`,
     next: 'title'
   },
   КонецЕдинство: {
-    location: 'festival_night', cutscene: 'ending_unity',
+    location: 'epilogue',
+    cutscene: 'ending_unity',
     speaker: 'Финал', boxClass: 'final-box', ending: 'unity',
     text: `<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец.</i>`,
     next: 'title'
@@ -1597,7 +1603,7 @@ function getCompletionPercent() {
 function saveGame() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
-      version: 10, timestamp: Date.now(),
+      version: 11, timestamp: Date.now(),
       currentPassage: gameState.currentPassage,
       history: gameState.history, historyIndex: gameState.historyIndex,
       variables: gameState.variables,
@@ -2128,8 +2134,7 @@ function renderPassageInner(id, passage) {
 }
 
 function renderTitleScreen() {
-  const useNight = (countEndings() >= 2);
-  setBackground(useNight ? 'title_night' : 'title');
+  setBackground('title');
   const clickLayer = document.getElementById('clickLayer');
   if (clickLayer) clickLayer.classList.remove('enabled');
 
