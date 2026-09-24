@@ -849,9 +849,10 @@ body.cutscene-active .particles-layer {
 
 <script>
 /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v13.6
-   Линия с Шустиком (Грибная тропа) убрана.
-   Осталось: Старый мост (Бруно), Лавка Селесты, Башня, 4 финала.
+   ПЕСНЬ АВГУСТА — движок v13.7
+   Убрана линия Шустика. Оставлено 2 концовки:
+   - Гармония (хорошая)
+   - Мастерство (нейтральная)
    ============================================================ */
 
 /* ===== ФОНЫ ===== */
@@ -868,11 +869,11 @@ const LOCATION_BG = {
   player_table2:      'images/bg_09.png',
   epilogue:           'images/bg_09.png',
 
-  // === МОСТ (цифровые имена) ===
-  most_bridge:        'images/1.png',  // 1 — общий вид моста (без Бруно)
-  most:               'images/2.png',  // 2 — Бруно спит
-  most_awake:         'images/3.png',  // 3 — Бруно пробудился (крупный план)
-  most_empty:         'images/4.png',  // 4 — мост пуст
+  // === МОСТ ===
+  most_bridge:        'images/1.png',
+  most:               'images/2.png',
+  most_awake:         'images/3.png',
+  most_empty:         'images/4.png',
 
   // === ЛАВКА СЕЛЕСТЫ ===
   lavka:              'images/sprite/bg_03.png',
@@ -895,13 +896,9 @@ const INSERT_IMG = {
   letter_wax:  'images/sprite/bg_05.png',
   letter_open: 'images/sprite/bg_07.png',
   epilogue:    'images/sprite/bg_09.png',
-
-  // === МОСТ ===
-  bruno_block: 'images/2.png',  // Бруно спит
-  bruno_awake: 'images/3.png',  // Бруно пробудился
-  most_free:   'images/4.png',  // мост свободен
-
-  // === ЛАВКА / БАШНЯ ===
+  bruno_block: 'images/2.png',
+  bruno_awake: 'images/3.png',
+  most_free:   'images/4.png',
   selesta:     'images/sprite/bg_03.png',
   tower:       'images/sprite/bg_03.png',
   observatory: 'images/sprite/bg_04.png',
@@ -923,7 +920,7 @@ const ACHIEVEMENTS = {
   vial:       { icon: '🧪', title: 'Флакон Селесты',       desc: 'Получить флакон от Селесты' },
   key:        { icon: '🔑', title: 'Латунный ключ',        desc: 'Взять ключ у Тик-Така' },
   scheme:     { icon: '📜', title: 'Схема Олвена',         desc: 'Изучить чертёж мастера Олвена' },
-  allEndings: { icon: '👑', title: 'Все концовки',         desc: 'Открыть все четыре финала' }
+  allEndings: { icon: '👑', title: 'Обе концовки',         desc: 'Открыть оба финала' }
 };
 
 const CUTSCENES = {
@@ -936,18 +933,6 @@ const CUTSCENES = {
   ending_mastery: { frames: [
     { img: 'images/sprite/bg_01.png', duration: 3500, effect: 'fade' },
     { img: 'images/sprite/bg_09.png', duration: 4500, effect: 'zoom-in' }
-  ]},
-  ending_science: { frames: [
-    { img: 'images/sprite/bg_06.png', duration: 3200, effect: 'slide-left' },
-    { img: 'images/sprite/bg_09.png', duration: 3200, effect: 'fade' },
-    { img: 'images/sprite/bg_01.png', duration: 4200, effect: 'zoom-in' }
-  ]},
-  ending_unity: { frames: [
-    { img: 'images/sprite/bg_01.png', duration: 3200, effect: 'fade' },
-    { img: 'images/sprite/bg_06.png', duration: 3200, effect: 'fade' },
-    { img: 'images/sprite/bg_09.png', duration: 3200, effect: 'fade' },
-    { img: 'images/sprite/bg_02.png', duration: 3200, effect: 'zoom-in' },
-    { img: 'images/sprite/bg_01.png', duration: 5000, effect: 'fade' }
   ]}
 };
 
@@ -961,7 +946,7 @@ const sfxCache = {};
 const SFX_VOLUME = 0.6;
 
 /* ============================================================
-   ПАССАЖИ (без линии Шустика)
+   ПАССАЖИ (2 концовки)
    ============================================================ */
 const PASSAGES = {
   title: { isTitle: true },
@@ -1418,72 +1403,41 @@ const PASSAGES = {
     speaker: 'Мира', boxClass: 'mira',
     text: `Корнелиус замер в ожидании с маслёнкой наготове. Какой план действий вы выберете?`,
     choices: [
-      { text: 'План 1: Настроить серебряные колокола чистым тоном камертона', to: 'ФиналМузыка' },
-      { text: 'План 2: Приготовить целебный лунный нектар', to: 'ФиналНектар' },
-      { text: 'План 3: Использовать инженерную смекалку Миры', to: 'ФиналМеханика' },
-      { text: 'План 4: Полная синхронизация всех сил', to: 'ФиналТриумф' }
+      { text: 'План 1: Полная синхронизация всех сил — природа, наука и дружба вместе', to: 'ФиналГармония' },
+      { text: 'План 2: Полагаться на инженерную смекалку и точный расчёт', to: 'ФиналМастерство' }
     ]
   },
 
-  ФиналМузыка: {
+  /* === 2 ФИНАЛА === */
+  ФиналГармония: {
     location: 'final',
     insert: INSERT_IMG.august_fly,
     insertDuration: 2500,
     speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Колокола оживают! Август встаёт во весь рост, заливая зал мягким светом!`,
+    text: `Колокола оживают, шестерни крутятся в такт, а целебный нектар придаёт сил! Август встаёт во весь рост, заливая зал мягким светом!`,
     next: 'КонецГармония'
   },
-  ФиналНектар: {
+  ФиналМастерство: {
     location: 'final',
     insert: INSERT_IMG.august_fly,
     insertDuration: 2500,
     speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Август с довольным урчанием припадает к чаше с сиропом!`,
+    text: `Точный расчёт, крепкая дружба и инженерная смекалка Миры — и Август взмывает в центр конструкции!`,
     next: 'КонецМастерство'
-  },
-  ФиналМеханика: {
-    location: 'final',
-    insert: INSERT_IMG.august_fly,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Шестерёнки встают на место! Август взмывает в центр конструкции!`,
-    next: 'КонецНаука'
-  },
-  ФиналТриумф: {
-    location: 'final',
-    insert: INSERT_IMG.august_fly,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Слаженный праздничный танец! Светляк взмыл под стеклянный купол!`,
-    next: 'КонецЕдинство'
   },
 
   КонецГармония: {
     location: 'epilogue',
     cutscene: 'ending_harmony',
     speaker: 'Финал', boxClass: 'final-box', ending: 'harmony',
-    text: `<b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство.</i>`,
+    text: `<b>КОНЕЦ: Финал Гармонии</b><br><br><i>Вы доказали, что природа, наука и тепло сердец вместе способны оживить даже самое хрупкое волшебство.</i>`,
     next: 'title'
   },
   КонецМастерство: {
     location: 'epilogue',
     cutscene: 'ending_mastery',
     speaker: 'Финал', boxClass: 'final-box', ending: 'mastery',
-    text: `<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина!</i>`,
-    next: 'title'
-  },
-  КонецНаука: {
-    location: 'epilogue',
-    cutscene: 'ending_science',
-    speaker: 'Финал', boxClass: 'final-box', ending: 'science',
-    text: `<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>`,
-    next: 'title'
-  },
-  КонецЕдинство: {
-    location: 'epilogue',
-    cutscene: 'ending_unity',
-    speaker: 'Финал', boxClass: 'final-box', ending: 'unity',
-    text: `<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец.</i>`,
+    text: `<b>КОНЕЦ: Финал Мастерства</b><br><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>`,
     next: 'title'
   }
 };
@@ -1590,7 +1544,8 @@ function loadEndingsFromStorage() {
 function saveEndingsToStorage() {
   try { localStorage.setItem(ENDINGS_KEY, JSON.stringify(gameState.endings)); } catch (e) {}
 }
-function countEndings() { return ['harmony','mastery','science','unity'].filter(k => gameState.endings[k]).length; }
+/* Теперь всего 2 концовки */
+function countEndings() { return ['harmony','mastery'].filter(k => gameState.endings[k]).length; }
 function loadAchievementsFromStorage() {
   try { const s = localStorage.getItem(ACHIEVEMENTS_KEY); if (s) gameState.achievements = Object.assign({}, JSON.parse(s), gameState.achievements); } catch (e) {}
 }
@@ -1951,7 +1906,6 @@ function advance() {
   }
 }
 
-/* === УДАЛЕНИЕ ТИТУЛЬНИКА И СТАРОГО КОНТЕНТА === */
 function clearTitleElements() {
   document.querySelectorAll('.title-screen, .title-endings').forEach(el => el.remove());
 }
@@ -1985,7 +1939,8 @@ function renderPassage(id, addToHistory = true) {
   if (passage.ending) {
     gameState.endings[passage.ending] = true;
     saveEndingsToStorage();
-    if (countEndings() >= 4) unlockAchievement('allEndings');
+    /* Теперь достаточно 2 концовок */
+    if (countEndings() >= 2) unlockAchievement('allEndings');
   }
   if (addToHistory) {
     gameState.history = gameState.history.slice(0, gameState.historyIndex + 1);
@@ -2158,7 +2113,7 @@ function renderTitleScreen() {
       </div>
       <p class="title-footer">Верхний Шепот · Праздник Осенней Звезды</p>
     </div>
-    <div class="title-endings">🏆 Концовок открыто: <b>${count} / 4</b></div>
+    <div class="title-endings">🏆 Концовок открыто: <b>${count} / 2</b></div>
   `;
 
   document.getElementById('btnStart').addEventListener('click', () => {
@@ -2346,7 +2301,7 @@ function openProgress() {
       <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">📖 ПАССАЖИ</div>${bar(visitedPassages, totalPassages)}</div>
       <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🎬 КАСТСЦЕНЫ</div>${bar(watchedCutscenes, totalCutscenes)}</div>
       <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🌄 ЛОКАЦИИ</div>${bar(visitedLocations, totalLocations)}</div>
-      <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🏁 КОНЦОВКИ</div>${bar(endingsCount, 4)}</div>
+      <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🏁 КОНЦОВКИ</div>${bar(endingsCount, 2)}</div>
     </div>
     <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;text-align:center;">
       <div style="font-size:28px;color:#FBBF24;font-weight:bold;letter-spacing:2px;">${percent}%</div>
