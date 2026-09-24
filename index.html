@@ -852,9 +852,7 @@ body.cutscene-active .particles-layer {
 
 <script>
 /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v13.2
-   Реплики персонажей — только прямая речь, без описаний действий.
-   Рассказчик — описывает мир и события.
+   ПЕСНЬ АВГУСТА — движок v13.3 (исправлен титульник)
    ============================================================ */
 
 /* ===== ФОНЫ ===== */
@@ -961,8 +959,6 @@ const SFX_VOLUME = 0.6;
 
 /* ============================================================
    ПАССАЖИ
-   Реплики персонажей — только прямая речь.
-   Рассказчик — описание мира и событий.
    ============================================================ */
 const PASSAGES = {
   title: { isTitle: true },
@@ -2014,6 +2010,14 @@ function advance() {
   }
 }
 
+/* === УДАЛЕНИЕ ТИТУЛЬНИКА И СТАРОГО КОНТЕНТА === */
+function clearTitleElements() {
+  document.querySelectorAll('.title-screen, .title-endings').forEach(el => el.remove());
+}
+function clearDialogueElements() {
+  document.querySelectorAll('.dialogue-box, .choice-box, .game-menu').forEach(el => el.remove());
+}
+
 function renderPassage(id, addToHistory = true) {
   const passage = PASSAGES[id];
   if (!passage) { console.error('Пассаж не найден:', id); return; }
@@ -2022,7 +2026,11 @@ function renderPassage(id, addToHistory = true) {
   gameState.isTyping = false;
   gameState.currentPassage = id;
 
+  // === Если это титульник — рендерим его ===
   if (passage.isTitle) { renderTitleScreen(); return; }
+
+  // === Если это НЕ титульник, но титульник где-то остался — удаляем ===
+  clearTitleElements();
 
   if (passage.set) {
     Object.assign(gameState.variables, passage.set);
@@ -2061,6 +2069,10 @@ function renderPassage(id, addToHistory = true) {
 }
 
 function renderPassageInner(id, passage) {
+  // === Принудительно удаляем титульник и старые элементы ===
+  clearTitleElements();
+  clearDialogueElements();
+
   setBackground(passage.location);
 
   if (passage.insert) {
@@ -2179,6 +2191,10 @@ function renderPassageInner(id, passage) {
 
 function renderTitleScreen() {
   gameState.currentPassage = 'title';
+  // === Принудительно удаляем старые элементы ===
+  clearDialogueElements();
+  clearTitleElements();
+
   setBackground('title');
   const clickLayer = document.getElementById('clickLayer');
   if (clickLayer) clickLayer.classList.remove('enabled');
@@ -2187,6 +2203,7 @@ function renderTitleScreen() {
   const count = countEndings();
   const canLoad = hasSave();
 
+  gameArea.style.opacity = '1';
   gameArea.innerHTML = `
     <div class="title-screen">
       <div class="title-logo">
@@ -2210,11 +2227,17 @@ function renderTitleScreen() {
   document.getElementById('btnStart').addEventListener('click', () => {
     gameState.history = []; gameState.historyIndex = -1;
     gameState.variables = {};
+    // Удаляем титульник перед стартом
+    clearTitleElements();
     renderPassage('Start1');
   });
   document.getElementById('btnLoad').addEventListener('click', () => {
-    if (loadGame()) renderPassage(gameState.currentPassage, false);
-    else showNotification('⚠ Ошибка', 'Сохранение не найдено');
+    if (loadGame()) {
+      clearTitleElements();
+      renderPassage(gameState.currentPassage, false);
+    } else {
+      showNotification('⚠ Ошибка', 'Сохранение не найдено');
+    }
   });
   document.getElementById('btnProgress').addEventListener('click', openProgress);
   document.getElementById('btnGallery').addEventListener('click', openGallery);
