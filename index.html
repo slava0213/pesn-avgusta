@@ -744,29 +744,6 @@ body.cutscene-active .particles-layer {
   opacity: 0.25;
 }
 
-.gallery-card {
-  position: relative;
-  aspect-ratio: 16/9;
-  border-radius: 6px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid rgba(251,191,36,0.5);
-  background-color: #1c1813;
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-.gallery-card.locked {
-  cursor: not-allowed;
-  border-color: rgba(255,255,255,0.08);
-  opacity: 0.4;
-}
-.gallery-card:not(.locked):hover {
-  transform: scale(1.04);
-  box-shadow: 0 12px 32px rgba(251,191,36,0.5);
-  border-color: rgba(244,197,66,1);
-}
-
 .dialogue-text::-webkit-scrollbar, .modal::-webkit-scrollbar { width: 6px; }
 .dialogue-text::-webkit-scrollbar-track, .modal::-webkit-scrollbar-track {
   background: rgba(255,243,196,0.1); border-radius: 3px;
@@ -849,10 +826,8 @@ body.cutscene-active .particles-layer {
 
 <script>
 /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v13.7
-   Убрана линия Шустика. Оставлено 2 концовки:
-   - Гармония (хорошая)
-   - Мастерство (нейтральная)
+   ПЕСНЬ АВГУСТА — движок v13.8
+   Галерея сцен убрана. 2 концовки. Линия Шустика убрана.
    ============================================================ */
 
 /* ===== ФОНЫ ===== */
@@ -946,7 +921,7 @@ const sfxCache = {};
 const SFX_VOLUME = 0.6;
 
 /* ============================================================
-   ПАССАЖИ (2 концовки)
+   ПАССАЖИ
    ============================================================ */
 const PASSAGES = {
   title: { isTitle: true },
@@ -1499,7 +1474,6 @@ function markLocationVisited(key) {
 }
 function markChoice(id, to) { gameState.progress.choices[id] = to; saveProgress(); }
 function isPassageVisited(id) { return !!gameState.progress.passages[id]; }
-function isCutsceneWatched(key) { return !!gameState.progress.cutscenes[key]; }
 function countVisitedPassages() { return Object.keys(gameState.progress.passages).length; }
 function countTotalPassages() { return Object.keys(PASSAGES).filter(k => !PASSAGES[k].isTitle).length; }
 function countWatchedCutscenes() { return Object.keys(gameState.progress.cutscenes).length; }
@@ -1544,7 +1518,6 @@ function loadEndingsFromStorage() {
 function saveEndingsToStorage() {
   try { localStorage.setItem(ENDINGS_KEY, JSON.stringify(gameState.endings)); } catch (e) {}
 }
-/* Теперь всего 2 концовки */
 function countEndings() { return ['harmony','mastery'].filter(k => gameState.endings[k]).length; }
 function loadAchievementsFromStorage() {
   try { const s = localStorage.getItem(ACHIEVEMENTS_KEY); if (s) gameState.achievements = Object.assign({}, JSON.parse(s), gameState.achievements); } catch (e) {}
@@ -1939,7 +1912,6 @@ function renderPassage(id, addToHistory = true) {
   if (passage.ending) {
     gameState.endings[passage.ending] = true;
     saveEndingsToStorage();
-    /* Теперь достаточно 2 концовок */
     if (countEndings() >= 2) unlockAchievement('allEndings');
   }
   if (addToHistory) {
@@ -2106,7 +2078,6 @@ function renderTitleScreen() {
         <button id="btnStart">▶ Начать историю</button>
         <button id="btnLoad" ${canLoad ? '' : 'disabled'}>📂 Загрузить</button>
         <button id="btnProgress">🗺 Карта прогресса</button>
-        <button id="btnGallery">🖼 Галерея сцен</button>
         <button id="btnAchievements">🏆 Достижения</button>
         <button id="btnSettings">⚙ Настройки</button>
         <button id="btnResetEndings">🔄 Сбросить прогресс</button>
@@ -2131,7 +2102,6 @@ function renderTitleScreen() {
     }
   });
   document.getElementById('btnProgress').addEventListener('click', openProgress);
-  document.getElementById('btnGallery').addEventListener('click', openGallery);
   document.getElementById('btnAchievements').addEventListener('click', openAchievements);
   document.getElementById('btnSettings').addEventListener('click', openSettings);
   document.getElementById('btnResetEndings').addEventListener('click', () => {
@@ -2278,8 +2248,6 @@ function openProgress() {
   const percent = getCompletionPercent();
   const totalLocations = Object.keys(LOCATION_BG).filter(k => k !== 'title' && k !== 'title_night').length;
   const visitedLocations = countVisitedLocations();
-  const totalCutscenes = Object.keys(CUTSCENES).length;
-  const watchedCutscenes = countWatchedCutscenes();
   const endingsCount = countEndings();
   const totalSec = p.totalPlayTime || 0;
   const hours = Math.floor(totalSec / 3600);
@@ -2299,9 +2267,8 @@ function openProgress() {
     <h2>🗺 Карта прогресса</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
       <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">📖 ПАССАЖИ</div>${bar(visitedPassages, totalPassages)}</div>
-      <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🎬 КАСТСЦЕНЫ</div>${bar(watchedCutscenes, totalCutscenes)}</div>
       <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🌄 ЛОКАЦИИ</div>${bar(visitedLocations, totalLocations)}</div>
-      <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🏁 КОНЦОВКИ</div>${bar(endingsCount, 2)}</div>
+      <div style="grid-column:1/-1;"><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🏁 КОНЦОВКИ</div>${bar(endingsCount, 2)}</div>
     </div>
     <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;text-align:center;">
       <div style="font-size:28px;color:#FBBF24;font-weight:bold;letter-spacing:2px;">${percent}%</div>
@@ -2318,47 +2285,6 @@ function openProgress() {
   document.getElementById('progReset').addEventListener('click', () => {
     if (confirm('Сбросить только карту прохождения?')) { resetPassagesOnly(); openProgress(); }
   });
-}
-
-function openGallery() {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  const allCutscenes = Object.keys(CUTSCENES);
-  const cardsHTML = allCutscenes.map(key => {
-    const watched = isCutsceneWatched(key);
-    const scene = CUTSCENES[key];
-    const thumb = watched && scene.frames[0] ? scene.frames[0].img : '';
-    const title = key.replace(/_/g, ' ');
-    return `
-      <div class="gallery-card ${watched ? '' : 'locked'}"
-           data-key="${key}"
-           style="background-image:${thumb ? `url('${thumb}')` : 'none'};">
-        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,0.85) 100%);"></div>
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;color:${watched ? '#FFD700' : '#888'};font-size:12px;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,0,0.9);">
-          ${watched ? '▶ ' : '🔒 '} ${title}
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  content.innerHTML = `
-    <h2>🖼 Галерея сцен</h2>
-    <p style="color:#888;font-size:12px;margin-bottom:16px;">
-      Просмотрено: <b style="color:#FBBF24;">${countWatchedCutscenes()} / ${allCutscenes.length}</b>
-    </p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">${cardsHTML}</div>
-    <div class="buttons"><button id="galClose">Закрыть</button></div>
-  `;
-  overlay.classList.remove('hidden');
-
-  content.querySelectorAll('.gallery-card:not(.locked)').forEach(card => {
-    card.addEventListener('click', () => {
-      const key = card.dataset.key;
-      overlay.classList.add('hidden');
-      CutscenePlayer.play(key, () => openGallery());
-    });
-  });
-  document.getElementById('galClose').addEventListener('click', () => overlay.classList.add('hidden'));
 }
 
 /* ============================================================
