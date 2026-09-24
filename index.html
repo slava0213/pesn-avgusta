@@ -852,7 +852,7 @@ body.cutscene-active .particles-layer {
 
 <script>
 /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v13.3 (исправлен титульник)
+   ПЕСНЬ АВГУСТА — движок v13.5 (картинки моста: 1.png, 2.png, 3.png, 4.png)
    ============================================================ */
 
 /* ===== ФОНЫ ===== */
@@ -868,8 +868,14 @@ const LOCATION_BG = {
   parchment:          'images/bg_08.png',
   player_table2:      'images/bg_09.png',
   epilogue:           'images/bg_09.png',
-  most:               'images/sprite/bg_02.png',
-  most_empty:         'images/sprite/bg_02.png',
+
+  // === МОСТ (цифровые имена) ===
+  most_bridge:        'images/1.png',  // 1 — общий вид моста (без Бруно)
+  most:               'images/2.png',  // 2 — Бруно спит
+  most_awake:         'images/3.png',  // 3 — Бруно пробудился (крупный план)
+  most_empty:         'images/4.png',  // 4 — мост пуст
+
+  // === ЗАГЛУШКИ ===
   most_blocked:       'images/sprite/bg_02.png',
   lavka:              'images/sprite/bg_03.png',
   tropa:              'images/sprite/bg_03.png',
@@ -892,8 +898,13 @@ const INSERT_IMG = {
   letter_wax:  'images/sprite/bg_05.png',
   letter_open: 'images/sprite/bg_07.png',
   epilogue:    'images/sprite/bg_09.png',
-  bruno_block: 'images/sprite/bg_02.png',
-  most_free:   'images/sprite/bg_02.png',
+
+  // === МОСТ (цифровые имена) ===
+  bruno_block: 'images/2.png',  // Бруно спит
+  bruno_awake: 'images/3.png',  // Бруно пробудился
+  most_free:   'images/4.png',  // мост свободен
+
+  // === ЗАГЛУШКИ ===
   tropa_start: 'images/sprite/bg_03.png',
   tropa_stuck: 'images/sprite/bg_03.png',
   tropa_pull:  'images/sprite/bg_03.png',
@@ -1086,28 +1097,42 @@ const PASSAGES = {
     next: 'ОткрытьПисьмо'
   },
 
+  /* === СТАРЫЙ МОСТ === */
+  /* 1. Подход к мосту — общий вид (без Бруно) */
   СтарыйМост: {
-    location: 'most',
+    location: 'most_bridge',
     insert: INSERT_IMG.bruno_block,
     insertDuration: 2500,
     speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно. Его хвост с кисточкой мирно покачивался в воздухе.`,
+    text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. По обе стороны — фонари и осенние деревья. Но что это? Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно.`,
     next: 'СтарыйМост2'
   },
+  /* 2. Замечаем Бруно спящим */
   СтарыйМост2: {
     location: 'most',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Ба, знакомые лица! Куда путь держите в такой важный день? Уж не к маяку ли?`,
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Его каменные крылья были увиты мхом, хвост с кисточкой мирно покачивался в воздухе, а из приоткрытой пасти вырывался лёгкий храп. Он перегородил весь проход.`,
     next: 'СтарыйМост3'
   },
+  /* 3. Мира будит Бруно */
   СтарыйМост3: {
     location: 'most',
     speaker: 'Мира', boxClass: 'mira',
-    text: `— Именно туда, Бруно. Время не ждёт, солнце перевалило за полдень. Пропустишь нас без долгих церемоний?`,
+    text: `— Эй, дядюшка Бруно! Просыпайся, соня!`,
     next: 'СтарыйМост4'
   },
+  /* 4. Бруно пробуждается — крупный план */
   СтарыйМост4: {
-    location: 'most',
+    location: 'most_awake',
+    insert: INSERT_IMG.bruno_awake,
+    insertDuration: 2200,
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— Ба, знакомые лица! Куда путь держите в такой важный день? Уж не к маяку ли?`,
+    next: 'СтарыйМост5'
+  },
+  /* 5. Бруно задаёт загадку */
+  СтарыйМост5: {
+    location: 'most_awake',
     speaker: 'Бруно', boxClass: 'bruno',
     text: `— Церемонии — основа порядка в долине! Но ради праздника я не стану мучить вас тремя испытаниями. Одной загадки довольно. Слушайте: «Не имеет крыльев, а летает; не имеет голоса, а воет; в стужу жалит, в зной ласкает, а сожмёшь в кулак — исчезнет без следа».`,
     choices: [
@@ -1118,30 +1143,31 @@ const PASSAGES = {
     ]
   },
   МостВетер: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Бруно хлопнул кожистыми крыльями, подняв облачко безвредной каменной пыли.`,
     next: 'МостВетер2'
   },
   МостВетер2: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Бруно', boxClass: 'bruno',
     text: `— В самую точку! Кому как не ученику Хранителя ветров знать повадки воздуха. Ты заслужил свободный проход!`,
     next: 'МостВетер3'
   },
   МостВетер3: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Он полез лапой под мостовую плиту и выкатил вам под ноги диковинку.`,
     next: 'МостВетер4'
   },
   МостВетер4: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Бруно', boxClass: 'bruno',
     text: `— Вот, держи. Это Перо Лазурной Сойки-Вестницы. Оно зачаровано на лёгкое дыхание. Если в механизмах башни застрянет пыль веков — взмахни им, и сквозняк сделает всю работу чисто и без поломок!`,
     set: { has_feather: true },
     next: 'МостВетер5'
   },
+  /* 6. Бруно уходит — мост пуст */
   МостВетер5: {
     location: 'most_empty',
     insert: INSERT_IMG.most_free,
@@ -1151,13 +1177,13 @@ const PASSAGES = {
     next: 'БашняСнаружи'
   },
   МостЭхо: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Бруно басовито захохотал, сотрясая каменные перила.`,
     next: 'МостЭхо2'
   },
   МостЭхо2: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Бруно', boxClass: 'bruno',
     text: `— Ох, молодёжь! Поэзии в тебе хоть отбавляй, а вот физика хромает! Разве эхо может ласкать в зной или жалить в стужу? Это ветер! Но за дерзость и красивый слог я не стану вас задерживать. Идите с миром, да смотрите под ноги на крутом подъёме.`,
     next: 'МостЭхо3'
@@ -1171,25 +1197,25 @@ const PASSAGES = {
     next: 'БашняСнаружи'
   },
   МостУгощение: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Вы достаёте из мешочка крупный янтарный ломтик вяленого яблока, пропитанный густым липовым мёдом. Аромат пряностей мгновенно окутывает мост.`,
     next: 'МостУгощение2'
   },
   МостУгощение2: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Бруно', boxClass: 'bruno',
     text: `— О великие горы... Это то самое? С пасеки мастера Олвена?!`,
     next: 'МостУгощение3'
   },
   МостУгощение3: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Вы', boxClass: 'player',
     text: `— Специально для хранителя покоя долины.`,
     next: 'МостУгощение4'
   },
   МостУгощение4: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Бруно бережно подхватил ломтик, сунул в пасть и зажмурился от блаженства.`,
     next: 'МостУгощение5'
@@ -1204,38 +1230,38 @@ const PASSAGES = {
     next: 'БашняСнаружи'
   },
   МостРасспросы: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Вы', boxClass: 'player',
     text: `— Бруно, ты ведь сидишь здесь круглые сутки. Скажи, ночью над башней ничего странного не происходило?`,
     next: 'МостРасспросы2'
   },
   МостРасспросы2: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Гаргуль задумался, почесывая каменное ухо когтем.`,
     next: 'МостРасспросы3'
   },
   МостРасспросы3: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Бруно', boxClass: 'bruno',
     text: `— Хм-м... Знаете, около полуночи с вершины башни сорвался лёгкий серебристый всполох. А потом послышался такой звук: динь-дон-хрясь! Ветер тогда дул с Заброшенной Обсерватории.`,
     set: { has_clue: true },
     next: 'МостРасспросы4'
   },
   МостРасспросы4: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Мира нахмурилась.`,
     next: 'МостРасспросы5'
   },
   МостРасспросы5: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Мира', boxClass: 'mira',
     text: `— Сквозняк мог сбить настройку балансира! Спасибо, дядюшка Бруно, это важная зацепка.`,
     next: 'МостРасспросы6'
   },
   МостРасспросы6: {
-    location: 'most',
+    location: 'most_awake',
     speaker: 'Бруно', boxClass: 'bruno',
     text: `— Ну а загадку отгадывать будете, сыщики?`,
     choices: [
@@ -2026,10 +2052,8 @@ function renderPassage(id, addToHistory = true) {
   gameState.isTyping = false;
   gameState.currentPassage = id;
 
-  // === Если это титульник — рендерим его ===
   if (passage.isTitle) { renderTitleScreen(); return; }
 
-  // === Если это НЕ титульник, но титульник где-то остался — удаляем ===
   clearTitleElements();
 
   if (passage.set) {
@@ -2069,7 +2093,6 @@ function renderPassage(id, addToHistory = true) {
 }
 
 function renderPassageInner(id, passage) {
-  // === Принудительно удаляем титульник и старые элементы ===
   clearTitleElements();
   clearDialogueElements();
 
@@ -2191,7 +2214,6 @@ function renderPassageInner(id, passage) {
 
 function renderTitleScreen() {
   gameState.currentPassage = 'title';
-  // === Принудительно удаляем старые элементы ===
   clearDialogueElements();
   clearTitleElements();
 
@@ -2227,7 +2249,6 @@ function renderTitleScreen() {
   document.getElementById('btnStart').addEventListener('click', () => {
     gameState.history = []; gameState.historyIndex = -1;
     gameState.variables = {};
-    // Удаляем титульник перед стартом
     clearTitleElements();
     renderPassage('Start1');
   });
