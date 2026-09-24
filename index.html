@@ -269,6 +269,14 @@ html, body {
 .dialogue-box.final-box .speaker-name { background: linear-gradient(180deg, rgba(255,215,0,1) 0%, rgba(200,150,20,1) 100%); color: #2A1500; }
 .dialogue-box.final-box .speaker-name::after { border-top-color: rgba(200,150,20,1); }
 
+/* === НОВЫЕ КЛАССЫ === */
+.dialogue-box.tik_tak { border-color: rgba(200,180,100,0.85); }
+.dialogue-box.tik_tak .speaker-name { background: linear-gradient(180deg, rgba(180,160,80,1) 0%, rgba(130,110,50,1) 100%); color: #FFF8E7; }
+.dialogue-box.tik_tak .speaker-name::after { border-top-color: rgba(130,110,50,1); }
+.dialogue-box.player { border-color: rgba(100,200,255,0.85); }
+.dialogue-box.player .speaker-name { background: linear-gradient(180deg, rgba(60,140,200,1) 0%, rgba(35,90,150,1) 100%); color: #F0F8FF; }
+.dialogue-box.player .speaker-name::after { border-top-color: rgba(35,90,150,1); }
+
 .choice-box {
   position: fixed; left: 50%; bottom: 40vh;
   transform: translateX(-50%); z-index: 101;
@@ -843,8 +851,8 @@ body.cutscene-active .particles-layer {
 </div>
 
 <script>
-   /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v13.0 (новая раскладка картинок)
+/* ============================================================
+   ПЕСНЬ АВГУСТА — движок v13.1 (исправленная версия)
    ============================================================ */
 
 /* ===== ФОНЫ (bg_01 ... bg_09) ===== */
@@ -854,17 +862,17 @@ const LOCATION_BG = {
   title_night:        'images/bg_01.png',
 
   // === СЮЖЕТ (начало) ===
-  start:              'images/bg_02.png',   // улочка города
-  player_outside:     'images/bg_03.png',   // дом снаружи
-  player_inside:      'images/bg_04.png',   // комната героя
-  letter_close:       'images/bg_05.png',   // письмо крупно
-  player_table:       'images/bg_06.png',   // Мира за плечом
-  letter_hand:        'images/bg_07.png',   // рука ломает сургуч
-  parchment:          'images/bg_08.png',   // пергамент
-  player_table2:      'images/bg_09.png',   // герой и Мира за столом
-  epilogue:           'images/bg_09.png',   // финал
+  start:              'images/bg_02.png',
+  player_outside:     'images/bg_03.png',
+  player_inside:      'images/bg_04.png',
+  letter_close:       'images/bg_05.png',
+  player_table:       'images/bg_06.png',
+  letter_hand:        'images/bg_07.png',
+  parchment:          'images/bg_08.png',
+  player_table2:      'images/bg_09.png',
+  epilogue:           'images/bg_09.png',
 
-  // === ЗАГЛУШКИ (пока нет картинок) ===
+  // === ЗАГЛУШКИ ===
   most:               'images/sprite/bg_02.png',
   most_empty:         'images/sprite/bg_02.png',
   most_blocked:       'images/sprite/bg_02.png',
@@ -884,13 +892,12 @@ const LOCATION_BG = {
 
 /* ===== ВСТАВКИ ===== */
 const INSERT_IMG = {
-  city:        'images/sprite/bg_02.png',   // улочка города
-  sunset:      'images/sprite/bg_01.png',   // поле (вместо заката)
-  letter_wax:  'images/sprite/bg_05.png',   // письмо крупно
-  letter_open: 'images/sprite/bg_07.png',   // рука ломает сургуч
-  epilogue:    'images/sprite/bg_09.png',   // герой и Мира за столом
+  city:        'images/sprite/bg_02.png',
+  sunset:      'images/sprite/bg_01.png',
+  letter_wax:  'images/sprite/bg_05.png',
+  letter_open: 'images/sprite/bg_07.png',
+  epilogue:    'images/sprite/bg_09.png',
 
-  // === ЗАГЛУШКИ ===
   bruno_block: 'images/sprite/bg_02.png',
   most_free:   'images/sprite/bg_02.png',
   tropa_start: 'images/sprite/bg_03.png',
@@ -1039,7 +1046,7 @@ const PASSAGES = {
   },
   ВыборПути2: {
     location: 'player_table2',
-    speaker: 'Вы', boxClass: 'narrator',
+    speaker: 'Вы', boxClass: 'player',
     text: `— Разберёмся по дороге. Сначала — к маяку.`,
     next: 'ВыборПути3'
   },
@@ -1068,7 +1075,7 @@ const PASSAGES = {
   },
   РазговорСМирой2: {
     location: 'player_table2',
-    speaker: 'Вы', boxClass: 'narrator',
+    speaker: 'Вы', boxClass: 'player',
     text: `— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`,
     next: 'РазговорСМирой3'
   },
@@ -1183,7 +1190,7 @@ const PASSAGES = {
   },
   МостУгощение3: {
     location: 'most',
-    speaker: 'Вы', boxClass: 'narrator',
+    speaker: 'Вы', boxClass: 'player',
     text: `— Специально для хранителя покоя долины, — с поклоном вручаете вы угощение.`,
     next: 'МостУгощение4'
   },
@@ -1204,7 +1211,7 @@ const PASSAGES = {
   },
   МостРасспросы: {
     location: 'most',
-    speaker: 'Вы', boxClass: 'narrator',
+    speaker: 'Вы', boxClass: 'player',
     text: `— Бруно, ты ведь сидишь здесь круглые сутки, — говорите вы, присаживаясь рядом на корточки. — Скажи, ночью над башней ничего странного не происходило?`,
     next: 'МостРасспросы2'
   },
@@ -1555,6 +1562,20 @@ const ENDINGS_KEY       = 'pesn_augusta_endings';
 const ACHIEVEMENTS_KEY  = 'pesn_augusta_achievements';
 const SETTINGS_KEY      = 'pesn_augusta_settings';
 
+/* === gameState ОБЪЯВЛЕН ДО ВСЕХ ФУНКЦИЙ === */
+const gameState = {
+  currentPassage: 'title',
+  history: [], historyIndex: -1,
+  variables: {}, endings: {}, achievements: {},
+  progress: {
+    passages: {}, cutscenes: {}, choices: {}, locations: {},
+    journal: [], playCount: 0, totalPlayTime: 0, lastPassage: null
+  },
+  settings: { textSpeed: 40, musicVolume: 0.6, typewriter: 'on', sfx: 'on' },
+  isTyping: false, typewriterTimer: null, isSwitching: false,
+  sessionStart: Date.now()
+};
+
 function createEmptyProgress() {
   return { passages: {}, cutscenes: {}, choices: {}, locations: {}, journal: [], playCount: 0, totalPlayTime: 0, lastPassage: null };
 }
@@ -1623,8 +1644,8 @@ function loadGame() {
     gameState.history = s.history || [];
     gameState.historyIndex = (typeof s.historyIndex === 'number') ? s.historyIndex : gameState.history.length - 1;
     gameState.variables = s.variables || {};
-    gameState.endings = s.endings || {};
-    gameState.achievements = s.achievements || {};
+    gameState.endings = Object.assign({}, gameState.endings, s.endings || {});
+    gameState.achievements = Object.assign({}, gameState.achievements, s.achievements || {});
     return true;
   } catch (e) { return false; }
 }
@@ -1675,16 +1696,9 @@ function resetPassagesOnly() {
   saveProgress();
 }
 
-const gameState = {
-  currentPassage: 'title',
-  history: [], historyIndex: -1,
-  variables: {}, endings: {}, achievements: {},
-  progress: createEmptyProgress(),
-  settings: { textSpeed: 40, musicVolume: 0.6, typewriter: 'on', sfx: 'on' },
-  isTyping: false, typewriterTimer: null, isSwitching: false,
-  sessionStart: Date.now()
-};
-
+/* ============================================================
+   АУДИО
+   ============================================================ */
 const bgMusic = document.getElementById('bgMusic');
 let musicStarted = false;
 
@@ -1735,6 +1749,9 @@ function showNotification(title, text) {
   notifyTimer = setTimeout(() => el.classList.remove('show'), 3200);
 }
 
+/* ============================================================
+   ФОН И ВСТАВКИ
+   ============================================================ */
 let bgSwapTimer = null;
 function setBackground(locationKey) {
   const bg = document.getElementById('bgLayer');
@@ -1751,22 +1768,29 @@ function setBackground(locationKey) {
 }
 
 let insertTimer = null;
+let insertClearTimer = null;
 function showInsert(imgUrl, duration) {
   const layer = document.getElementById('insertLayer');
   if (!layer || !imgUrl) return;
   if (insertTimer) { clearTimeout(insertTimer); insertTimer = null; }
+  if (insertClearTimer) { clearTimeout(insertClearTimer); insertClearTimer = null; }
   layer.style.backgroundImage = `url("${imgUrl}")`;
   layer.classList.remove('active');
   void layer.offsetWidth;
   layer.classList.add('active');
   insertTimer = setTimeout(() => {
     layer.classList.remove('active');
-    insertTimer = setTimeout(() => {
+    insertClearTimer = setTimeout(() => {
       layer.style.backgroundImage = '';
+      insertClearTimer = null;
     }, 700);
+    insertTimer = null;
   }, duration);
 }
 
+/* ============================================================
+   ЧАСТИЦЫ
+   ============================================================ */
 function initParticles() {
   const layer = document.getElementById('particlesLayer');
   if (!layer) return;
@@ -1786,6 +1810,9 @@ function initParticles() {
   }
 }
 
+/* ============================================================
+   ПЕЧАТАЮЩИЙСЯ ТЕКСТ
+   ============================================================ */
 function typeText(element, html, speed, callback) {
   const tokens = [];
   let i = 0;
@@ -1820,6 +1847,9 @@ function typeText(element, html, speed, callback) {
   step();
 }
 
+/* ============================================================
+   КАСТСЦЕНЫ
+   ============================================================ */
 const CutscenePlayer = {
   current: null, frameIndex: 0, timer: null, paused: false, onFinish: null,
 
@@ -1839,8 +1869,25 @@ const CutscenePlayer = {
     document.body.classList.add('cutscene-active');
     layer.classList.add('active');
 
+    // Предзагрузка
     scene.frames.forEach(f => { const img = new Image(); img.src = f.img; });
-    setTimeout(() => this.showFrame(0), 100);
+
+    // Сразу задаём фон для первого кадра, чтобы не было чёрной вспышки
+    const firstFrame = scene.frames[0];
+    const currentEl = document.getElementById('csFrameCurrent');
+    const nextEl = document.getElementById('csFrameNext');
+    currentEl.style.backgroundImage = `url("${firstFrame.img}")`;
+    currentEl.className = 'cutscene-frame current';
+    nextEl.className = 'cutscene-frame next';
+    nextEl.style.backgroundImage = '';
+    nextEl.style.transform = '';
+
+    // Запускаем прогресс
+    const progress = document.getElementById('csProgress');
+    progress.style.transition = 'none';
+    progress.style.width = '0%';
+
+    setTimeout(() => this.showFrame(1), firstFrame.duration);
   },
 
   showFrame(index) {
@@ -1946,6 +1993,9 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') { e.preventDefault(); CutscenePlayer.skip(); }
 });
 
+/* ============================================================
+   ПЕРЕХОДЫ
+   ============================================================ */
 function advance() {
   if (gameState.isSwitching) return;
   const passage = PASSAGES[gameState.currentPassage];
@@ -2078,6 +2128,7 @@ function renderPassageInner(id, passage) {
       if (e.target.closest('[data-to]')) return;
       if (e.target.closest('.game-menu')) return;
       if (e.target.closest('.history-controls')) return;
+      e.stopPropagation();
       playSfx('click');
       advance();
     });
@@ -2133,6 +2184,7 @@ function renderPassageInner(id, passage) {
 }
 
 function renderTitleScreen() {
+  gameState.currentPassage = 'title';
   setBackground('title');
   const clickLayer = document.getElementById('clickLayer');
   if (clickLayer) clickLayer.classList.remove('enabled');
@@ -2156,7 +2208,7 @@ function renderTitleScreen() {
         <button id="btnSettings">⚙ Настройки</button>
         <button id="btnResetEndings">🔄 Сбросить прогресс</button>
       </div>
-      <p class="title-footer">Верхний Шепоть · Праздник Осенней Звезды</p>
+      <p class="title-footer">Верхний Шепот · Праздник Осенней Звезды</p>
     </div>
     <div class="title-endings">🏆 Концовок открыто: <b>${count} / 4</b></div>
   `;
@@ -2193,16 +2245,21 @@ function updateHistoryButtons() {
   fwd.disabled = gameState.historyIndex >= gameState.history.length - 1;
 }
 function goBack() {
+  if (gameState.isSwitching) return;
   if (gameState.historyIndex <= 0) return;
   gameState.historyIndex--;
   renderPassage(gameState.history[gameState.historyIndex], false);
 }
 function goForward() {
+  if (gameState.isSwitching) return;
   if (gameState.historyIndex >= gameState.history.length - 1) return;
   gameState.historyIndex++;
   renderPassage(gameState.history[gameState.historyIndex], false);
 }
 
+/* ============================================================
+   МОДАЛЬНЫЕ ОКНА
+   ============================================================ */
 function openSettings() {
   const overlay = document.getElementById('modalOverlay');
   const content = document.getElementById('modalContent');
@@ -2398,6 +2455,9 @@ function openGallery() {
   document.getElementById('galClose').addEventListener('click', () => overlay.classList.add('hidden'));
 }
 
+/* ============================================================
+   ИНИЦИАЛИЗАЦИЯ
+   ============================================================ */
 let playTimeInterval = null;
 
 function init() {
