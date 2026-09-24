@@ -844,36 +844,38 @@ body.cutscene-active .particles-layer {
 
 <script>
    /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v12.0 (пути в images/sprite/)
+   ПЕСНЬ АВГУСТА — движок v13.0 (новая раскладка картинок)
    ============================================================ */
 
-/* ===== ФОНЫ (bg_01 ... bg_08) ===== */
+/* ===== ФОНЫ (bg_01 ... bg_09) ===== */
 const LOCATION_BG = {
-  // === ТВОИ 8 КАРТИНОК (в папке images/sprite/) ===
-  epilogue:           'images/sprite/bg_01.png',   // Мира + герой в поле
-  player_outside:     'images/sprite/bg_02.png',   // Дом снаружи
-  player_inside:      'images/sprite/bg_03.png',   // Комната героя
-  letter_close:       'images/sprite/bg_04.png',   // Письмо крупно
-  player_table:       'images/sprite/bg_05.png',   // Мира за плечом
-  letter_hand:        'images/sprite/bg_06.png',   // Рука ломает сургуч
-  parchment:          'images/sprite/bg_07.png',   // Чистый пергамент
-  player_table2:      'images/sprite/bg_08.png',   // Герой и Мира за столом
-
-  // === ЗАГЛУШКИ ===
+  // === ТИТУЛЬНИК ===
   title:              'images/sprite/bg_01.png',
   title_night:        'images/sprite/bg_01.png',
-  start:              'images/sprite/bg_02.png',
-  most:               'images/sprite/bg_05.png',
-  most_empty:         'images/sprite/bg_05.png',
-  most_blocked:       'images/sprite/bg_05.png',
-  lavka:              'images/sprite/bg_02.png',
-  tropa:              'images/sprite/bg_02.png',
-  tropa_2:            'images/sprite/bg_02.png',
-  tropa_3:            'images/sprite/bg_02.png',
-  tower:              'images/sprite/bg_02.png',
-  tower_inside:       'images/sprite/bg_03.png',
-  observatory:        'images/sprite/bg_03.png',
-  august_sleep:       'images/sprite/bg_03.png',
+
+  // === СЮЖЕТ (начало) ===
+  start:              'images/sprite/bg_02.png',   // улочка города
+  player_outside:     'images/sprite/bg_03.png',   // дом снаружи
+  player_inside:      'images/sprite/bg_04.png',   // комната героя
+  letter_close:       'images/sprite/bg_05.png',   // письмо крупно
+  player_table:       'images/sprite/bg_06.png',   // Мира за плечом
+  letter_hand:        'images/sprite/bg_07.png',   // рука ломает сургуч
+  parchment:          'images/sprite/bg_08.png',   // пергамент
+  player_table2:      'images/sprite/bg_09.png',   // герой и Мира за столом
+  epilogue:           'images/sprite/bg_09.png',   // финал
+
+  // === ЗАГЛУШКИ (пока нет картинок) ===
+  most:               'images/sprite/bg_02.png',
+  most_empty:         'images/sprite/bg_02.png',
+  most_blocked:       'images/sprite/bg_02.png',
+  lavka:              'images/sprite/bg_03.png',
+  tropa:              'images/sprite/bg_03.png',
+  tropa_2:            'images/sprite/bg_03.png',
+  tropa_3:            'images/sprite/bg_03.png',
+  tower:              'images/sprite/bg_03.png',
+  tower_inside:       'images/sprite/bg_04.png',
+  observatory:        'images/sprite/bg_04.png',
+  august_sleep:       'images/sprite/bg_04.png',
   final:              'images/sprite/bg_01.png',
   festival:           'images/sprite/bg_01.png',
   festival_night:     'images/sprite/bg_01.png',
@@ -882,20 +884,22 @@ const LOCATION_BG = {
 
 /* ===== ВСТАВКИ ===== */
 const INSERT_IMG = {
-  city:        'images/sprite/bg_02.png',
-  sunset:      'images/sprite/bg_01.png',
-  letter_wax:  'images/sprite/bg_04.png',
-  letter_open: 'images/sprite/bg_06.png',
-  epilogue:    'images/sprite/bg_01.png',
-  bruno_block: 'images/sprite/bg_05.png',
-  most_free:   'images/sprite/bg_05.png',
-  tropa_start: 'images/sprite/bg_02.png',
-  tropa_stuck: 'images/sprite/bg_02.png',
-  tropa_pull:  'images/sprite/bg_02.png',
-  selesta:     'images/sprite/bg_02.png',
-  tower:       'images/sprite/bg_02.png',
-  observatory: 'images/sprite/bg_03.png',
-  august_sleep:'images/sprite/bg_03.png',
+  city:        'images/sprite/bg_02.png',   // улочка города
+  sunset:      'images/sprite/bg_01.png',   // поле (вместо заката)
+  letter_wax:  'images/sprite/bg_05.png',   // письмо крупно
+  letter_open: 'images/sprite/bg_07.png',   // рука ломает сургуч
+  epilogue:    'images/sprite/bg_09.png',   // герой и Мира за столом
+
+  // === ЗАГЛУШКИ ===
+  bruno_block: 'images/sprite/bg_02.png',
+  most_free:   'images/sprite/bg_02.png',
+  tropa_start: 'images/sprite/bg_03.png',
+  tropa_stuck: 'images/sprite/bg_03.png',
+  tropa_pull:  'images/sprite/bg_03.png',
+  selesta:     'images/sprite/bg_03.png',
+  tower:       'images/sprite/bg_03.png',
+  observatory: 'images/sprite/bg_04.png',
+  august_sleep:'images/sprite/bg_04.png',
   august_fly:  'images/sprite/bg_01.png'
 };
 
@@ -921,23 +925,23 @@ const ACHIEVEMENTS = {
 const CUTSCENES = {
   ending_harmony: { frames: [
     { img: 'images/sprite/bg_01.png', duration: 3500, effect: 'fade' },
-    { img: 'images/sprite/bg_08.png', duration: 3500, effect: 'zoom-in' },
+    { img: 'images/sprite/bg_09.png', duration: 3500, effect: 'zoom-in' },
     { img: 'images/sprite/bg_01.png', duration: 3500, effect: 'fade' },
-    { img: 'images/sprite/bg_08.png', duration: 4500, effect: 'zoom-out' }
+    { img: 'images/sprite/bg_09.png', duration: 4500, effect: 'zoom-out' }
   ]},
   ending_mastery: { frames: [
     { img: 'images/sprite/bg_01.png', duration: 3500, effect: 'fade' },
-    { img: 'images/sprite/bg_08.png', duration: 4500, effect: 'zoom-in' }
+    { img: 'images/sprite/bg_09.png', duration: 4500, effect: 'zoom-in' }
   ]},
   ending_science: { frames: [
-    { img: 'images/sprite/bg_05.png', duration: 3200, effect: 'slide-left' },
-    { img: 'images/sprite/bg_08.png', duration: 3200, effect: 'fade' },
+    { img: 'images/sprite/bg_06.png', duration: 3200, effect: 'slide-left' },
+    { img: 'images/sprite/bg_09.png', duration: 3200, effect: 'fade' },
     { img: 'images/sprite/bg_01.png', duration: 4200, effect: 'zoom-in' }
   ]},
   ending_unity: { frames: [
     { img: 'images/sprite/bg_01.png', duration: 3200, effect: 'fade' },
-    { img: 'images/sprite/bg_05.png', duration: 3200, effect: 'fade' },
-    { img: 'images/sprite/bg_08.png', duration: 3200, effect: 'fade' },
+    { img: 'images/sprite/bg_06.png', duration: 3200, effect: 'fade' },
+    { img: 'images/sprite/bg_09.png', duration: 3200, effect: 'fade' },
     { img: 'images/sprite/bg_02.png', duration: 3200, effect: 'zoom-in' },
     { img: 'images/sprite/bg_01.png', duration: 5000, effect: 'fade' }
   ]}
@@ -1598,7 +1602,7 @@ function getCompletionPercent() {
 function saveGame() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
-      version: 12, timestamp: Date.now(),
+      version: 13, timestamp: Date.now(),
       currentPassage: gameState.currentPassage,
       history: gameState.history, historyIndex: gameState.historyIndex,
       variables: gameState.variables,
