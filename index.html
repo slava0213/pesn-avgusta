@@ -235,9 +235,6 @@ html, body {
 .dialogue-box.bruno { border-color: rgba(170,170,170,0.8); }
 .dialogue-box.bruno .speaker-name { background: linear-gradient(180deg, rgba(120,120,120,1) 0%, rgba(70,70,70,1) 100%); color: #F5F5F5; }
 .dialogue-box.bruno .speaker-name::after { border-top-color: rgba(70,70,70,1); }
-.dialogue-box.shustik { border-color: rgba(80,200,100,0.85); }
-.dialogue-box.shustik .speaker-name { background: linear-gradient(180deg, rgba(60,160,80,1) 0%, rgba(35,110,55,1) 100%); }
-.dialogue-box.shustik .speaker-name::after { border-top-color: rgba(35,110,55,1); }
 .dialogue-box.selesta { border-color: rgba(160,120,210,0.85); }
 .dialogue-box.selesta .speaker-name { background: linear-gradient(180deg, rgba(130,90,180,1) 0%, rgba(95,65,135,1) 100%); }
 .dialogue-box.selesta .speaker-name::after { border-top-color: rgba(95,65,135,1); }
@@ -852,7 +849,9 @@ body.cutscene-active .particles-layer {
 
 <script>
 /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v13.5 (картинки моста: 1.png, 2.png, 3.png, 4.png)
+   ПЕСНЬ АВГУСТА — движок v13.6
+   Линия с Шустиком (Грибная тропа) убрана.
+   Осталось: Старый мост (Бруно), Лавка Селесты, Башня, 4 финала.
    ============================================================ */
 
 /* ===== ФОНЫ ===== */
@@ -875,12 +874,10 @@ const LOCATION_BG = {
   most_awake:         'images/3.png',  // 3 — Бруно пробудился (крупный план)
   most_empty:         'images/4.png',  // 4 — мост пуст
 
-  // === ЗАГЛУШКИ ===
-  most_blocked:       'images/sprite/bg_02.png',
+  // === ЛАВКА СЕЛЕСТЫ ===
   lavka:              'images/sprite/bg_03.png',
-  tropa:              'images/sprite/bg_03.png',
-  tropa_2:            'images/sprite/bg_03.png',
-  tropa_3:            'images/sprite/bg_03.png',
+
+  // === БАШНЯ ===
   tower:              'images/sprite/bg_03.png',
   tower_inside:       'images/sprite/bg_04.png',
   observatory:        'images/sprite/bg_04.png',
@@ -899,15 +896,12 @@ const INSERT_IMG = {
   letter_open: 'images/sprite/bg_07.png',
   epilogue:    'images/sprite/bg_09.png',
 
-  // === МОСТ (цифровые имена) ===
+  // === МОСТ ===
   bruno_block: 'images/2.png',  // Бруно спит
   bruno_awake: 'images/3.png',  // Бруно пробудился
   most_free:   'images/4.png',  // мост свободен
 
-  // === ЗАГЛУШКИ ===
-  tropa_start: 'images/sprite/bg_03.png',
-  tropa_stuck: 'images/sprite/bg_03.png',
-  tropa_pull:  'images/sprite/bg_03.png',
+  // === ЛАВКА / БАШНЯ ===
   selesta:     'images/sprite/bg_03.png',
   tower:       'images/sprite/bg_03.png',
   observatory: 'images/sprite/bg_04.png',
@@ -916,7 +910,7 @@ const INSERT_IMG = {
 };
 
 const SPEAKER_MAP = {
-  'Мира': 'mira', 'Бруно': 'bruno', 'Шустик': 'shustik',
+  'Мира': 'mira', 'Бруно': 'bruno',
   'Бабушка Селеста': 'selesta', 'Селеста': 'selesta',
   'Корнелиус': 'cornelius', 'Господин Корнелиус': 'cornelius',
   'Мастер Олвен': 'olven', 'Август': 'august',
@@ -926,10 +920,8 @@ const SPEAKER_MAP = {
 const ACHIEVEMENTS = {
   feather:    { icon: '🪶', title: 'Перо Лазурной Сойки', desc: 'Получить перо у Бруно' },
   crystal:    { icon: '💎', title: 'Кристалл Кварца',      desc: 'Получить кристалл у Бруно' },
-  pollen:     { icon: '✨', title: 'Пыльца Светляков',     desc: 'Получить пыльцу у Шустика' },
   vial:       { icon: '🧪', title: 'Флакон Селесты',       desc: 'Получить флакон от Селесты' },
   key:        { icon: '🔑', title: 'Латунный ключ',        desc: 'Взять ключ у Тик-Така' },
-  secret:     { icon: '🚪', title: 'Тайный вход',          desc: 'Найти секретный проход в башню' },
   scheme:     { icon: '📜', title: 'Схема Олвена',         desc: 'Изучить чертёж мастера Олвена' },
   allEndings: { icon: '👑', title: 'Все концовки',         desc: 'Открыть все четыре финала' }
 };
@@ -969,7 +961,7 @@ const sfxCache = {};
 const SFX_VOLUME = 0.6;
 
 /* ============================================================
-   ПАССАЖИ
+   ПАССАЖИ (без линии Шустика)
    ============================================================ */
 const PASSAGES = {
   title: { isTitle: true },
@@ -1038,7 +1030,6 @@ const PASSAGES = {
     text: `— «Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?`,
     choices: [
       { text: 'Пойти через Старый каменный мост', to: 'СтарыйМост' },
-      { text: 'Срезать через тенистую Грибную тропу', to: 'ГрибнаяТропа' },
       { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
     ]
   },
@@ -1064,10 +1055,9 @@ const PASSAGES = {
   ВыборПути4: {
     location: 'player_table2',
     speaker: 'Мира', boxClass: 'mira',
-    text: `— Тогда решай, как пойдём. Через мост — дольше, но спокойнее. Через Грибную тропу — быстрее, но там сумрачно и можно встретить лесных духов. Или заглянем к бабушке Селесте — она всегда что-то подскажет.`,
+    text: `— Тогда решай, как пойдём. Через Старый мост — дольше, но спокойнее. Или заглянем к бабушке Селесте — она всегда что-то подскажет.`,
     choices: [
       { text: 'Пойти через Старый каменный мост', to: 'СтарыйМост' },
-      { text: 'Срезать через тенистую Грибную тропу', to: 'ГрибнаяТропа' },
       { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
     ]
   },
@@ -1098,7 +1088,6 @@ const PASSAGES = {
   },
 
   /* === СТАРЫЙ МОСТ === */
-  /* 1. Подход к мосту — общий вид (без Бруно) */
   СтарыйМост: {
     location: 'most_bridge',
     insert: INSERT_IMG.bruno_block,
@@ -1107,21 +1096,18 @@ const PASSAGES = {
     text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. По обе стороны — фонари и осенние деревья. Но что это? Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно.`,
     next: 'СтарыйМост2'
   },
-  /* 2. Замечаем Бруно спящим */
   СтарыйМост2: {
     location: 'most',
     speaker: 'Рассказчик', boxClass: 'narrator',
     text: `Его каменные крылья были увиты мхом, хвост с кисточкой мирно покачивался в воздухе, а из приоткрытой пасти вырывался лёгкий храп. Он перегородил весь проход.`,
     next: 'СтарыйМост3'
   },
-  /* 3. Мира будит Бруно */
   СтарыйМост3: {
     location: 'most',
     speaker: 'Мира', boxClass: 'mira',
     text: `— Эй, дядюшка Бруно! Просыпайся, соня!`,
     next: 'СтарыйМост4'
   },
-  /* 4. Бруно пробуждается — крупный план */
   СтарыйМост4: {
     location: 'most_awake',
     insert: INSERT_IMG.bruno_awake,
@@ -1130,7 +1116,6 @@ const PASSAGES = {
     text: `— Ба, знакомые лица! Куда путь держите в такой важный день? Уж не к маяку ли?`,
     next: 'СтарыйМост5'
   },
-  /* 5. Бруно задаёт загадку */
   СтарыйМост5: {
     location: 'most_awake',
     speaker: 'Бруно', boxClass: 'bruno',
@@ -1167,7 +1152,6 @@ const PASSAGES = {
     set: { has_feather: true },
     next: 'МостВетер5'
   },
-  /* 6. Бруно уходит — мост пуст */
   МостВетер5: {
     location: 'most_empty',
     insert: INSERT_IMG.most_free,
@@ -1270,68 +1254,7 @@ const PASSAGES = {
     ]
   },
 
-  ГрибнаяТропа: {
-    location: 'tropa',
-    insert: INSERT_IMG.tropa_start,
-    insertDuration: 2000,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Грибная тропа встретила вас мягким сумраком древних дубов и прохладой. Крошечный лесной дух Шустик, похожий на ожившую пушистую еловую шишку, дёргал за ручку крохотную тележку.`,
-    next: 'ГрибнаяТропа2'
-  },
-  ГрибнаяТропа2: {
-    location: 'tropa',
-    speaker: 'Шустик', boxClass: 'shustik',
-    text: `— Ой-ой-ой! Беда-кручина! Скоро вечер, фестиваль без праздничных огней останется! Дерево уснуло и колесо зажало!`,
-    choices: [
-      { text: 'Осторожно смазать корни травяным смягчающим маслом', to: 'ГрибыМасло' },
-      { text: 'Предложить Мире использовать её разводной ключ и рычаг', to: 'ГрибыМеханика' },
-      { text: 'Заговорить с древним деревом на языке ветров и шепотов', to: 'ГрибыМагия' }
-    ]
-  },
-  ГрибыМасло: {
-    location: 'tropa_2',
-    insert: INSERT_IMG.tropa_stuck,
-    insertDuration: 1800,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы достаёте из походной сумки флакон с вытяжкой из дикого миндаля. Тележка застряла среди корней — Шустик с надеждой смотрит на вас.`,
-    next: 'ГрибыМасло2'
-  },
-  ГрибыМасло2: {
-    location: 'tropa',
-    speaker: 'Шустик', boxClass: 'shustik',
-    text: `— Ура-а! Спасены! Держите горсть волшебной светящейся пыльцы!`,
-    set: { has_pollen: true },
-    next: 'БашняСнаружи'
-  },
-  ГрибыМеханика: {
-    location: 'tropa_3',
-    insert: INSERT_IMG.tropa_pull,
-    insertDuration: 1800,
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Раз, два — взяли! Рычаг первого рода — лучшее колдовство на свете!`,
-    next: 'ГрибыМеханика2'
-  },
-  ГрибыМеханика2: {
-    location: 'tropa',
-    speaker: 'Шустик', boxClass: 'shustik',
-    text: `— Вот это ловкость! Возьмите мешочек искристой пыльцы!`,
-    set: { has_pollen: true },
-    next: 'БашняСнаружи'
-  },
-  ГрибыМагия: {
-    location: 'tropa_2',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы напеваете древний распев Верхнего Шепота. Корни мягко шевельнулись, тележка высвободилась.`,
-    next: 'ГрибыМагия2'
-  },
-  ГрибыМагия2: {
-    location: 'tropa',
-    speaker: 'Шустик', boxClass: 'shustik',
-    text: `— Возьми Пыльцу Звёздных Светляков! А ещё я покажу вам старую калитку в скале под башней!`,
-    set: { has_pollen: true, has_secret_door: true },
-    next: 'ТайныйВход'
-  },
-
+  /* === ЛАВКА СЕЛЕСТЫ === */
   ЛавкаСелесты: {
     location: 'lavka',
     insert: INSERT_IMG.selesta,
@@ -1357,18 +1280,10 @@ const PASSAGES = {
     speaker: 'Бабушка Селеста', boxClass: 'selesta',
     text: `— Возьмите-ка вот это. Это капли лунного зверобоя и сладкой мелиссы. Если Август закапризничает — пара капель вернут ему бодрость духа.`,
     set: { has_selesta_vial: true },
-    choices: [
-      { text: 'Поблагодарить Селесту и отправиться к Старому мосту', to: 'СтарыйМост' },
-      { text: 'Поблагодарить и пойти короткой Грибной тропой', to: 'ГрибнаяТропа' }
-    ]
+    next: 'БашняСнаружи'
   },
 
-  ТайныйВход: {
-    location: 'tower_inside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Шустик привёл вас к незаметному гроту. Вы выходите прямо в центральный зал Башни.`,
-    next: 'ВнутриБашни'
-  },
+  /* === БАШНЯ === */
   БашняСнаружи: {
     location: 'tower',
     insert: INSERT_IMG.tower,
@@ -2059,8 +1974,8 @@ function renderPassage(id, addToHistory = true) {
   if (passage.set) {
     Object.assign(gameState.variables, passage.set);
     const itemAch = {
-      has_feather: 'feather', has_crystal: 'crystal', has_pollen: 'pollen',
-      has_selesta_vial: 'vial', has_key: 'key', has_secret_door: 'secret',
+      has_feather: 'feather', has_crystal: 'crystal',
+      has_selesta_vial: 'vial', has_key: 'key',
       has_scheme: 'scheme'
     };
     for (const [k, a] of Object.entries(itemAch)) {
@@ -2370,7 +2285,6 @@ function openJournal() {
   const items = [
     { key: 'has_feather', icon: '🪶', name: 'Перо Лазурной Сойки' },
     { key: 'has_crystal', icon: '💎', name: 'Кристалл Горного Кварца' },
-    { key: 'has_pollen', icon: '✨', name: 'Пыльца Звёздных Светляков' },
     { key: 'has_selesta_vial', icon: '🧪', name: 'Флакон Селесты' },
     { key: 'has_key', icon: '🔑', name: 'Латунный ключ' }
   ];
@@ -2382,7 +2296,6 @@ function openJournal() {
 
   const flags = [
     { key: 'has_clue', name: 'Зацепка от Бруно' },
-    { key: 'has_secret_door', name: 'Тайный вход в башню' },
     { key: 'has_scheme', name: 'Схема Олвена изучена' },
     { key: 'has_met_august', name: 'Знакомство с Августом' },
     { key: 'inspected_mechanism', name: 'Механизм башни осмотрен' },
