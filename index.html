@@ -2,486 +2,1065 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Песнь Августа</title>
+<title>Песнь Августа — упрощённая версия</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; }
 html, body {
-  height: 100%;
-  font-family: 'Georgia', serif;
-  background: #0a0a14;
-  color: #eee;
+  margin: 0; padding: 0; height: 100%;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: #0a0a14; color: #eee;
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
-#bg {
+
+/* === ФОН И СЦЕНЫ === */
+.bg-layer {
   position: fixed; inset: 0;
   background-size: cover;
-  background-position: center;
+  background-position: center center;
+  background-repeat: no-repeat;
   background-color: #0a0a14;
-  z-index: 1;
-  transition: opacity 0.6s ease;
+  z-index: 1; pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.8s ease-in-out;
+  animation: kenBurns 28s ease-in-out infinite alternate;
 }
-#bg::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 30%, transparent 60%, rgba(0,0,0,0.8) 100%);
+@keyframes kenBurns {
+  0%   { transform: scale(1)    translate(0, 0); }
+  100% { transform: scale(1.08) translate(-1.2%, -1%); }
 }
-#dialogue {
-  position: fixed;
-  left: 50%; bottom: 3vh;
+
+/* === СЛОЙ СЦЕНЫ (картинка действия) === */
+.scene-layer {
+  position: fixed; inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+  background-color: #000;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.scene-layer.active {
+  opacity: 1;
+  visibility: visible;
+  animation: sceneZoom 5s ease-out forwards;
+}
+@keyframes sceneZoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+
+/* === ВИНЬЕТКА === */
+.vignette-layer {
+  position: fixed; inset: 0; pointer-events: none; z-index: 4;
+  background:
+    radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0,0,0,0.7) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 25%, transparent 65%, rgba(0,0,0,0.7) 100%);
+}
+
+/* === ЗАГРУЗКА === */
+.loading-screen {
+  position: fixed; inset: 0; z-index: 5000;
+  background: radial-gradient(ellipse at center, #14101e 0%, #0a0a14 100%);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 24px;
+  transition: opacity 0.8s ease;
+}
+.loading-screen.hidden { opacity: 0; pointer-events: none; }
+.loading-spinner {
+  width: 72px; height: 72px;
+  border: 3px solid rgba(251,191,36,0.12);
+  border-top-color: #FBBF24;
+  border-right-color: rgba(251,191,36,0.5);
+  border-radius: 50%;
+  animation: spin 1.1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  box-shadow: 0 0 40px rgba(251,191,36,0.35), inset 0 0 20px rgba(251,191,36,0.15);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+  color: #FBBF24; font-size: 14px;
+  letter-spacing: 6px; text-transform: uppercase;
+  animation: pulse 1.8s ease-in-out infinite;
+  text-shadow: 0 0 16px rgba(251,191,36,0.7);
+}
+@keyframes pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* === КЛИК-СЛОЙ === */
+.click-layer {
+  position: fixed; inset: 0; z-index: 90;
+  background: transparent; cursor: pointer; display: none;
+}
+.click-layer.enabled { display: block; }
+
+/* === ДИАЛОГОВОЕ ОКНО (только для персонажей) === */
+.dialogue-box {
+  position: fixed; left: 50%; bottom: 3vh;
   transform: translateX(-50%);
-  width: min(900px, 94vw);
-  min-height: 22vh;
-  background: linear-gradient(180deg, rgba(28,22,14,0.95), rgba(14,10,6,0.98));
+  width: min(1000px, 92vw);
+  max-height: 30vh;
+  background: linear-gradient(180deg, rgba(28,22,14,0.94) 0%, rgba(14,10,6,0.97) 100%);
   border: 1px solid rgba(244,197,66,0.6);
-  border-radius: 6px;
-  padding: 34px 30px 26px;
-  z-index: 10;
-  cursor: pointer;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255,200,80,0.1);
-}
-#speaker {
-  position: absolute;
-  top: -18px; left: 24px;
-  padding: 8px 22px;
-  background: linear-gradient(180deg, #d97706, #a04b0a);
-  color: #FFF8E7;
-  font-size: 15px;
-  font-weight: bold;
   border-radius: 4px;
-  border: 1px solid rgba(244,197,66,0.9);
-  letter-spacing: 1.5px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-  display: none;
+  box-shadow:
+    0 -40px 80px rgba(0,0,0,0.7),
+    0 24px 70px rgba(0,0,0,0.8),
+    0 0 60px rgba(255,200,80,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 100;
+  display: flex; flex-direction: column;
+  animation: dialogueIn 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
 }
-#speaker.show { display: block; }
-#text {
-  font-size: clamp(15px, 1.3vw, 19px);
-  line-height: 1.75;
+.dialogue-box::before, .dialogue-box::after {
+  content: ''; position: absolute;
+  width: 28px; height: 28px;
+  border: 2px solid rgba(244,197,66,0.85);
+  pointer-events: none; z-index: 3;
+}
+.dialogue-box::before {
+  top: -2px; left: -2px;
+  border-right: none; border-bottom: none;
+  border-radius: 4px 0 0 0;
+}
+.dialogue-box::after {
+  bottom: -2px; right: -2px;
+  border-left: none; border-top: none;
+  border-radius: 0 0 4px 0;
+}
+@keyframes dialogueIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(40px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.speaker-name {
+  position: absolute; top: -26px; left: 34px;
+  min-width: 150px; max-width: 360px;
+  padding: 10px 26px 9px;
+  background: linear-gradient(180deg, rgba(217,119,6,1) 0%, rgba(160,75,10,1) 100%);
+  color: #FFF8E7;
+  font-size: clamp(14px, 1.2vw, 18px);
+  font-weight: bold; border-radius: 3px;
+  border: 1px solid rgba(244,197,66,0.95);
+  box-shadow:
+    0 10px 28px rgba(0,0,0,0.7),
+    0 0 24px rgba(255,180,50,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.85);
+  letter-spacing: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  z-index: 4;
+}
+.speaker-name::after {
+  content: ''; position: absolute;
+  bottom: -6px; left: 22px;
+  width: 0; height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid rgba(160,75,10,1);
+}
+.dialogue-text {
+  width: 100%; flex: 1;
+  min-height: 10vh; max-height: 22vh;
   color: #f5ecd7;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-  min-height: 12vh;
+  font-size: clamp(15px, 1.2vw, 19px);
+  line-height: 1.75;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.95);
+  padding: 34px 44px 30px;
+  overflow-y: auto;
+  letter-spacing: 0.2px;
 }
-#text b { color: #FFE9A8; }
-#text i { color: #d8c9a8; }
-.cursor {
-  display: inline-block;
+.dialogue-text b { color: #FFE9A8; font-weight: bold; }
+.dialogue-text i { color: #d8c9a8; font-style: italic; }
+.type-cursor {
+  display: inline-block; color: #FFD700;
+  animation: cursorBlink 0.8s steps(2, start) infinite;
+  font-weight: bold; margin-left: 2px;
+}
+@keyframes cursorBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+.next-hint {
+  position: absolute; right: 26px; bottom: 16px;
   color: #FFD700;
-  animation: blink 0.8s steps(2) infinite;
+  font-size: clamp(18px, 1.5vw, 24px);
+  opacity: 0.85;
+  animation: nextPulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+  text-shadow: 0 0 14px rgba(255,215,0,0.9);
 }
-@keyframes blink { 50% { opacity: 0; } }
-#choices {
-  position: fixed;
-  left: 50%; bottom: 32vh;
-  transform: translateX(-50%);
-  width: min(700px, 90vw);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 11;
+@keyframes nextPulse {
+  0%,100% { transform: translateY(0); opacity: 0.4; }
+  50%     { transform: translateY(6px); opacity: 1; }
 }
-#choices button {
-  padding: 14px 22px;
-  background: linear-gradient(180deg, rgba(28,22,14,0.95), rgba(14,10,6,0.98));
+
+/* === КЛАССЫ ПЕРСОНАЖЕЙ === */
+.dialogue-box.mira { border-color: rgba(230,126,34,0.85); }
+.dialogue-box.mira .speaker-name { background: linear-gradient(180deg, rgba(230,126,34,1) 0%, rgba(190,90,15,1) 100%); }
+.dialogue-box.mira .speaker-name::after { border-top-color: rgba(190,90,15,1); }
+.dialogue-box.bruno { border-color: rgba(170,170,170,0.8); }
+.dialogue-box.bruno .speaker-name { background: linear-gradient(180deg, rgba(120,120,120,1) 0%, rgba(70,70,70,1) 100%); color: #F5F5F5; }
+.dialogue-box.bruno .speaker-name::after { border-top-color: rgba(70,70,70,1); }
+.dialogue-box.shustik { border-color: rgba(80,200,100,0.85); }
+.dialogue-box.shustik .speaker-name { background: linear-gradient(180deg, rgba(60,160,80,1) 0%, rgba(35,110,55,1) 100%); }
+.dialogue-box.shustik .speaker-name::after { border-top-color: rgba(35,110,55,1); }
+.dialogue-box.selesta { border-color: rgba(160,120,210,0.85); }
+.dialogue-box.selesta .speaker-name { background: linear-gradient(180deg, rgba(130,90,180,1) 0%, rgba(95,65,135,1) 100%); }
+.dialogue-box.selesta .speaker-name::after { border-top-color: rgba(95,65,135,1); }
+.dialogue-box.cornelius { border-color: rgba(80,120,210,0.85); }
+.dialogue-box.cornelius .speaker-name { background: linear-gradient(180deg, rgba(60,100,180,1) 0%, rgba(35,65,135,1) 100%); }
+.dialogue-box.cornelius .speaker-name::after { border-top-color: rgba(35,65,135,1); }
+.dialogue-box.august {
+  border-color: rgba(255,210,70,1);
+  box-shadow: 0 0 70px rgba(255,200,50,0.45), inset 0 1px 0 rgba(255,220,100,0.4);
+}
+.dialogue-box.august .speaker-name { background: linear-gradient(180deg, rgba(255,210,70,1) 0%, rgba(220,160,20,1) 100%); color: #2A1500; }
+.dialogue-box.august .speaker-name::after { border-top-color: rgba(220,160,20,1); }
+.dialogue-box.olven { border-style: dashed; border-color: rgba(170,130,70,0.9); background: linear-gradient(180deg, rgba(50,38,22,0.94) 0%, rgba(28,20,10,0.97) 100%); }
+.dialogue-box.olven .speaker-name { background: linear-gradient(180deg, rgba(150,110,55,1) 0%, rgba(100,70,30,1) 100%); }
+.dialogue-box.olven .speaker-name::after { border-top-color: rgba(100,70,30,1); }
+.dialogue-box.olven .dialogue-text { font-style: italic; color: #f0e3c8; }
+.dialogue-box.player { border-color: rgba(100,200,255,0.85); }
+.dialogue-box.player .speaker-name { background: linear-gradient(180deg, rgba(60,140,200,1) 0%, rgba(35,90,150,1) 100%); color: #F0F8FF; }
+.dialogue-box.player .speaker-name::after { border-top-color: rgba(35,90,150,1); }
+.dialogue-box.final-box {
+  border-color: rgba(255,215,0,1);
+  box-shadow: 0 0 80px rgba(255,215,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.dialogue-box.final-box .speaker-name { background: linear-gradient(180deg, rgba(255,215,0,1) 0%, rgba(200,150,20,1) 100%); color: #2A1500; }
+.dialogue-box.final-box .speaker-name::after { border-top-color: rgba(200,150,20,1); }
+
+/* === ВЫБОРЫ === */
+.choice-box {
+  position: fixed; left: 50%; bottom: 38vh;
+  transform: translateX(-50%); z-index: 101;
+  display: flex; flex-direction: column; gap: 14px;
+  width: min(720px, 88vw);
+  animation: choicesIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s backwards;
+}
+@keyframes choicesIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(24px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.choice-box a {
+  position: relative;
+  width: 100%; display: block; text-align: left;
+  padding: 16px 26px 16px 60px;
+  background: linear-gradient(180deg, rgba(28,22,14,0.94) 0%, rgba(14,10,6,0.97) 100%);
   color: #F5ECD7;
   border: 1px solid rgba(244,197,66,0.5);
   border-radius: 4px;
-  font-family: inherit;
-  font-size: clamp(13px, 1.1vw, 16px);
-  text-align: left;
+  text-decoration: none;
+  font-size: clamp(13px, 1.05vw, 16px);
+  line-height: 1.4;
   cursor: pointer;
-  transition: all 0.25s ease;
-  position: relative;
-  padding-left: 50px;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+  letter-spacing: 0.4px; overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
-#choices button::before {
-  content: '▸';
-  position: absolute;
-  left: 20px; top: 50%;
+.choice-box a::before {
+  content: '▸'; position: absolute;
+  left: 22px; top: 50%;
   transform: translateY(-50%);
-  color: #FBBF24;
-  font-size: 18px;
+  color: #FBBF24; font-size: 18px;
+  transition: all 0.3s ease;
 }
-#choices button:hover {
-  background: linear-gradient(180deg, rgba(244,197,66,0.2), rgba(180,120,20,0.15));
-  border-color: #FBBF24;
-  transform: translateX(6px);
+.choice-box a:hover {
+  background: linear-gradient(180deg, rgba(244,197,66,0.18) 0%, rgba(180,120,20,0.12) 100%);
+  border-color: rgba(244,197,66,0.95);
   color: #FFF8E7;
+  transform: translateX(6px);
+  box-shadow: 0 14px 38px rgba(0,0,0,0.7), 0 0 30px rgba(255,200,80,0.3);
 }
-#hint {
-  position: absolute;
-  right: 20px; bottom: 12px;
-  color: #FFD700;
-  font-size: 20px;
-  animation: bounce 1.4s infinite;
-  opacity: 0.8;
+.choice-box a:hover::before { color: #FFD700; transform: translateY(-50%) translateX(4px); }
+
+/* === КНОПКИ ИГРЫ === */
+.game-menu {
+  position: fixed; top: 18px; right: 18px;
+  display: flex; gap: 12px; z-index: 300;
 }
-@keyframes bounce {
-  0%,100% { transform: translateY(0); opacity: 0.4; }
-  50% { transform: translateY(6px); opacity: 1; }
-}
-#menu {
-  position: fixed;
-  top: 16px; right: 16px;
-  display: flex; gap: 10px;
-  z-index: 20;
-}
-#menu button {
-  width: 44px; height: 44px;
+.game-menu button {
+  width: 50px; height: 50px;
   border-radius: 50%;
-  background: rgba(28,22,14,0.9);
   border: 1px solid rgba(244,197,66,0.7);
+  background: linear-gradient(180deg, rgba(28,22,14,0.9) 0%, rgba(14,10,6,0.95) 100%);
   color: #FBBF24;
-  font-size: 18px;
+  font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.game-menu button:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 24px rgba(255,200,80,0.5);
+  border-color: rgba(244,197,66,1);
+  color: #FFD700;
+}
+
+/* === НАЗАД/ВПЕРЁД === */
+.history-controls {
+  position: fixed; top: 18px; left: 18px;
+  display: flex; gap: 12px; z-index: 300;
+}
+.history-btn {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  border: 1px solid rgba(244,197,66,0.7);
+  background: linear-gradient(180deg, rgba(28,22,14,0.9) 0%, rgba(14,10,6,0.95) 100%);
+  color: #FBBF24;
+  font-size: 22px; font-weight: bold;
   cursor: pointer;
-  transition: all 0.25s;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  font-family: 'Georgia', serif;
 }
-#menu button:hover {
-  background: rgba(244,197,66,0.2);
-  transform: scale(1.1);
+.history-btn:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 24px rgba(255,200,80,0.5);
+  color: #FFD700;
 }
-#title-screen {
+.history-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(0.8); }
+
+/* === УВЕДОМЛЕНИЯ === */
+.notification {
+  position: fixed; top: 90px; right: 24px;
+  background: linear-gradient(180deg, rgba(217,119,6,0.97) 0%, rgba(160,75,10,0.97) 100%);
+  color: #FFF8E7;
+  padding: 16px 26px 16px 30px;
+  border: 1px solid rgba(244,197,66,0.9);
+  border-left: 4px solid #FBBF24;
+  border-radius: 6px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.7), 0 0 30px rgba(255,180,50,0.4);
+  font-size: 14px;
+  z-index: 400;
+  opacity: 0;
+  transform: translateX(80px);
+  transition: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  max-width: 340px;
+}
+.notification.show { opacity: 1; transform: translateX(0); }
+.notification b { color: #FFE9A8; display: block; margin-bottom: 5px; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; }
+
+/* === ТИТУЛЬНИК === */
+.title-screen {
   position: fixed; inset: 0;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 30px;
-  z-index: 30;
-  background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.5), rgba(0,0,0,0.9));
-  text-align: center;
-  padding: 20px;
+  align-items: center; justify-content: space-between;
+  padding: 8vh 20px 6vh; z-index: 200;
+  background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0.85) 100%);
 }
-#title-screen h1 {
-  font-size: clamp(36px, 7vw, 72px);
+.title-logo { text-align: center; animation: titleFadeIn 1.3s ease-out; }
+@keyframes titleFadeIn {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.title-main {
+  font-size: clamp(38px, 6vw, 76px);
   color: #FFF8E7;
-  letter-spacing: 6px;
   text-shadow:
     -3px -3px 0 #8B4513, 3px -3px 0 #8B4513,
     -3px 3px 0 #8B4513, 3px 3px 0 #8B4513,
-    0 0 50px rgba(255,220,100,0.9);
+     0 0 40px rgba(255, 220, 100, 1),
+     0 0 80px rgba(255, 180, 50, 0.7);
+  letter-spacing: 8px; margin: 0; font-weight: bold;
+  animation: titleGlow 3.6s ease-in-out infinite;
 }
-#title-screen .sub {
+@keyframes titleGlow {
+  0%,100% { text-shadow: -3px -3px 0 #8B4513, 3px -3px 0 #8B4513, -3px 3px 0 #8B4513, 3px 3px 0 #8B4513, 0 0 40px rgba(255,220,100,1), 0 0 80px rgba(255,180,50,0.7); }
+  50%     { text-shadow: -3px -3px 0 #8B4513, 3px -3px 0 #8B4513, -3px 3px 0 #8B4513, 3px 3px 0 #8B4513, 0 0 65px rgba(255,240,150,1), 0 0 120px rgba(255,200,80,0.9); }
+}
+.title-sub {
+  font-size: clamp(14px, 1.2vw, 19px);
   color: #FFF3C4;
-  font-style: italic;
-  letter-spacing: 4px;
-  font-size: 14px;
+  text-shadow: 2px 2px 0 #8B4513, 3px 3px 8px rgba(0,0,0,0.95);
+  font-style: italic; margin-top: 14px; letter-spacing: 6px;
   text-transform: uppercase;
-  margin-top: -20px;
 }
-#title-screen .menu {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: min(300px, 80vw);
+.title-menu {
+  display: flex; flex-direction: column; gap: 14px;
+  width: min(340px, 80vw);
 }
-#title-screen .menu button {
-  padding: 14px 24px;
-  background: linear-gradient(180deg, rgba(28,22,14,0.95), rgba(14,10,6,0.98));
+.title-menu button {
+  background: linear-gradient(180deg, rgba(28,22,14,0.9) 0%, rgba(14,10,6,0.95) 100%);
   color: #FFE9A8;
-  border: 1px solid rgba(244,197,66,0.6);
+  padding: 15px 26px;
   border-radius: 4px;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: bold;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  border: 1px solid rgba(244,197,66,0.6);
   cursor: pointer;
-  transition: all 0.3s;
+  font-size: clamp(13px, 1.05vw, 16px);
+  font-weight: bold; font-family: inherit; text-align: center;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
 }
-#title-screen .menu button:hover:not(:disabled) {
-  background: linear-gradient(180deg, rgba(244,197,66,0.25), rgba(180,120,20,0.2));
-  border-color: #FBBF24;
-  transform: translateY(-2px);
+.title-menu button:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(244,197,66,0.2) 0%, rgba(180,120,20,0.15) 100%);
   color: #FFF8E7;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 30px rgba(255,200,80,0.5);
+  border-color: rgba(244,197,66,1);
 }
-#title-screen .menu button:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-#title-screen .footer {
+.title-menu button:disabled { opacity: 0.35; cursor: not-allowed; filter: grayscale(0.7); }
+.title-footer {
+  font-size: clamp(11px, 0.9vw, 13px);
   color: #FFF3C4;
-  font-size: 12px;
-  letter-spacing: 3px;
+  letter-spacing: 4px; font-style: italic; opacity: 0.9; margin: 0;
   text-transform: uppercase;
-  font-style: italic;
-  opacity: 0.8;
-  position: absolute;
-  bottom: 4vh;
 }
+.title-endings {
+  position: fixed; left: 50%; bottom: 12vh;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.82);
+  color: #FFD700;
+  padding: 12px 32px;
+  border: 1px solid rgba(255,215,0,0.9);
+  border-radius: 999px;
+  font-size: clamp(12px, 1vw, 15px);
+  letter-spacing: 2px;
+  box-shadow: 0 8px 32px rgba(255,215,0,0.35);
+  z-index: 210;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+/* === МОДАЛКИ === */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(6px);
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+  background: linear-gradient(180deg, #1a1410 0%, #0d0a08 100%);
+  border: 1px solid rgba(244,197,66,0.6);
+  max-width: 620px; width: 100%; max-height: 84vh;
+  overflow-y: auto; padding: 30px;
+  border-radius: 6px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.9), 0 0 60px rgba(255,200,80,0.15);
+  animation: modalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal h2 {
+  margin: 0 0 22px; color: #FBBF24;
+  text-transform: uppercase; font-size: 18px; letter-spacing: 3px;
+  border-bottom: 1px solid rgba(244,197,66,0.25);
+  padding-bottom: 14px;
+}
+.modal .row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid rgba(244,197,66,0.12);
+  gap: 12px; flex-wrap: wrap;
+}
+.modal .row:last-of-type { border-bottom: none; }
+.modal label { color: #ddd; }
+.modal select, .modal input[type=range] {
+  background: #1c1813; color: #eee;
+  border: 1px solid #4a3f2f;
+  padding: 8px 12px; border-radius: 4px;
+  font-family: inherit; font-size: 14px;
+}
+.modal .buttons { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; flex-wrap: wrap; }
+.modal button {
+  background: linear-gradient(180deg, rgba(60,100,180,0.95) 0%, rgba(35,65,135,0.95) 100%);
+  color: #fff; border: 1px solid rgba(100,140,220,0.9);
+  padding: 11px 24px; border-radius: 4px;
+  cursor: pointer; font-family: inherit; font-size: 14px;
+  font-weight: bold; letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.modal button:hover {
+  background: linear-gradient(180deg, rgba(80,130,220,1) 0%, rgba(45,85,165,1) 100%);
+  transform: translateY(-2px);
+}
+.modal .ach-list { display: flex; flex-direction: column; gap: 10px; }
+.modal .ach {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; border-radius: 6px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(244,197,66,0.15);
+}
+.modal .ach.locked { opacity: 0.35; filter: grayscale(1); }
+.modal .ach .icon { font-size: 26px; }
+.modal .ach .info { display: flex; flex-direction: column; gap: 3px; }
+.modal .ach .title { color: #FBBF24; font-weight: bold; font-size: 14px; }
+.modal .ach .desc { color: #999; font-size: 12px; }
+
+/* === ГАЛЕРЕЯ === */
+.gallery-card {
+  position: relative;
+  aspect-ratio: 16/9;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(251,191,36,0.5);
+  background-color: #1c1813;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease;
+}
+.gallery-card.locked { cursor: not-allowed; opacity: 0.4; }
+.gallery-card:not(.locked):hover { transform: scale(1.04); }
+
 .hidden { display: none !important; }
-@media (max-width: 600px) {
-  #dialogue { padding: 30px 20px 22px; min-height: 26vh; }
-  #choices { bottom: 36vh; }
-  #speaker { font-size: 13px; padding: 6px 16px; }
+
+@media (max-width: 768px) {
+  .dialogue-box { width: 94vw; max-height: 38vh; bottom: 2vh; }
+  .speaker-name { top: -22px; left: 22px; padding: 8px 20px 7px; font-size: 14px; }
+  .dialogue-text { font-size: 15px; padding: 30px 26px 26px; }
+  .choice-box { bottom: 44vh; width: 92vw; }
+  .history-btn, .game-menu button { width: 44px; height: 44px; font-size: 18px; }
+}
+@media (max-width: 480px) {
+  .dialogue-box { width: 96vw; max-height: 42vh; bottom: 1.5vh; }
+  .speaker-name { top: -20px; left: 16px; padding: 6px 16px; font-size: 13px; }
+  .dialogue-text { font-size: 14px; padding: 28px 20px 22px; }
+  .choice-box { bottom: 50vh; width: 96vw; }
+  .title-main { font-size: 30px; letter-spacing: 4px; }
 }
 </style>
 </head>
 <body>
 
-<div id="bg"></div>
-
-<div id="title-screen">
-  <div>
-    <h1>Песнь Августа</h1>
-    <p class="sub">Интерактивная сказка</p>
-  </div>
-  <div class="menu">
-    <button id="btn-start">▶ Начать историю</button>
-    <button id="btn-continue">📂 Продолжить</button>
-    <button id="btn-reset">🔄 Сбросить прогресс</button>
-  </div>
-  <p class="footer">Верхний Шепот · Праздник Осенней Звезды</p>
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Загрузка долины...</div>
 </div>
 
-<div id="dialogue" class="hidden">
-  <div id="speaker"></div>
-  <div id="text"></div>
-  <div id="hint">▼</div>
+<div class="bg-layer" id="bgLayer"></div>
+<div class="scene-layer" id="sceneLayer"></div>
+<div class="vignette-layer"></div>
+
+<div class="click-layer" id="clickLayer"></div>
+
+<div class="history-controls" id="historyControls" style="display:none;">
+  <button class="history-btn" id="btnBack" title="Назад">←</button>
+  <button class="history-btn" id="btnForward" title="Вперёд">→</button>
 </div>
 
-<div id="choices" class="hidden"></div>
+<div id="gameArea"></div>
 
-<div id="menu" class="hidden">
-  <button id="btn-save" title="Сохранить">💾</button>
-  <button id="btn-home" title="В меню">🏠</button>
+<div class="notification" id="notification"></div>
+
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
 </div>
 
 <script>
 /* ============================================================
-   ИСТОРИЯ — все пассажи в одном объекте
+   ПЕСНЬ АВГУСТА — упрощённая версия
+   Сцены = картинки, без окна рассказчика.
+   Реплики — только у персонажей, короткие.
    ============================================================ */
-const STORY = {
-  start: {
-    bg: 'images/bg_02.png',
-    speaker: 'Рассказчик',
-    text: 'Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой. Сегодня — Праздник Осенней Звезды, но что-то пошло не так.',
-    next: 'home'
+
+/* === ФОНЫ === */
+const LOCATION_BG = {
+  title:          'images/bg_01.png',
+  start:          'images/bg_02.png',
+  player_outside: 'images/bg_03.png',
+  player_inside:  'images/bg_04.png',
+  letter_close:   'images/bg_05.png',
+  player_table:   'images/bg_06.png',
+  letter_hand:    'images/bg_07.png',
+  parchment:      'images/bg_08.png',
+  player_table2:  'images/bg_09.png',
+  epilogue:       'images/bg_09.png',
+  most:           'images/sprite/bg_02.png',
+  most_empty:     'images/sprite/bg_02.png',
+  lavka:          'images/sprite/bg_03.png',
+  tropa:          'images/sprite/bg_03.png',
+  tropa_2:        'images/sprite/bg_03.png',
+  tropa_3:        'images/sprite/bg_03.png',
+  tower:          'images/sprite/bg_03.png',
+  tower_inside:   'images/sprite/bg_04.png',
+  observatory:    'images/sprite/bg_04.png',
+  august_sleep:   'images/sprite/bg_04.png',
+  final:          'images/sprite/bg_01.png'
+};
+
+/* === КАРТИНКИ-СЦЕНЫ (действия) === */
+const SCENE_IMG = {
+  city:        'images/sprite/bg_02.png',
+  sunset:      'images/sprite/bg_01.png',
+  letter_open: 'images/sprite/bg_07.png',
+  bruno_block: 'images/sprite/bg_02.png',
+  most_free:   'images/sprite/bg_02.png',
+  tropa_start: 'images/sprite/bg_03.png',
+  tropa_stuck: 'images/sprite/bg_03.png',
+  tropa_pull:  'images/sprite/bg_03.png',
+  selesta:     'images/sprite/bg_03.png',
+  tower:       'images/sprite/bg_03.png',
+  observatory: 'images/sprite/bg_04.png',
+  august_sleep:'images/sprite/bg_04.png',
+  august_fly:  'images/sprite/bg_01.png'
+};
+
+/* === ДОСТИЖЕНИЯ === */
+const ACHIEVEMENTS = {
+  feather: { icon: '🪶', title: 'Перо Лазурной Сойки', desc: 'Получить перо у Бруно' },
+  crystal: { icon: '💎', title: 'Кристалл Кварца', desc: 'Получить кристалл у Бруно' },
+  pollen:  { icon: '✨', title: 'Пыльца Светляков', desc: 'Получить пыльцу у Шустика' },
+  vial:    { icon: '🧪', title: 'Флакон Селесты', desc: 'Получить флакон от Селесты' },
+  key:     { icon: '🔑', title: 'Латунный ключ', desc: 'Взять ключ у Тик-Така' },
+  secret:  { icon: '🚪', title: 'Тайный вход', desc: 'Найти секретный проход' },
+  scheme:  { icon: '📜', title: 'Схема Олвена', desc: 'Изучить чертёж мастера' },
+  allEndings: { icon: '👑', title: 'Все концовки', desc: 'Открыть все четыре финала' }
+};
+
+/* ============================================================
+   ПАССАЖИ
+   type: 'scene' — картинка-действие (автопереход)
+   type: 'dialogue' — реплика персонажа
+   type: 'choice' — выбор
+   ============================================================ */
+const PASSAGES = {
+  title: { isTitle: true },
+
+  /* === НАЧАЛО === */
+  S1: { type: 'scene', location: 'start', scene: SCENE_IMG.city, duration: 2200, next: 'S2' },
+  S2: { type: 'scene', location: 'start', scene: SCENE_IMG.sunset, duration: 2200, next: 'S3' },
+  S3: { type: 'scene', location: 'player_outside', duration: 2000, next: 'S4' },
+  S4: { type: 'scene', location: 'player_inside', scene: SCENE_IMG.letter_open, duration: 2200, next: 'S5' },
+  S5: {
+    type: 'dialogue', location: 'player_table',
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Подъём, Хранитель трав! Мастер Олвен передал: в маяке заклинило резонатор. Я взяла инструменты. Что в письме?`,
+    next: 'S6'
   },
-  home: {
-    bg: 'images/bg_04.png',
-    speaker: 'Рассказчик',
-    text: 'Вы — молодой травник, ученик мастера Олвена. На столе лежит письмо, запечатанное красным воском с оттиском кленового листа. За спиной послышались лёгкие шаги.',
-    next: 'mira'
-  },
-  mira: {
-    bg: 'images/bg_06.png',
-    speaker: 'Мира',
-    text: '— Подъём, Хранитель трав и ветров! — звонко бросила Мира. — В маяке заклинило рунный резонатор. Я взяла инструменты. А у тебя что в письме?',
+  S6: {
+    type: 'choice', location: 'player_table',
+    speaker: 'Вы', boxClass: 'player',
+    text: `Как поступим?`,
     choices: [
-      { text: 'Вскрыть письмо мастера Олвена', to: 'letter' },
-      { text: 'Сначала обсудить маршрут к маяку', to: 'route' },
-      { text: 'Пошутить над Мирой', to: 'joke' }
+      { text: 'Вскрыть письмо Олвена', to: 'S7' },
+      { text: 'Обсудить маршрут к маяку', to: 'S8' },
+      { text: 'Пошутить над Мирой', to: 'S9' }
     ]
   },
-  joke: {
-    bg: 'images/bg_09.png',
-    speaker: 'Вы',
-    text: '— Ты собралась чинить маяк или перестраивать всю часовую башню столицы?',
-    next: 'joke2'
+  S7: {
+    type: 'dialogue', location: 'parchment',
+    speaker: 'Мастер Олвен', boxClass: 'olven',
+    text: `«Сердце маяка — Звёздный Светляк Август. Он не терпит грубости. Ищи причину в нарушении гармонии, а не в поломке. Свет рождается из дружбы».`,
+    next: 'S10'
   },
-  joke2: {
-    bg: 'images/bg_09.png',
-    speaker: 'Мира',
-    text: '— Настоящий механик готов ко всему! Ну так что пишет Олвен?',
-    next: 'letter'
+  S8: {
+    type: 'dialogue', location: 'player_table2',
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Тогда решай: через мост — дольше, но спокойнее. Через Грибную тропу — быстрее. Или к бабушке Селесте.`,
+    next: 'S10'
   },
-  letter: {
-    bg: 'images/bg_05.png',
-    speaker: 'Рассказчик',
-    text: 'Вы берёте письмо. Красный воск тёплый на ощупь. За окном — солнце, тишина и далёкий маяк.',
-    next: 'letter2'
+  S9: {
+    type: 'dialogue', location: 'player_table2',
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Настоящий механик готов ко всему! Вдруг по дороге застрявшая стрекоза? Ну так что пишет Олвен?`,
+    next: 'S7'
   },
-  letter2: {
-    bg: 'images/bg_08.png',
-    speaker: 'Мастер Олвен',
-    text: '«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы. Свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».',
-    next: 'route'
-  },
-  route: {
-    bg: 'images/bg_09.png',
-    speaker: 'Мира',
-    text: '— «Свет рождается из дружбы»... Красиво! Как пойдём к холму Светлячков?',
+  S10: {
+    type: 'choice', location: 'player_table2',
+    speaker: 'Вы', boxClass: 'player',
+    text: `Куда идём?`,
     choices: [
-      { text: 'Через Старый каменный мост', to: 'bridge' },
-      { text: 'Через тенистую Грибную тропу', to: 'forest' },
-      { text: 'Заглянуть к бабушке Селесте', to: 'selesta' }
+      { text: 'Через Старый каменный мост', to: 'M1' },
+      { text: 'Через Грибную тропу', to: 'G1' },
+      { text: 'К бабушке Селесте', to: 'L1' }
     ]
   },
-  bridge: {
-    bg: 'images/sprite/bg_02.png',
-    speaker: 'Бруно',
-    text: '— Ба, знакомые лица! Куда путь держите? К маяку? Отгадайте загадку: «Не имеет крыльев, а летает; не имеет голоса, а воет; в стужу жалит, в зной ласкает».',
+
+  /* === СТАРЫЙ МОСТ === */
+  M1: { type: 'scene', location: 'most', scene: SCENE_IMG.bruno_block, duration: 2200, next: 'M2' },
+  M2: {
+    type: 'dialogue', location: 'most',
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— Ба, знакомые лица! К маяку? Отгадайте загадку: «Не имеет крыльев, а летает; в стужу жалит, в зной ласкает».`,
+    next: 'M3'
+  },
+  M3: {
+    type: 'choice', location: 'most',
+    speaker: 'Вы', boxClass: 'player',
+    text: `Что ответите?`,
     choices: [
-      { text: '«Это горный ветер!»', to: 'bridge_ok' },
-      { text: '«Это лесное эхо»', to: 'bridge_ok' },
-      { text: 'Угостить Бруно медовым яблоком', to: 'bridge_gift' }
+      { text: '«Это горный ветер!»', to: 'M4' },
+      { text: '«Это лесное эхо»', to: 'M5' },
+      { text: 'Угостить Бруно медовым яблоком', to: 'M6' },
+      { text: 'Спросить, что случилось ночью', to: 'M7' }
     ]
   },
-  bridge_ok: {
-    bg: 'images/sprite/bg_02.png',
-    speaker: 'Бруно',
-    text: '— В самую точку! Проходите, да смотрите под ноги.',
-    next: 'tower'
+  M4: {
+    type: 'dialogue', location: 'most',
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— В точку! Держи Перо Лазурной Сойки — оно разгоняет пыль веков.`,
+    set: { has_feather: true },
+    next: 'M8'
   },
-  bridge_gift: {
-    bg: 'images/sprite/bg_02.png',
-    speaker: 'Бруно',
-    text: '— Боги гранита, какая сладость! Забирайте мост! И вот, возьмите Кристалл Горного Кварца — в оптике маяка ему самое место.',
-    next: 'tower'
+  M5: {
+    type: 'dialogue', location: 'most',
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— Поэтично, но физика хромает! Это ветер. Идите с миром.`,
+    next: 'M8'
   },
-  forest: {
-    bg: 'images/sprite/bg_03.png',
-    speaker: 'Шустик',
-    text: '— Ой-ой-ой! Беда-кручина! Тележка застряла среди корней, а без неё фестиваль без огней останется!',
+  M6: {
+    type: 'dialogue', location: 'most',
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— Боги гранита! Возьми Кристалл Горного Кварца — в оптике маяка ему место!`,
+    set: { has_crystal: true },
+    next: 'M8'
+  },
+  M7: {
+    type: 'dialogue', location: 'most',
+    speaker: 'Бруно', boxClass: 'bruno',
+    text: `— Около полуночи с башни сорвался серебристый всполох. Ветер дул с Заброшенной Обсерватории.`,
+    set: { has_clue: true },
+    next: 'M3'
+  },
+  M8: { type: 'scene', location: 'most_empty', scene: SCENE_IMG.most_free, duration: 2000, next: 'T1' },
+
+  /* === ГРИБНАЯ ТРОПА === */
+  G1: { type: 'scene', location: 'tropa', scene: SCENE_IMG.tropa_start, duration: 2000, next: 'G2' },
+  G2: {
+    type: 'dialogue', location: 'tropa',
+    speaker: 'Шустик', boxClass: 'shustik',
+    text: `— Беда! Дерево уснуло и колесо зажало! Помогите!`,
+    next: 'G3'
+  },
+  G3: {
+    type: 'choice', location: 'tropa',
+    speaker: 'Вы', boxClass: 'player',
+    text: `Как поможем?`,
     choices: [
-      { text: 'Смазать корни маслом', to: 'forest_ok' },
-      { text: 'Использовать рычаг Миры', to: 'forest_ok' },
-      { text: 'Заговорить с деревом', to: 'forest_ok' }
+      { text: 'Смазать корни маслом', to: 'G4' },
+      { text: 'Использовать ключ Миры', to: 'G5' },
+      { text: 'Заговорить с деревом', to: 'G6' }
     ]
   },
-  forest_ok: {
-    bg: 'images/sprite/bg_03.png',
-    speaker: 'Шустик',
-    text: '— Ура-а! Спасены! Держите горсть волшебной светящейся пыльцы!',
-    next: 'tower'
+  G4: {
+    type: 'dialogue', location: 'tropa',
+    speaker: 'Шустик', boxClass: 'shustik',
+    text: `— Ура! Держите Пыльцу Светляков!`,
+    set: { has_pollen: true },
+    next: 'T1'
   },
-  selesta: {
-    bg: 'images/sprite/bg_03.png',
-    speaker: 'Бабушка Селеста',
-    text: '— Батюшки, юные мастера! Возьмите-ка капли лунного зверобоя. Если Август закапризничает — пара капель вернут ему бодрость духа.',
-    next: 'route_after_selesta'
+  G5: {
+    type: 'dialogue', location: 'tropa',
+    speaker: 'Шустик', boxClass: 'shustik',
+    text: `— Вот это ловкость! Возьмите Пыльцу!`,
+    set: { has_pollen: true },
+    next: 'T1'
   },
-  route_after_selesta: {
-    bg: 'images/sprite/bg_03.png',
-    speaker: 'Мира',
-    text: '— Спасибо, бабушка! Ну что, куда теперь?',
+  G6: {
+    type: 'dialogue', location: 'tropa',
+    speaker: 'Шустик', boxClass: 'shustik',
+    text: `— Возьмите Пыльцу! И я покажу тайную калитку в башню!`,
+    set: { has_pollen: true, has_secret_door: true },
+    next: 'T0'
+  },
+
+  /* === БАБУШКА СЕЛЕСТА === */
+  L1: { type: 'scene', location: 'lavka', scene: SCENE_IMG.selesta, duration: 2000, next: 'L2' },
+  L2: {
+    type: 'dialogue', location: 'lavka',
+    speaker: 'Бабушка Селеста', boxClass: 'selesta',
+    text: `— Батюшки, беда с маяком! Возьмите капли лунного зверобоя — Август взбодрится.`,
+    set: { has_selesta_vial: true },
+    next: 'L3'
+  },
+  L3: {
+    type: 'choice', location: 'lavka',
+    speaker: 'Вы', boxClass: 'player',
+    text: `Куда теперь?`,
     choices: [
-      { text: 'К Старому мосту', to: 'bridge' },
-      { text: 'К Грибной тропе', to: 'forest' }
+      { text: 'К Старому мосту', to: 'M1' },
+      { text: 'Через Грибную тропу', to: 'G1' }
     ]
   },
-  tower: {
-    bg: 'images/sprite/bg_03.png',
-    speaker: 'Рассказчик',
-    text: 'Перед вами вздымалась Башня Светлячков. Массивные дубовые двери заперты. На бронзовой накладке — циферблат с четырьмя стихийными знаками. Загадка: «Лишь союз тепла и движения пробудит спящий свет».',
+
+  /* === ТАЙНЫЙ ВХОД === */
+  T0: {
+    type: 'dialogue', location: 'tower_inside',
+    speaker: 'Шустик', boxClass: 'shustik',
+    text: `— Вот калитка! Вы прямо в зале башни. Удачи!`,
+    next: 'T2'
+  },
+
+  /* === БАШНЯ === */
+  T1: { type: 'scene', location: 'tower', scene: SCENE_IMG.tower, duration: 2200, next: 'T2' },
+  T2: {
+    type: 'dialogue', location: 'tower',
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Двери заперты. Загадка: «Лишь союз тепла и движения пробудит спящий свет». Что крутим?`,
+    next: 'T3'
+  },
+  T3: {
+    type: 'choice', location: 'tower',
+    speaker: 'Вы', boxClass: 'player',
+    text: `Выбираем комбинацию?`,
     choices: [
-      { text: '«Солнце и Ветер»', to: 'inside' },
-      { text: '«Вода и Росток»', to: 'tower_wrong' },
-      { text: 'Осмотреть окрестности', to: 'tower_look' }
+      { text: '«Солнце и Ветер»', to: 'T4' },
+      { text: '«Вода и Росток»', to: 'T5' },
+      { text: 'Осмотреть окрестности', to: 'T6' }
     ]
   },
-  tower_wrong: {
-    bg: 'images/sprite/bg_03.png',
-    speaker: 'Мира',
-    text: '— Освежает! Но подсказка гласила: «Тепло и движение»! Попробуем ещё раз?',
-    next: 'inside'
+  T4: {
+    type: 'dialogue', location: 'tower_inside',
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Щёлк! Двери открыты!`,
+    set: { door_opened: true },
+    next: 'T7'
   },
-  tower_look: {
-    bg: 'images/sprite/bg_03.png',
-    speaker: 'Мира',
-    text: '— Окно приоткрыто! Можем залезть в Обсерваторию или открыть дверь.',
+  T5: {
+    type: 'dialogue', location: 'tower',
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Освежает! Но подсказка была: «Тепло и движение»!`,
+    next: 'T4'
+  },
+  T6: {
+    type: 'choice', location: 'tower',
+    speaker: 'Вы', boxClass: 'player',
+    text: `Что делаем?`,
     choices: [
-      { text: 'Открыть парадную дверь', to: 'inside' },
-      { text: 'Залезть в окно', to: 'observatory' }
+      { text: 'Открыть парадную дверь', to: 'T4' },
+      { text: 'Залезть в окно Обсерватории', to: 'O1' }
     ]
   },
-  observatory: {
-    bg: 'images/sprite/bg_04.png',
-    speaker: 'Рассказчик',
-    text: 'Вы в комнате с медными звёздными картами. На столе спит заводной кот Тик-Так с латунным ключом на ошейнике.',
+
+  /* === ОБСЕРВАТОРИЯ === */
+  O1: { type: 'scene', location: 'observatory', scene: SCENE_IMG.observatory, duration: 2200, next: 'O2' },
+  O2: {
+    type: 'dialogue', location: 'observatory',
+    speaker: 'Тик-Так', boxClass: 'narrator',
+    text: `— Мррр... (протягивает лапку с латунным ключом)`,
+    next: 'O3'
+  },
+  O3: {
+    type: 'choice', location: 'observatory',
+    speaker: 'Вы', boxClass: 'player',
+    text: `Взять ключ?`,
     choices: [
-      { text: 'Взять ключ', to: 'inside' },
-      { text: 'Оставить ключ и спуститься', to: 'inside' }
+      { text: 'Взять ключ', to: 'O4' },
+      { text: 'Оставить и спуститься', to: 'T7' }
     ]
   },
-  inside: {
-    bg: 'images/sprite/bg_04.png',
-    speaker: 'Корнелиус',
-    text: '— Беда! Катастрофа долины! Фестиваль через два часа, а наш золотой мальчик спит без задних лапок!',
-    next: 'inside2'
+  O4: {
+    type: 'dialogue', location: 'observatory',
+    speaker: 'Вы', boxClass: 'player',
+    text: `— Спасибо, Тик-Так.`,
+    set: { has_key: true },
+    next: 'T7'
   },
-  inside2: {
-    bg: 'images/sprite/bg_04.png',
-    speaker: 'Мира',
-    text: '— Господин Корнелиус, спокойствие! Олвен прислал подкрепление!',
-    next: 'final_choice'
+
+  /* === ВНУТРИ БАШНИ === */
+  T7: { type: 'scene', location: 'tower_inside', scene: SCENE_IMG.august_sleep, duration: 2500, next: 'T8' },
+  T8: {
+    type: 'dialogue', location: 'tower_inside',
+    speaker: 'Корнелиус', boxClass: 'cornelius',
+    text: `— Беда! Фестиваль через два часа, а Август спит! Спасите!`,
+    next: 'T9'
   },
-  final_choice: {
-    bg: 'images/sprite/bg_04.png',
-    speaker: 'Мира',
-    text: 'Корнелиус замер в ожидании с маслёнкой наготове. Какой план действий выберете?',
+  T9: {
+    type: 'choice', location: 'tower_inside',
+    speaker: 'Вы', boxClass: 'player',
+    text: `С чего начнём?`,
     choices: [
-      { text: 'Настроить серебряные колокола', to: 'end_harmony' },
-      { text: 'Приготовить целебный нектар', to: 'end_mastery' },
-      { text: 'Использовать инженерную смекалку', to: 'end_science' },
-      { text: 'Полная синхронизация всех сил', to: 'end_unity' }
+      { text: 'Показать схему Олвена', to: 'T10' },
+      { text: 'Осмотреть механизм', to: 'T11' },
+      { text: 'Подойти к Августу', to: 'T12' }
     ]
   },
-  end_harmony: {
-    bg: 'images/sprite/bg_01.png',
-    speaker: 'Финал',
-    text: '<b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство.</i>',
-    ending: true
+  T10: {
+    type: 'dialogue', location: 'tower_inside',
+    speaker: 'Корнелиус', boxClass: 'cornelius',
+    text: `— Батюшки! Настройка гармонического строя третьей октавы!`,
+    set: { has_scheme: true },
+    next: 'T13'
   },
-  end_mastery: {
-    bg: 'images/sprite/bg_01.png',
-    speaker: 'Финал',
-    text: '<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина!</i>',
-    ending: true
+  T11: {
+    type: 'dialogue', location: 'tower_inside',
+    speaker: 'Мира', boxClass: 'mira',
+    text: `— Работа ясна! Мы можем сделать это несколькими путями!`,
+    set: { inspected_mechanism: true },
+    next: 'T13'
   },
-  end_science: {
-    bg: 'images/sprite/bg_01.png',
-    speaker: 'Финал',
-    text: '<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>',
-    ending: true
+  T12: {
+    type: 'dialogue', location: 'tower_inside',
+    speaker: 'Август', boxClass: 'august',
+    text: `— ... (приоткрывает огромный фиолетовый глаз и тихо вздыхает)`,
+    set: { has_met_august: true },
+    next: 'T13'
   },
-  end_unity: {
-    bg: 'images/sprite/bg_01.png',
-    speaker: 'Финал',
-    text: '<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец.</i>',
-    ending: true
+
+  /* === ФИНАЛЬНЫЙ ВЫБОР === */
+  T13: {
+    type: 'choice', location: 'tower_inside',
+    speaker: 'Мира', boxClass: 'mira',
+    text: `Какой план?`,
+    choices: [
+      { text: 'Настроить колокола камертоном', to: 'F1' },
+      { text: 'Приготовить лунный нектар', to: 'F2' },
+      { text: 'Использовать инженерную смекалку', to: 'F3' },
+      { text: 'Полная синхронизация сил', to: 'F4' }
+    ]
+  },
+
+  /* === ФИНАЛЫ === */
+  F1: { type: 'scene', location: 'final', scene: SCENE_IMG.august_fly, duration: 2500, next: 'E1' },
+  F2: { type: 'scene', location: 'final', scene: SCENE_IMG.august_fly, duration: 2500, next: 'E2' },
+  F3: { type: 'scene', location: 'final', scene: SCENE_IMG.august_fly, duration: 2500, next: 'E3' },
+  F4: { type: 'scene', location: 'final', scene: SCENE_IMG.august_fly, duration: 2500, next: 'E4' },
+
+  E1: {
+    type: 'dialogue', location: 'epilogue', speaker: 'Финал', boxClass: 'final-box', ending: 'harmony',
+    text: `<b>КОНЕЦ: Мелодия и Добро</b><br><i>Чуткость и верный тон оживляют хрупкое волшебство.</i>`,
+    next: 'title'
+  },
+  E2: {
+    type: 'dialogue', location: 'epilogue', speaker: 'Финал', boxClass: 'final-box', ending: 'mastery',
+    text: `<b>КОНЕЦ: Забота и Изобилие</b><br><i>Сытый дух — счастливая долина!</i>`,
+    next: 'title'
+  },
+  E3: {
+    type: 'dialogue', location: 'epilogue', speaker: 'Финал', boxClass: 'final-box', ending: 'science',
+    text: `<b>КОНЕЦ: Инженерное Чудо</b><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>`,
+    next: 'title'
+  },
+  E4: {
+    type: 'dialogue', location: 'epilogue', speaker: 'Финал', boxClass: 'final-box', ending: 'unity',
+    text: `<b>КОНЕЦ: Истинная Гармония Стихий</b><br><i>Природа, наука и тепло сердец вместе.</i>`,
+    next: 'title'
   }
 };
 
 /* ============================================================
-   СОСТОЯНИЕ
+   СОХРАНЕНИЯ
    ============================================================ */
-const SAVE_KEY = 'pesn_augusta_simple';
-const state = {
-  current: 'start',
-  isTyping: false,
-  typeTimer: null
+const SAVE_KEY = 'pesn_augusta_simple_save';
+const ENDINGS_KEY = 'pesn_augusta_simple_endings';
+const ACHIEVEMENTS_KEY = 'pesn_augusta_simple_ach';
+
+const gameState = {
+  currentPassage: 'title',
+  history: [], historyIndex: -1,
+  variables: {}, endings: {}, achievements: {},
+  isTyping: false, typewriterTimer: null,
+  sceneTimer: null, sceneTimer2: null,
+  settings: { textSpeed: 40, typewriter: 'on' }
 };
 
-const $ = id => document.getElementById(id);
-const bgEl = $('bg');
-const dialogueEl = $('dialogue');
-const speakerEl = $('speaker');
-const textEl = $('text');
-const choicesEl = $('choices');
-const hintEl = $('hint');
-const titleEl = $('title-screen');
-const menuEl = $('menu');
+function saveGame() {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify({
+      currentPassage: gameState.currentPassage,
+      history: gameState.history,
+      historyIndex: gameState.historyIndex,
+      variables: gameState.variables,
+      endings: gameState.endings,
+      achievements: gameState.achievements
+    }));
+    return true;
+  } catch (e) { return false; }
+}
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    if (!s || !s.currentPassage) return false;
+    gameState.currentPassage = s.currentPassage;
+    gameState.history = s.history || [];
+    gameState.historyIndex = typeof s.historyIndex === 'number' ? s.historyIndex : gameState.history.length - 1;
+    gameState.variables = s.variables || {};
+    gameState.endings = Object.assign({}, gameState.endings, s.endings || {});
+    gameState.achievements = Object.assign({}, gameState.achievements, s.achievements || {});
+    return true;
+  } catch (e) { return false; }
+}
+function hasSave() { try { return !!localStorage.getItem(SAVE_KEY); } catch (e) { return false; } }
+function loadEndings() { try { const s = localStorage.getItem(ENDINGS_KEY); if (s) gameState.endings = Object.assign({}, JSON.parse(s), gameState.endings); } catch (e) {} }
+function saveEndings() { try { localStorage.setItem(ENDINGS_KEY, JSON.stringify(gameState.endings)); } catch (e) {} }
+function loadAchievements() { try { const s = localStorage.getItem(ACHIEVEMENTS_KEY); if (s) gameState.achievements = Object.assign({}, JSON.parse(s), gameState.achievements); } catch (e) {} }
+function saveAchievements() { try { localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(gameState.achievements)); } catch (e) {} }
+function countEndings() { return ['harmony','mastery','science','unity'].filter(k => gameState.endings[k]).length; }
+function resetAll() {
+  gameState.endings = {}; gameState.achievements = {}; gameState.variables = {};
+  gameState.history = []; gameState.historyIndex = -1;
+  try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(ENDINGS_KEY); localStorage.removeItem(ACHIEVEMENTS_KEY); } catch (e) {}
+}
+function unlockAchievement(key) {
+  if (gameState.achievements[key]) return;
+  gameState.achievements[key] = true;
+  saveAchievements();
+  const a = ACHIEVEMENTS[key];
+  if (a) showNotification('🏆 Достижение', `${a.icon} ${a.title}`);
+}
 
 /* ============================================================
-   ФОН
+   УВЕДОМЛЕНИЯ
    ============================================================ */
-function setBg(url) {
+let notifyTimer = null;
+function showNotification(title, text) {
+  const el = document.getElementById('notification');
+  if (!el) return;
+  el.innerHTML = `<b>${title}</b>${text}`;
+  el.classList.add('show');
+  if (notifyTimer) clearTimeout(notifyTimer);
+  notifyTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+/* ============================================================
+   ФОН И СЦЕНЫ
+   ============================================================ */
+let bgTimer = null;
+function setBackground(locationKey) {
+  const bg = document.getElementById('bgLayer');
+  const url = LOCATION_BG[locationKey];
   if (!url) return;
-  if (bgEl.style.backgroundImage.includes(url)) return;
-  bgEl.style.opacity = '0';
-  setTimeout(() => {
-    bgEl.style.backgroundImage = `url("${url}")`;
-    bgEl.style.opacity = '1';
-  }, 300);
+  if (bgTimer) { clearTimeout(bgTimer); bgTimer = null; }
+  bg.style.opacity = '0';
+  bgTimer = setTimeout(() => {
+    bg.style.backgroundImage = `url("${url}")`;
+    bg.style.opacity = '1';
+    bgTimer = null;
+  }, 400);
+}
+
+function showScene(imgUrl, duration, callback) {
+  const layer = document.getElementById('sceneLayer');
+  if (!layer) return;
+  if (gameState.sceneTimer) { clearTimeout(gameState.sceneTimer); gameState.sceneTimer = null; }
+  if (gameState.sceneTimer2) { clearTimeout(gameState.sceneTimer2); gameState.sceneTimer2 = null; }
+  layer.style.backgroundImage = `url("${imgUrl}")`;
+  layer.classList.remove('active');
+  void layer.offsetWidth;
+  layer.classList.add('active');
+  gameState.sceneTimer = setTimeout(() => {
+    layer.classList.remove('active');
+    gameState.sceneTimer2 = setTimeout(() => {
+      layer.style.backgroundImage = '';
+      gameState.sceneTimer2 = null;
+    }, 700);
+    gameState.sceneTimer = null;
+    if (callback) callback();
+  }, duration);
 }
 
 /* ============================================================
    ПЕЧАТАЮЩИЙСЯ ТЕКСТ
    ============================================================ */
-function typeText(html, callback) {
-  // Разбиваем на токены: теги и символы
+function typeText(element, html, speed, callback) {
   const tokens = [];
   let i = 0;
   while (i < html.length) {
@@ -490,220 +1069,311 @@ function typeText(html, callback) {
       if (end === -1) { tokens.push(html[i]); i++; continue; }
       tokens.push(html.slice(i, end + 1));
       i = end + 1;
-    } else {
-      tokens.push(html[i]);
-      i++;
-    }
+    } else { tokens.push(html[i]); i++; }
   }
-
-  textEl.innerHTML = '';
+  element.innerHTML = '';
   const cursor = document.createElement('span');
-  cursor.className = 'cursor';
+  cursor.className = 'type-cursor';
   cursor.textContent = '▍';
-  textEl.appendChild(cursor);
-
+  element.appendChild(cursor);
   let idx = 0;
   function step() {
     if (idx >= tokens.length) {
       cursor.remove();
-      textEl.innerHTML = html;
-      state.isTyping = false;
+      element.innerHTML = html;
+      gameState.isTyping = false;
       if (callback) callback();
       return;
     }
     const t = tokens[idx++];
     cursor.insertAdjacentHTML('beforebegin', t);
     if (t.startsWith('<')) step();
-    else state.typeTimer = setTimeout(step, 30);
+    else gameState.typewriterTimer = setTimeout(step, speed);
   }
   step();
 }
 
 /* ============================================================
-   ПОКАЗ ПАССАЖА
+   ПЕРЕХОДЫ
    ============================================================ */
-function showPassage(id) {
-  const p = STORY[id];
-  if (!p) { console.error('Нет пассажа:', id); return; }
+function goTo(id, addToHistory = true) {
+  const p = PASSAGES[id];
+  if (!p) { console.error('Пассаж не найден:', id); return; }
 
-  if (state.typeTimer) { clearTimeout(state.typeTimer); state.typeTimer = null; }
-  state.isTyping = false;
-  state.current = id;
+  if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
+  if (gameState.sceneTimer) { clearTimeout(gameState.sceneTimer); gameState.sceneTimer = null; }
+  if (gameState.sceneTimer2) { clearTimeout(gameState.sceneTimer2); gameState.sceneTimer2 = null; }
+  gameState.isTyping = false;
+  gameState.currentPassage = id;
 
-  setBg(p.bg);
+  // Титульник
+  if (p.isTitle) { renderTitle(); return; }
 
-  // Спикер
-  if (p.speaker) {
-    speakerEl.textContent = p.speaker;
-    speakerEl.classList.add('show');
-  } else {
-    speakerEl.classList.remove('show');
+  // Установка переменных
+  if (p.set) {
+    Object.assign(gameState.variables, p.set);
+    const map = {
+      has_feather: 'feather', has_crystal: 'crystal', has_pollen: 'pollen',
+      has_selesta_vial: 'vial', has_key: 'key', has_secret_door: 'secret',
+      has_scheme: 'scheme'
+    };
+    for (const [k, a] of Object.entries(map)) {
+      if (p.set[k]) unlockAchievement(a);
+    }
   }
+  if (p.ending) {
+    gameState.endings[p.ending] = true;
+    saveEndings();
+    if (countEndings() >= 4) unlockAchievement('allEndings');
+  }
+  if (addToHistory) {
+    gameState.history = gameState.history.slice(0, gameState.historyIndex + 1);
+    gameState.history.push(id);
+    gameState.historyIndex = gameState.history.length - 1;
+  }
+  if (p.location) setBackground(p.location);
+
+  // === СЦЕНА (картинка действия) ===
+  if (p.type === 'scene' && p.scene) {
+    showScene(p.scene, p.duration || 2200, () => {
+      if (p.next) goTo(p.next);
+    });
+    return;
+  }
+
+  // === ДИАЛОГ И ВЫБОР ===
+  renderDialogue(id, p);
+}
+
+function renderDialogue(id, p) {
+  const gameArea = document.getElementById('gameArea');
+  const boxClass = p.boxClass || 'narrator';
+  const speaker = p.speaker || '';
+
+  let navHTML = '';
+  if (p.type === 'choice' && p.choices) {
+    navHTML = '<div class="choice-box">' + p.choices.map(c =>
+      `<a data-to="${c.to}"><span>${c.text}</span></a>`
+    ).join('') + '</div>';
+  }
+
+  const menuHTML = `
+    <div class="game-menu">
+      <button id="btnSave" title="Сохранить">💾</button>
+      <button id="btnMenu" title="Меню">🏠</button>
+    </div>
+  `;
+
+  const boxHTML = `
+    <div class="dialogue-box ${boxClass}">
+      ${speaker ? `<div class="speaker-name">${speaker}</div>` : ''}
+      <div class="dialogue-text" id="dialogueText"></div>
+      ${p.type === 'dialogue' && p.next ? '<div class="next-hint">▼</div>' : ''}
+    </div>
+  `;
+
+  gameArea.innerHTML = boxHTML + navHTML + menuHTML;
 
   // Выборы
-  choicesEl.innerHTML = '';
-  if (p.choices && p.choices.length > 0) {
-    choicesEl.classList.remove('hidden');
-    hintEl.style.display = 'none';
-    p.choices.forEach(c => {
-      const btn = document.createElement('button');
-      btn.textContent = c.text;
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showPassage(c.to);
-      });
-      choicesEl.appendChild(btn);
+  gameArea.querySelectorAll('[data-to]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const to = btn.dataset.to;
+      saveGame();
+      if (to === 'title') { gameState.history = []; gameState.historyIndex = -1; goTo('title', false); }
+      else goTo(to);
     });
-  } else {
-    choicesEl.classList.add('hidden');
-    if (p.ending) {
-      hintEl.style.display = 'none';
-    } else {
-      hintEl.style.display = 'block';
-    }
+  });
+
+  // Клик по диалогу
+  const box = gameArea.querySelector('.dialogue-box');
+  if (box) {
+    box.addEventListener('click', (e) => {
+      if (e.target.closest('[data-to]')) return;
+      if (e.target.closest('.game-menu')) return;
+      e.stopPropagation();
+      advanceDialogue();
+    });
   }
+
+  // Кнопки
+  const saveBtn = document.getElementById('btnSave');
+  if (saveBtn) saveBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (saveGame()) { saveBtn.textContent = '✅'; showNotification('💾', 'Игра сохранена'); setTimeout(() => saveBtn.textContent = '💾', 1000); }
+  });
+  const menuBtn = document.getElementById('btnMenu');
+  if (menuBtn) menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (confirm('В главное меню?')) { gameState.history = []; gameState.historyIndex = -1; goTo('title', false); }
+  });
 
   // Текст
-  state.isTyping = true;
-  typeText(p.text, () => { state.isTyping = false; });
-
-  // Сохраняем
-  saveGame();
-}
-
-/* ============================================================
-   ПРОДВИЖЕНИЕ
-   ============================================================ */
-function advance() {
-  const p = STORY[state.current];
-  if (!p) return;
-
-  // Если печатается — показать сразу
-  if (state.isTyping) {
-    if (state.typeTimer) { clearTimeout(state.typeTimer); state.typeTimer = null; }
-    textEl.innerHTML = p.text;
-    state.isTyping = false;
-    return;
-  }
-
-  // Если есть выборы — не идём дальше
-  if (p.choices && p.choices.length > 0) return;
-
-  // Если есть next — идём
-  if (p.next) {
-    showPassage(p.next);
-    return;
-  }
-
-  // Если концовка — вернуться в меню
-  if (p.ending) {
-    setTimeout(goHome, 500);
-  }
-}
-
-/* ============================================================
-   СОХРАНЕНИЕ
-   ============================================================ */
-function saveGame() {
-  try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({ current: state.current, time: Date.now() }));
-  } catch (e) {}
-}
-function loadGame() {
-  try {
-    const raw = localStorage.getItem(SAVE_KEY);
-    if (!raw) return false;
-    const data = JSON.parse(raw);
-    if (!data.current || !STORY[data.current]) return false;
-    return data.current;
-  } catch (e) { return false; }
-}
-function hasSave() {
-  try { return !!localStorage.getItem(SAVE_KEY); } catch (e) { return false; }
-}
-function resetGame() {
-  try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
-}
-
-/* ============================================================
-   ЭКРАНЫ
-   ============================================================ */
-function showTitle() {
-  titleEl.classList.remove('hidden');
-  dialogueEl.classList.add('hidden');
-  choicesEl.classList.add('hidden');
-  menuEl.classList.add('hidden');
-  $('btn-continue').disabled = !hasSave();
-}
-
-function startGame() {
-  titleEl.classList.add('hidden');
-  dialogueEl.classList.remove('hidden');
-  menuEl.classList.remove('hidden');
-  showPassage('start');
-}
-
-function continueGame() {
-  const saved = loadGame();
-  if (!saved) { alert('Сохранение не найдено'); return; }
-  titleEl.classList.add('hidden');
-  dialogueEl.classList.remove('hidden');
-  menuEl.classList.remove('hidden');
-  showPassage(saved);
-}
-
-function goHome() {
-  showTitle();
-}
-
-/* ============================================================
-   СОБЫТИЯ
-   ============================================================ */
-$('btn-start').addEventListener('click', startGame);
-$('btn-continue').addEventListener('click', continueGame);
-$('btn-reset').addEventListener('click', () => {
-  if (confirm('Сбросить весь прогресс?')) {
-    resetGame();
-    showTitle();
-  }
-});
-
-dialogueEl.addEventListener('click', advance);
-
-$('btn-save').addEventListener('click', (e) => {
-  e.stopPropagation();
-  saveGame();
-  const btn = e.currentTarget;
-  btn.textContent = '✅';
-  setTimeout(() => { btn.textContent = '💾'; }, 1000);
-});
-
-$('btn-home').addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (confirm('Вернуться в главное меню? Прогресс сохранён.')) {
-    goHome();
-  }
-});
-
-document.addEventListener('keydown', (e) => {
-  if (titleEl.classList.contains('hidden')) {
-    if (e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault();
-      advance();
-    }
+  const textEl = document.getElementById('dialogueText');
+  if (gameState.settings.typewriter === 'on') {
+    gameState.isTyping = true;
+    typeText(textEl, p.text || '', gameState.settings.textSpeed, () => { gameState.isTyping = false; });
   } else {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      if (hasSave()) continueGame();
-      else startGame();
-    }
+    textEl.innerHTML = p.text || '';
   }
-});
+
+  // Клик-слой
+  const clickLayer = document.getElementById('clickLayer');
+  if (clickLayer) {
+    if (p.type === 'choice') clickLayer.classList.remove('enabled');
+    else clickLayer.classList.add('enabled');
+  }
+
+  updateHistoryButtons();
+}
+
+function advanceDialogue() {
+  const p = PASSAGES[gameState.currentPassage];
+  if (!p) return;
+  if (gameState.isTyping) {
+    if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
+    const textEl = document.getElementById('dialogueText');
+    if (textEl) textEl.innerHTML = p.text || '';
+    gameState.isTyping = false;
+    return;
+  }
+  if (p.type === 'choice') return;
+  if (p.next) {
+    if (p.next === 'title') { gameState.history = []; gameState.historyIndex = -1; goTo('title', false); }
+    else goTo(p.next);
+  }
+}
 
 /* ============================================================
-   СТАРТ
+   ТИТУЛЬНИК
    ============================================================ */
-showTitle();
+function renderTitle() {
+  gameState.currentPassage = 'title';
+  setBackground('title');
+  const clickLayer = document.getElementById('clickLayer');
+  if (clickLayer) clickLayer.classList.remove('enabled');
+
+  const gameArea = document.getElementById('gameArea');
+  const count = countEndings();
+  const canLoad = hasSave();
+
+  gameArea.innerHTML = `
+    <div class="title-screen">
+      <div class="title-logo">
+        <h1 class="title-main">Песнь Августа</h1>
+        <p class="title-sub">Упрощённая сказка</p>
+      </div>
+      <div class="title-menu">
+        <button id="btnStart">▶ Начать</button>
+        <button id="btnLoad" ${canLoad ? '' : 'disabled'}>📂 Загрузить</button>
+        <button id="btnAchievements">🏆 Достижения</button>
+        <button id="btnReset">🔄 Сбросить</button>
+      </div>
+      <p class="title-footer">Верхний Шепот · Праздник Осенней Звезды</p>
+    </div>
+    <div class="title-endings">🏆 Концовок: <b>${count} / 4</b></div>
+  `;
+
+  document.getElementById('btnStart').addEventListener('click', () => {
+    gameState.history = []; gameState.historyIndex = -1;
+    gameState.variables = {};
+    goTo('S1');
+  });
+  document.getElementById('btnLoad').addEventListener('click', () => {
+    if (loadGame()) goTo(gameState.currentPassage, false);
+    else showNotification('⚠', 'Сохранение не найдено');
+  });
+  document.getElementById('btnAchievements').addEventListener('click', openAchievements);
+  document.getElementById('btnReset').addEventListener('click', () => {
+    if (confirm('Сбросить весь прогресс?')) { resetAll(); renderTitle(); }
+  });
+  updateHistoryButtons();
+}
+
+function updateHistoryButtons() {
+  const back = document.getElementById('btnBack');
+  const fwd = document.getElementById('btnForward');
+  const controls = document.getElementById('historyControls');
+  if (gameState.currentPassage === 'title') { controls.style.display = 'none'; return; }
+  controls.style.display = 'flex';
+  back.disabled = gameState.historyIndex <= 0;
+  fwd.disabled = gameState.historyIndex >= gameState.history.length - 1;
+}
+function goBack() {
+  if (gameState.historyIndex <= 0) return;
+  gameState.historyIndex--;
+  goTo(gameState.history[gameState.historyIndex], false);
+}
+function goForward() {
+  if (gameState.historyIndex >= gameState.history.length - 1) return;
+  gameState.historyIndex++;
+  goTo(gameState.history[gameState.historyIndex], false);
+}
+
+/* ============================================================
+   ДОСТИЖЕНИЯ
+   ============================================================ */
+function openAchievements() {
+  const overlay = document.getElementById('modalOverlay');
+  const content = document.getElementById('modalContent');
+  let html = '<h2>🏆 Достижения</h2><div class="ach-list">';
+  for (const [key, a] of Object.entries(ACHIEVEMENTS)) {
+    const unlocked = !!gameState.achievements[key];
+    html += `
+      <div class="ach ${unlocked ? '' : 'locked'}">
+        <div class="icon">${unlocked ? a.icon : '🔒'}</div>
+        <div class="info">
+          <div class="title">${a.title}</div>
+          <div class="desc">${a.desc}</div>
+        </div>
+      </div>
+    `;
+  }
+  html += '</div><div class="buttons"><button id="achClose">Закрыть</button></div>';
+  content.innerHTML = html;
+  overlay.classList.remove('hidden');
+  document.getElementById('achClose').addEventListener('click', () => overlay.classList.add('hidden'));
+}
+
+/* ============================================================
+   ИНИЦИАЛИЗАЦИЯ
+   ============================================================ */
+function init() {
+  loadEndings();
+  loadAchievements();
+
+  document.getElementById('btnBack').addEventListener('click', goBack);
+  document.getElementById('btnForward').addEventListener('click', goForward);
+
+  const clickLayer = document.getElementById('clickLayer');
+  if (clickLayer) clickLayer.addEventListener('click', advanceDialogue);
+
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'ArrowLeft') { ev.preventDefault(); goBack(); }
+    else if (ev.key === 'ArrowRight') { ev.preventDefault(); goForward(); }
+    else if (ev.key === ' ' || ev.key === 'Enter') {
+      ev.preventDefault();
+      advanceDialogue();
+    }
+    else if (ev.key === 'Escape') {
+      const overlay = document.getElementById('modalOverlay');
+      if (!overlay.classList.contains('hidden')) overlay.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('modalOverlay').addEventListener('click', ev => {
+    if (ev.target.id === 'modalOverlay') ev.target.classList.add('hidden');
+  });
+
+  setTimeout(() => {
+    const loading = document.getElementById('loadingScreen');
+    if (loading) loading.classList.add('hidden');
+  }, 700);
+
+  goTo('title', false);
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
