@@ -879,7 +879,6 @@ html, body {
 .dialogue-box.final-unity .speaker-name::after { border-top-color: rgba(200,150,20,1); }
 @keyframes unityGradient { 0% { background-position: 0% 0; } 100% { background-position: 300% 0; } }
 
-/* placeholder art (пока картинки не сгенерированы пользователем) */
 .bg-layer.placeholder, .insert-layer.placeholder {
   background: radial-gradient(ellipse at center, #241a2e 0%, #0a0a14 100%);
 }
@@ -930,79 +929,77 @@ html, body {
 <script>
 /* ============================================================
    ПЕСНЬ АВГУСТА — полная версия (4 концовки, 3 маршрута помощников)
-   Изображения: LOCATION_BG — фон локации (сцена, иногда с персонажами
-   в статичной позе); INSERT_IMG — вставка конкретного действия,
-   показывается на несколько секунд поверх фона в момент реплики.
-   Пути к файлам — из папок images/bg/ и images/insert/ в вашем
-   репозитории (см. ПРОМПТЫ_ДЛЯ_КАРТИНОК.md — там точные промпты
-   для Kandinsky/GigaChat под каждый файл).
+   Изображения теперь пронумерованы:
+   images/bg/1.png ... images/bg/21.png    — фоны локаций
+   images/insert/1.png ... images/insert/41.png — вставки-действия
+   Соответствие имён и номеров — см. таблицу в чате.
    ============================================================ */
 const LOCATION_BG = {
-  "title": "images/bg/title.png",
-  "start": "images/bg/start_city.png",
-  "player_outside": "images/bg/player_house_outside.png",
-  "player_inside": "images/bg/player_house_inside.png",
-  "letter_close": "images/bg/letter_closeup.png",
-  "player_table": "images/bg/room_mira_enter.png",
-  "parchment": "images/bg/parchment_text.png",
-  "player_table2": "images/bg/room_dialogue.png",
-  "epilogue": "images/bg/epilogue_valley.png",
-  "most_bridge": "images/bg/bridge_wide.png",
-  "most_sleep": "images/bg/bridge_bruno_sleep.png",
-  "most_awake": "images/bg/bridge_bruno_awake.png",
-  "most_empty": "images/bg/bridge_empty.png",
-  "grib_tropa": "images/bg/forest_path.png",
-  "grib_action": "images/bg/forest_shustik.png",
-  "lavka": "images/bg/selesta_shop.png",
-  "tower": "images/bg/tower_outside.png",
-  "tower_secret": "images/bg/tower_secret_door.png",
-  "observatory": "images/bg/observatory.png",
-  "tower_inside": "images/bg/tower_hall.png",
-  "final": "images/bg/tower_final.png",
+  "title": "images/bg/1.png",
+  "start": "images/bg/2.png",
+  "player_outside": "images/bg/3.png",
+  "player_inside": "images/bg/4.png",
+  "letter_close": "images/bg/5.png",
+  "player_table": "images/bg/6.png",
+  "parchment": "images/bg/7.png",
+  "player_table2": "images/bg/8.png",
+  "epilogue": "images/bg/9.png",
+  "most_bridge": "images/bg/10.png",
+  "most_sleep": "images/bg/11.png",
+  "most_awake": "images/bg/12.png",
+  "most_empty": "images/bg/13.png",
+  "grib_tropa": "images/bg/14.png",
+  "grib_action": "images/bg/15.png",
+  "lavka": "images/bg/16.png",
+  "tower": "images/bg/17.png",
+  "tower_secret": "images/bg/18.png",
+  "observatory": "images/bg/19.png",
+  "tower_inside": "images/bg/20.png",
+  "final": "images/bg/21.png",
 };
 
 const INSERT_IMG = {
-  "city_holiday": "images/insert/city_holiday.png",
-  "sunrise_lighthouse": "images/insert/sunrise_lighthouse.png",
-  "letter_seal": "images/insert/letter_seal.png",
-  "mira_arrive": "images/insert/mira_arrive.png",
-  "mira_joke": "images/insert/mira_joke.png",
-  "olven_scheme": "images/insert/olven_scheme.png",
-  "bruno_block": "images/insert/bruno_block.png",
-  "bruno_awake": "images/insert/bruno_awake.png",
-  "bruno_riddle": "images/insert/bruno_riddle.png",
-  "bruno_wind": "images/insert/bruno_wind.png",
-  "bruno_feather": "images/insert/bruno_feather.png",
-  "bruno_apple": "images/insert/bruno_apple.png",
-  "bruno_crystal": "images/insert/bruno_crystal.png",
-  "bruno_clue": "images/insert/bruno_clue.png",
-  "shustik_stuck": "images/insert/shustik_stuck.png",
-  "shustik_magic": "images/insert/shustik_magic.png",
-  "shustik_oil": "images/insert/shustik_oil.png",
-  "shustik_lever": "images/insert/shustik_lever.png",
-  "shustik_gift": "images/insert/shustik_gift.png",
-  "selesta_greet": "images/insert/selesta_greet.png",
-  "selesta_vial": "images/insert/selesta_vial.png",
-  "door_riddle": "images/insert/door_riddle.png",
-  "door_water": "images/insert/door_water.png",
-  "door_open": "images/insert/door_open.png",
-  "cat_sleep": "images/insert/cat_sleep.png",
-  "cat_key": "images/insert/cat_key.png",
-  "secret_entry": "images/insert/secret_entry.png",
-  "cornelius_panic": "images/insert/cornelius_panic.png",
-  "august_sleep": "images/insert/august_sleep.png",
-  "august_wake_eye": "images/insert/august_wake_eye.png",
-  "schema_show": "images/insert/schema_show.png",
-  "mechanism_inspect": "images/insert/mechanism_inspect.png",
-  "plan_music": "images/insert/plan_music.png",
-  "plan_nectar": "images/insert/plan_nectar.png",
-  "plan_mechanics": "images/insert/plan_mechanics.png",
-  "plan_unity": "images/insert/plan_unity.png",
-  "august_fly": "images/insert/august_fly.png",
-  "ending_melody": "images/insert/ending_melody.png",
-  "ending_abundance": "images/insert/ending_abundance.png",
-  "ending_engineering": "images/insert/ending_engineering.png",
-  "ending_unity": "images/insert/ending_unity.png",
+  "city_holiday": "images/insert/1.png",
+  "sunrise_lighthouse": "images/insert/2.png",
+  "letter_seal": "images/insert/3.png",
+  "mira_arrive": "images/insert/4.png",
+  "mira_joke": "images/insert/5.png",
+  "olven_scheme": "images/insert/6.png",
+  "bruno_block": "images/insert/7.png",
+  "bruno_awake": "images/insert/8.png",
+  "bruno_riddle": "images/insert/9.png",
+  "bruno_wind": "images/insert/10.png",
+  "bruno_feather": "images/insert/11.png",
+  "bruno_apple": "images/insert/12.png",
+  "bruno_crystal": "images/insert/13.png",
+  "bruno_clue": "images/insert/14.png",
+  "shustik_stuck": "images/insert/15.png",
+  "shustik_magic": "images/insert/16.png",
+  "shustik_oil": "images/insert/17.png",
+  "shustik_lever": "images/insert/18.png",
+  "shustik_gift": "images/insert/19.png",
+  "selesta_greet": "images/insert/20.png",
+  "selesta_vial": "images/insert/21.png",
+  "door_riddle": "images/insert/22.png",
+  "door_water": "images/insert/23.png",
+  "door_open": "images/insert/24.png",
+  "cat_sleep": "images/insert/25.png",
+  "cat_key": "images/insert/26.png",
+  "secret_entry": "images/insert/27.png",
+  "cornelius_panic": "images/insert/28.png",
+  "august_sleep": "images/insert/29.png",
+  "august_wake_eye": "images/insert/30.png",
+  "schema_show": "images/insert/31.png",
+  "mechanism_inspect": "images/insert/32.png",
+  "plan_music": "images/insert/33.png",
+  "plan_nectar": "images/insert/34.png",
+  "plan_mechanics": "images/insert/35.png",
+  "plan_unity": "images/insert/36.png",
+  "august_fly": "images/insert/37.png",
+  "ending_melody": "images/insert/38.png",
+  "ending_abundance": "images/insert/39.png",
+  "ending_engineering": "images/insert/40.png",
+  "ending_unity": "images/insert/41.png",
 };
 
 const ITEMS = {
@@ -1463,8 +1460,6 @@ function renderPassageInner(id, passage) {
   clearTitleElements();
   clearDialogueElements();
 
-  // 🛡 СТРАХОВКА: перед показом ГлавнаяПочинка убеждаемся,
-  // что у игрока есть хотя бы один доступный финал.
   if (id === 'ГлавнаяПочинка' && !canDoMusic() && !canDoNectar() && !canDoMechanics()) {
     grantEmergencyItem();
   }
@@ -1584,7 +1579,6 @@ function renderPassageInner(id, passage) {
   }
 }
 
-/* 🛡 Экстренная выдача предмета — сюжетная реплика Миры. */
 function grantEmergencyItem() {
   if (!has('has_selesta_vial') && !has('has_pollen')) {
     gameState.variables['has_selesta_vial'] = true;
@@ -1613,7 +1607,7 @@ function grantEmergencyItem() {
 }
 
 /* ============================================================
-   ЭКРАН КОНЦОВКИ — с фоном, рамкой и счётчиком открытых финалов
+   ЭКРАН КОНЦОВКИ
    ============================================================ */
 function showEndingScreen(endingKey) {
   clearDialogueElements();
@@ -1628,7 +1622,6 @@ function showEndingScreen(endingKey) {
     unity:       { title: 'Финал Истинной Гармонии',     subtitle: 'Природа, наука и тепло сердец',  color: '#FFD700', bg: INSERT_IMG['ending_unity'] },
   }[endingKey] || { title: 'Финал', subtitle: '', color: '#FBBF24', bg: null };
 
-  // Меняем фон на картинку концовки
   if (data.bg) {
     const bg = document.getElementById('bgLayer');
     bg.style.opacity = '0';
@@ -1675,14 +1668,9 @@ function showEndingScreen(endingKey) {
   `;
   gameArea.appendChild(screen);
 
-  // 🔑 «Попробовать снова» — НЕ сбрасывает прогресс,
-  // возвращает к развилке маршрутов, чтобы собрать оставшиеся предметы.
   document.getElementById('btnTryAgain').addEventListener('click', () => {
-    // Прогресс (endings, achievements, variables) сохраняется.
-    // Сбрасываем только историю — чтобы можно было пойти по новой ветке.
     gameState.history = [];
     gameState.historyIndex = -1;
-    // Возвращаемся к развилке маршрутов
     renderPassage('ВыборПути3');
     showNotification('🔄 Новое прохождение',
       'Прогресс сохранён. Пройдите другой маршрут, чтобы открыть остальные финалы.');
