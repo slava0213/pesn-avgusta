@@ -259,6 +259,17 @@ html, body {
 }
 .dialogue-box.final-box .speaker-name { background: linear-gradient(180deg, rgba(255,215,0,1) 0%, rgba(200,150,20,1) 100%); color: #2A1500; }
 .dialogue-box.final-box .speaker-name::after { border-top-color: rgba(200,150,20,1); }
+/* 🎭 3-я концовка — зелёный стиль */
+.dialogue-box.final-nature {
+  border-color: rgba(139,171,122,1);
+  box-shadow:
+    0 -40px 80px rgba(0,0,0,0.7),
+    0 24px 70px rgba(0,0,0,0.8),
+    0 0 80px rgba(139,171,122,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.dialogue-box.final-nature .speaker-name { background: linear-gradient(180deg, rgba(139,171,122,1) 0%, rgba(90,120,80,1) 100%); color: #1a2410; }
+.dialogue-box.final-nature .speaker-name::after { border-top-color: rgba(90,120,80,1); }
 
 .choice-box {
   position: fixed; left: 50%; bottom: 40vh;
@@ -664,12 +675,8 @@ html, body {
   padding: 10px 0; border-bottom: 1px solid rgba(244,197,66,0.1);
 }
 .modal .item-row:last-child { border-bottom: none; }
-.modal .item-icon {
-  font-size: 26px; line-height: 1; flex-shrink: 0;
-}
-.modal .item-icon.locked { opacity: 0.25; filter: grayscale(1); }
+.modal .item-icon { font-size: 26px; line-height: 1; flex-shrink: 0; }
 .modal .item-name { color: #eee; font-weight: bold; }
-.modal .item-name.locked { color: #888; }
 .modal .item-hint { color: #999; font-size: 12px; font-style: italic; margin-top: 3px; }
 
 .modal .ending-status {
@@ -829,7 +836,7 @@ html, body {
 
 <script>
 /* ============================================================
-   ПЕСНЬ АВГУСТА — гибрид: классический визуал + логика Клода
+   ПЕСНЬ АВГУСТА — 3 концовки
    ============================================================ */
 
 /* ===== ФОНЫ ===== */
@@ -881,7 +888,7 @@ const ITEMS = {
   has_clue:         { icon: '🔍', name: 'Зацепка от Бруно',      hint: 'Сквозняк сбил настройку колоколов ночью' }
 };
 
-/* ===== ДОСТИЖЕНИЯ ===== */
+/* ===== ДОСТИЖЕНИЯ (добавлено nature) ===== */
 const ACHIEVEMENTS = {
   feather:    { icon: '🪶', title: 'Перо Лазурной Сойки', desc: 'Получить перо у Бруно' },
   crystal:    { icon: '💎', title: 'Кристалл Кварца',      desc: 'Получить кристалл у Бруно' },
@@ -890,10 +897,11 @@ const ACHIEVEMENTS = {
   scheme:     { icon: '📜', title: 'Схема Олвена',         desc: 'Изучить чертёж мастера Олвена' },
   harmony:    { icon: '✨', title: 'Финал Гармонии',       desc: 'Пройти путь единства' },
   mastery:    { icon: '⚙', title: 'Финал Мастерства',      desc: 'Пройти путь инженерии' },
-  allEndings: { icon: '👑', title: 'Обе концовки',         desc: 'Открыть оба финала' }
+  nature:     { icon: '🌿', title: 'Финал Изобилия',       desc: 'Пройти путь заботы' },   /* 🎭 3-я КОНЦОВКА */
+  allEndings: { icon: '👑', title: 'Все три концовки',     desc: 'Открыть все три финала' }
 };
 
-/* ===== КАТСЦЕНЫ ===== */
+/* ===== КАТСЦЕНЫ (добавлена ending_nature) ===== */
 const CUTSCENES = {
   ending_harmony: { frames: [
     { img: 'images/sprite/bg_01.png', duration: 3500 },
@@ -904,6 +912,12 @@ const CUTSCENES = {
   ending_mastery: { frames: [
     { img: 'images/sprite/bg_01.png', duration: 3500 },
     { img: 'images/sprite/bg_09.png', duration: 4500 }
+  ]},
+  /* 🎭 3-я КОНЦОВКА */
+  ending_nature: { frames: [
+    { img: 'images/sprite/bg_01.png', duration: 3500 },
+    { img: 'images/sprite/bg_09.png', duration: 3500 },
+    { img: 'images/sprite/bg_01.png', duration: 4500 }
   ]}
 };
 
@@ -1360,17 +1374,19 @@ const PASSAGES = {
     set: { has_met_august: true },
     next: 'ГлавнаяПочинка'
   },
+  /* 🎭 3-я КОНЦОВКА — добавлен третий вариант */
   ГлавнаяПочинка: {
     location: 'tower_inside',
     speaker: 'Мира', boxClass: 'mira',
     text: `Корнелиус замер в ожидании с маслёнкой наготове. Какой план действий вы выберете?`,
     choices: [
       { text: 'План 1: Полная синхронизация всех сил — природа, наука и дружба вместе', to: 'ФиналГармония' },
-      { text: 'План 2: Полагаться на инженерную смекалку и точный расчёт', to: 'ФиналМастерство' }
+      { text: 'План 2: Полагаться на инженерную смекалку и точный расчёт', to: 'ФиналМастерство' },
+      { text: 'План 3: Окружить Августа заботой, лакомством и теплом', to: 'ФиналИзобилие' } /* 🎭 */
     ]
   },
 
-  /* === 2 ФИНАЛА === */
+  /* === 3 ФИНАЛА === */
   ФиналГармония: {
     location: 'final',
     insert: INSERT_IMG.august_fly,
@@ -1387,6 +1403,15 @@ const PASSAGES = {
     text: `Мира берёт дело в свои руки. Ключ на двенадцать от Тик-Така, кристалл кварца Бруно — в оправу оптической оси. Все шестерёнки встают на места с идеальным кликом: <i>тик-так, тик-так</i>.<br><br>Механическая карусель оживает без единого скрипа. Зеркала выстраиваются в идеальную спираль — и Август, очарованный безупречной гармонией движения, взмывает в центр конструкции!`,
     next: 'КонецМастерство'
   },
+  /* 🎭 3-я КОНЦОВКА — новый пассаж */
+  ФиналИзобилие: {
+    location: 'final',
+    insert: INSERT_IMG.august_fly,
+    insertDuration: 2500,
+    speaker: 'Рассказчик', boxClass: 'narrator',
+    text: `Вы не спешите с механизмами. Сначала — забота. Мира разводит огонь под хрустальной чашей, вы капаете в неё <strong>флакон Селесты</strong> — тёплый аромат лунного зверобоя и мелиссы наполняет зал.<br><br>Август шевелит усиками, принюхивается... и сонно улыбается. Пара капель на сахарную пластину — и светляк припадает к чаше. С каждым глотком его крылья трепещут всё ярче, пока тёплое медовое сияние не заливает весь зал.`,
+    next: 'КонецИзобилие'
+  },
 
   КонецГармония: {
     location: 'epilogue',
@@ -1401,13 +1426,21 @@ const PASSAGES = {
     speaker: 'Финал', boxClass: 'final-box', ending: 'mastery',
     text: `<b>КОНЕЦ: Финал Мастерства</b><br><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>`,
     endingScreen: 'mastery'
+  },
+  /* 🎭 3-я КОНЦОВКА — новый финал */
+  КонецИзобилие: {
+    location: 'epilogue',
+    cutscene: 'ending_nature',
+    speaker: 'Финал', boxClass: 'final-nature', ending: 'nature',
+    text: `<b>КОНЕЦ: Финал Изобилия</b><br><br><i>Сытый дух — счастливая долина! Ваша доброта подарила жителям самую красивую ночь в году.</i>`,
+    endingScreen: 'nature'
   }
 };
 
 /* ============================================================
    СОХРАНЕНИЕ
    ============================================================ */
-const SAVE_KEY = 'pesn_augusta_hybrid_v1';
+const SAVE_KEY = 'pesn_augusta_hybrid_v2';
 
 const gameState = {
   currentPassage: 'title',
@@ -1459,11 +1492,17 @@ function resetAll() {
 }
 
 /* ============================================================
-   ПРЕДМЕТЫ И ФИНАЛЫ
+   ПРЕДМЕТЫ И ФИНАЛЫ (обновлена логика для 3 финалов)
    ============================================================ */
 function has(k) { return !!gameState.variables[k]; }
+
+/* ✨ Гармония — всё вместе: флакон + схема */
 function canDoHarmony() { return has('has_selesta_vial') && has('has_scheme'); }
+/* ⚙ Мастерство — инженерия: ключ или кристалл */
 function canDoMastery() { return has('has_key') || has('has_crystal'); }
+/* 🌿 Изобилие — забота: флакон (в идеале ещё и перо как «тепло природы») */
+function canDoNature() { return has('has_selesta_vial') || has('has_feather'); }
+
 function missingHarmony() {
   const m = [];
   if (!has('has_selesta_vial')) m.push('🧪 Флакон Селесты');
@@ -1473,6 +1512,13 @@ function missingHarmony() {
 function missingMastery() {
   const m = [];
   if (!has('has_key') && !has('has_crystal')) m.push('🔑 Ключ или 💎 Кристалл');
+  return m;
+}
+function missingNature() {
+  const m = [];
+  if (!has('has_selesta_vial') && !has('has_feather')) {
+    m.push('🧪 Флакон Селесты или 🪶 Перо Сойки');
+  }
   return m;
 }
 
@@ -1520,7 +1566,7 @@ function showItemPopup(key) {
 }
 
 /* ============================================================
-   ДОСТИЖЕНИЯ
+   ДОСТИЖЕНИЯ (обновлено для 3 финалов)
    ============================================================ */
 function unlockAchievement(key) {
   if (gameState.achievements[key]) return;
@@ -1528,11 +1574,12 @@ function unlockAchievement(key) {
   saveGame();
   const a = ACHIEVEMENTS[key];
   if (a) showNotification('🏆 Достижение', `${a.icon} ${a.title}`);
-  if (gameState.endings.harmony && gameState.endings.mastery) {
+  /* 🎭 3-я КОНЦОВКА — проверка на все три */
+  if (gameState.endings.harmony && gameState.endings.mastery && gameState.endings.nature) {
     if (!gameState.achievements.allEndings) {
       gameState.achievements.allEndings = true;
       saveGame();
-      setTimeout(() => showNotification('🏆 Достижение', '👑 Обе концовки'), 3500);
+      setTimeout(() => showNotification('🏆 Достижение', '👑 Все три концовки'), 3500);
     }
   }
 }
@@ -1662,7 +1709,6 @@ const CutscenePlayer = {
     setTimeout(() => {
       document.getElementById('csFrameCurrent').style.backgroundImage = `url("${frame.img}")`;
       nextEl.style.opacity = '0';
-      this.timer = setTimeout(() => this.showFrame(index + 1), 100);
     }, 700);
     this.timer = setTimeout(() => this.showFrame(index + 1), frame.duration);
   },
@@ -1720,7 +1766,6 @@ function renderPassage(id, addToHistory = true) {
   if (passage.isTitle) { renderTitleScreen(); return; }
   clearTitleElements();
 
-  // Устанавливаем флаги + карточки предметов
   if (passage.set) {
     const newItems = [];
     Object.keys(passage.set).forEach(k => {
@@ -1744,7 +1789,10 @@ function renderPassage(id, addToHistory = true) {
   if (passage.ending) {
     gameState.endings[passage.ending] = true;
     unlockAchievement(passage.ending);
-    if (gameState.endings.harmony && gameState.endings.mastery) unlockAchievement('allEndings');
+    /* 🎭 3-я КОНЦОВКА — проверка на все три */
+    if (gameState.endings.harmony && gameState.endings.mastery && gameState.endings.nature) {
+      unlockAchievement('allEndings');
+    }
     saveGame();
   }
 
@@ -1779,6 +1827,7 @@ function renderPassageInner(id, passage) {
     navHTML = '<div class="choice-box">' + passage.choices.map(c => {
       let cls = '';
       let extra = '';
+      /* 🎭 3-я КОНЦОВКА — проверка для всех трёх финалов */
       if (c.to === 'ФиналГармония' && !canDoHarmony()) {
         cls = 'disabled';
         extra = `<span class="need">(нужно: ${missingHarmony().join(', ')})</span>`;
@@ -1786,6 +1835,10 @@ function renderPassageInner(id, passage) {
       if (c.to === 'ФиналМастерство' && !canDoMastery()) {
         cls = 'disabled';
         extra = `<span class="need">(нужно: ${missingMastery().join(', ')})</span>`;
+      }
+      if (c.to === 'ФиналИзобилие' && !canDoNature()) {
+        cls = 'disabled';
+        extra = `<span class="need">(нужно: ${missingNature().join(', ')})</span>`;
       }
       return `<a data-to="${c.to}" class="${cls}"><span>${c.text}${extra}</span></a>`;
     }).join('') + '</div>';
@@ -1815,14 +1868,15 @@ function renderPassageInner(id, passage) {
   gameArea.style.opacity = '1';
   gameArea.innerHTML = boxHTML + navHTML + gameMenuHTML;
 
-  const currentPassageId = id;
-
   gameArea.querySelectorAll('[data-to]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       if (btn.classList.contains('disabled')) {
-        const isH = btn.dataset.to === 'ФиналГармония';
-        const missing = isH ? missingHarmony() : missingMastery();
+        const to = btn.dataset.to;
+        let missing;
+        if (to === 'ФиналГармония') missing = missingHarmony();
+        else if (to === 'ФиналМастерство') missing = missingMastery();
+        else missing = missingNature();
         showNotification('⚠ Не хватает предметов', `Соберите: ${missing.join(', ')}`, 'warn');
         return;
       }
@@ -1878,14 +1932,13 @@ function renderPassageInner(id, passage) {
     else clickLayer.classList.add('enabled');
   }
 
-  // Экран после концовки
   if (passage.endingScreen) {
     setTimeout(() => showEndingScreen(passage.endingScreen), 4000);
   }
 }
 
 /* ============================================================
-   ЭКРАН ПОСЛЕ КОНЦОВКИ
+   ЭКРАН ПОСЛЕ КОНЦОВКИ (обновлён для 3 концовок)
    ============================================================ */
 function showEndingScreen(endingKey) {
   clearDialogueElements();
@@ -1893,20 +1946,19 @@ function showEndingScreen(endingKey) {
   const clickLayer = document.getElementById('clickLayer');
   if (clickLayer) clickLayer.classList.remove('enabled');
 
-  const isHarmony = endingKey === 'harmony';
-  const title = isHarmony ? '✨ Финал Гармонии' : '⚙ Финал Мастерства';
-  const subtitle = isHarmony
-    ? 'Природа, наука и тепло сердец — вместе'
-    : 'Точный расчёт и крепкая дружба';
-  const color = isHarmony ? '#FBBF24' : '#8bab7a';
+  const data = {
+    harmony: { title: '✨ Финал Гармонии', subtitle: 'Природа, наука и тепло сердец — вместе', color: '#FBBF24' },
+    mastery: { title: '⚙ Финал Мастерства', subtitle: 'Точный расчёт и крепкая дружба', color: '#8bab7a' },
+    nature:  { title: '🌿 Финал Изобилия',  subtitle: 'Сытый дух — счастливая долина', color: '#a8d49a' }
+  }[endingKey] || { title: 'Финал', subtitle: '', color: '#FBBF24' };
 
   const gameArea = document.getElementById('gameArea');
   gameArea.style.opacity = '1';
   gameArea.innerHTML = `
     <div class="title-screen">
       <div class="title-logo">
-        <h1 class="title-main" style="color:${color};">${title}</h1>
-        <p class="title-sub" style="color:${color};">${subtitle}</p>
+        <h1 class="title-main" style="color:${data.color};">${data.title}</h1>
+        <p class="title-sub" style="color:${data.color};">${data.subtitle}</p>
       </div>
       <div class="title-menu">
         <button id="btnPlayAgain">🔄 Пройти заново</button>
@@ -1933,7 +1985,7 @@ function showEndingScreen(endingKey) {
 }
 
 /* ============================================================
-   ТИТУЛЬНЫЙ ЭКРАН
+   ТИТУЛЬНЫЙ ЭКРАН (обновлён на 3 концовки)
    ============================================================ */
 function renderTitleScreen() {
   gameState.currentPassage = 'title';
@@ -1945,7 +1997,8 @@ function renderTitleScreen() {
   if (clickLayer) clickLayer.classList.remove('enabled');
 
   const gameArea = document.getElementById('gameArea');
-  const count = ['harmony','mastery'].filter(k => gameState.endings[k]).length;
+  /* 🎭 3-я КОНЦОВКА */
+  const count = ['harmony','mastery','nature'].filter(k => gameState.endings[k]).length;
   const canLoad = hasSave();
 
   gameArea.style.opacity = '1';
@@ -1963,7 +2016,7 @@ function renderTitleScreen() {
       </div>
       <p class="title-footer">Верхний Шепот · Праздник Осенней Звезды</p>
     </div>
-    <div class="title-endings">🏆 Концовок открыто: <b>${count} / 2</b></div>
+    <div class="title-endings">🏆 Концовок открыто: <b>${count} / 3</b></div>
   `;
 
   document.getElementById('btnStart').addEventListener('click', () => {
@@ -2011,7 +2064,7 @@ function goForward() {
 }
 
 /* ============================================================
-   МОДАЛКИ
+   МОДАЛКИ (журнал обновлён для 3 концовок)
    ============================================================ */
 function openJournal() {
   const overlay = document.getElementById('modalOverlay');
@@ -2035,15 +2088,23 @@ function openJournal() {
     });
   }
 
+  /* 🎭 3-я КОНЦОВКА — показываем все три финала */
   html += '<h3>Доступные финалы</h3>';
-  const hReady = canDoHarmony(), mReady = canDoMastery();
+  const hReady = canDoHarmony(), mReady = canDoMastery(), nReady = canDoNature();
+
   html += `<div class="ending-status ${hReady?'ready':'locked'}">
-    <div>${hReady?'✅':'🔒'} ✨ Финал Гармонии</div>
+    <div>${hReady?'✅':'🔒'} ✨ Финал Гармонии — всё вместе</div>
     ${hReady ? '' : `<div class="status-need">Нужно: ${missingHarmony().join(', ')}</div>`}
   </div>`;
+
   html += `<div class="ending-status ${mReady?'ready':'locked'}">
-    <div>${mReady?'✅':'🔒'} ⚙ Финал Мастерства</div>
+    <div>${mReady?'✅':'🔒'} ⚙ Финал Мастерства — инженерия</div>
     ${mReady ? '' : `<div class="status-need">Нужно: ${missingMastery().join(', ')}</div>`}
+  </div>`;
+
+  html += `<div class="ending-status ${nReady?'ready':'locked'}">
+    <div>${nReady?'✅':'🔒'} 🌿 Финал Изобилия — забота</div>
+    ${nReady ? '' : `<div class="status-need">Нужно: ${missingNature().join(', ')}</div>`}
   </div>`;
 
   html += '<div class="buttons"><button id="journalClose">Закрыть</button></div>';
