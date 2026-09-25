@@ -903,7 +903,32 @@ html, body {
 </div>
 
 <script>
-  const LOCATION_BG = {
+  /* Нумерация images/bg/ (1..15):
+   1  = title              — титульник
+   2  = start              — панорама города
+   3  = street             — переулок с гирляндами
+   4  = player_outside     — дом снаружи
+   5  = player_inside      — комната внутри
+   6  = letter_close       — письмо крупным планом
+   7  = player_table       — Мира входит
+   8  = letter_seal_bg     — руки вскрывают печать
+   9  = player_table2      — оба за столом
+   10 = player_hide_letter — герой убирает письмо
+   11 = most_bridge        — мост: приходим
+   12 = most_sleep         — мост: Бруно спит
+   13 = most_awake         — мост: Бруно проснулся
+   14 = most_empty         — мост: свободен
+   15 = parchment          — чертёж линз
+   16 = grib_tropa         — лесная тропа
+   17 = grib_action        — Шустик с тележкой
+   18 = lavka              — домик Селесты
+   19 = tower              — башня снаружи
+   20 = tower_secret       — тайная дверца
+   21 = observatory        — обсерватория
+   22 = tower_inside       — главный зал
+   23 = final              — Август просыпается
+*/
+const LOCATION_BG = {
   "title": "images/bg/1.png",
   "start": "images/bg/2.png",
   "street": "images/bg/3.png",
@@ -911,12 +936,13 @@ html, body {
   "player_inside": "images/bg/5.png",
   "letter_close": "images/bg/6.png",
   "player_table": "images/bg/7.png",
-  "player_table2": "images/bg/8.png",
-  "player_hide_letter": "images/bg/9.png",
-  "most_bridge": "images/bg/10.png",
-  "most_sleep": "images/bg/11.png",
-  "most_awake": "images/bg/12.png",
-  "most_empty": "images/bg/13.png",
+  "letter_seal_bg": "images/bg/8.png",
+  "player_table2": "images/bg/9.png",
+  "player_hide_letter": "images/bg/10.png",
+  "most_bridge": "images/bg/11.png",
+  "most_sleep": "images/bg/12.png",
+  "most_awake": "images/bg/13.png",
+  "most_empty": "images/bg/14.png",
   "parchment": "images/bg/15.png",
   "grib_tropa": "images/bg/16.png",
   "grib_action": "images/bg/17.png",
@@ -928,47 +954,47 @@ html, body {
   "final": "images/bg/23.png",
 };
 
+/* Нумерация images/insert/ (1..40) — без letter_seal и olven_scheme */
 const INSERT_IMG = {
   "city_holiday": "images/insert/1.png",
   "sunrise_lighthouse": "images/insert/2.png",
-  "letter_seal": "images/insert/3.png",
-  "mira_arrive": "images/insert/4.png",
-  "mira_joke": "images/insert/5.png",
-  "bruno_block": "images/insert/6.png",
-  "bruno_awake": "images/insert/7.png",
-  "bruno_riddle": "images/insert/8.png",
-  "bruno_wind": "images/insert/9.png",
-  "bruno_feather": "images/insert/10.png",
-  "bruno_apple": "images/insert/11.png",
-  "bruno_crystal": "images/insert/12.png",
-  "bruno_clue": "images/insert/13.png",
-  "shustik_stuck": "images/insert/14.png",
-  "shustik_magic": "images/insert/15.png",
-  "shustik_oil": "images/insert/16.png",
-  "shustik_lever": "images/insert/17.png",
-  "shustik_gift": "images/insert/18.png",
-  "selesta_greet": "images/insert/19.png",
-  "selesta_vial": "images/insert/20.png",
-  "door_riddle": "images/insert/21.png",
-  "door_water": "images/insert/22.png",
-  "door_open": "images/insert/23.png",
-  "cat_sleep": "images/insert/24.png",
-  "cat_key": "images/insert/25.png",
-  "secret_entry": "images/insert/26.png",
-  "cornelius_panic": "images/insert/27.png",
-  "august_sleep": "images/insert/28.png",
-  "august_wake_eye": "images/insert/29.png",
-  "schema_show": "images/insert/30.png",
-  "mechanism_inspect": "images/insert/31.png",
-  "plan_music": "images/insert/32.png",
-  "plan_nectar": "images/insert/33.png",
-  "plan_mechanics": "images/insert/34.png",
-  "plan_unity": "images/insert/35.png",
-  "august_fly": "images/insert/36.png",
-  "ending_melody": "images/insert/37.png",
-  "ending_abundance": "images/insert/38.png",
-  "ending_engineering": "images/insert/39.png",
-  "ending_unity": "images/insert/40.png",
+  "mira_arrive": "images/insert/3.png",
+  "mira_joke": "images/insert/4.png",
+  "bruno_block": "images/insert/5.png",
+  "bruno_awake": "images/insert/6.png",
+  "bruno_riddle": "images/insert/7.png",
+  "bruno_wind": "images/insert/8.png",
+  "bruno_feather": "images/insert/9.png",
+  "bruno_apple": "images/insert/10.png",
+  "bruno_crystal": "images/insert/11.png",
+  "bruno_clue": "images/insert/12.png",
+  "shustik_stuck": "images/insert/13.png",
+  "shustik_magic": "images/insert/14.png",
+  "shustik_oil": "images/insert/15.png",
+  "shustik_lever": "images/insert/16.png",
+  "shustik_gift": "images/insert/17.png",
+  "selesta_greet": "images/insert/18.png",
+  "selesta_vial": "images/insert/19.png",
+  "door_riddle": "images/insert/20.png",
+  "door_water": "images/insert/21.png",
+  "door_open": "images/insert/22.png",
+  "cat_sleep": "images/insert/23.png",
+  "cat_key": "images/insert/24.png",
+  "secret_entry": "images/insert/25.png",
+  "cornelius_panic": "images/insert/26.png",
+  "august_sleep": "images/insert/27.png",
+  "august_wake_eye": "images/insert/28.png",
+  "schema_show": "images/insert/29.png",
+  "mechanism_inspect": "images/insert/30.png",
+  "plan_music": "images/insert/31.png",
+  "plan_nectar": "images/insert/32.png",
+  "plan_mechanics": "images/insert/33.png",
+  "plan_unity": "images/insert/34.png",
+  "august_fly": "images/insert/35.png",
+  "ending_melody": "images/insert/36.png",
+  "ending_abundance": "images/insert/37.png",
+  "ending_engineering": "images/insert/38.png",
+  "ending_unity": "images/insert/39.png",
 };
 
 const ITEMS = {
@@ -1010,7 +1036,7 @@ const PASSAGES = {
   "Start4": { location: "player_outside", speaker: "Рассказчик", boxClass: "narrator", text: "На столе в доме лежало письмо: плотный пергамент, запечатанный золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.", next: "Start5" },
   "Start5": { location: "player_inside", speaker: "Рассказчик", boxClass: "narrator", text: "Вы вернулись в дом. За окном — знакомый вид на потухший маяк. На столе — письмо и чашка остывшего травяного чая. И тут скрипнула калитка, послышались лёгкие шаги.", next: "Start6" },
   "Start6": { location: "player_table", insert: INSERT_IMG["mira_arrive"], insertDuration: 2200, speaker: "Мира", boxClass: "mira", text: "— Подъём, Хранитель трав и ветров! Мастер Олвен передал: в маяке не просто перегорела свеча — там заклинило рунный резонатор. Я взяла отмычки, разводной ключ на двенадцать и банку лучшей графитовой смазки. А у тебя что в письме?", choices: [{ text: "Вскрыть письмо мастера Олвена прямо сейчас", to: "ОткрытьПисьмо" }, { text: "Спрятать письмо и сразу обсудить маршрут", to: "ВыборПути" }, { text: "Пошутить над Мирой и её чехлом с инструментами", to: "РазговорСМирой1" }] },
-  "ОткрытьПисьмо": { location: "letter_close", insert: INSERT_IMG["letter_seal"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Вы ломаете восковую печать. Внутри — не просто записка, а тщательно вычерченная схема линз с личными пометками мастера, сделанными серебряными чернилами.", next: "ПисьмоОлвена" },
+  "ОткрытьПисьмо": { location: "letter_seal_bg", speaker: "Рассказчик", boxClass: "narrator", text: "Вы ломаете восковую печать. Внутри — не просто записка, а тщательно вычерченная схема линз с личными пометками мастера, сделанными серебряными чернилами.", next: "ПисьмоОлвена" },
   "ПисьмоОлвена": { location: "parchment", speaker: "Мастер Олвен", boxClass: "olven", text: "«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы и фальшивых нот. Если механизм замер, ищите причину не в поломке металла, а в нарушении гармонии. Возьмите с собой частицу стихии и помните: свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».", set: { "has_scheme": true }, next: "ПисьмоОлвена2" },
   "ПисьмоОлвена2": { location: "player_table2", speaker: "Мира", boxClass: "mira", text: "— «Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?", choices: [{ text: "Пойти через Старый каменный мост", to: "СтарыйМост" }, { text: "Срезать через тенистую Грибную тропу", to: "ГрибнаяТропа" }, { text: "Сначала заглянуть в лавку травницы Селесты", to: "ЛавкаСелесты" }] },
   "ВыборПути": { location: "player_hide_letter", speaker: "Рассказчик", boxClass: "narrator", text: "Вы прячете письмо во внутренний карман.", next: "ВыборПути2" },
@@ -1260,6 +1286,22 @@ function showInsert(imgUrl, duration) {
     }, 700);
     insertTimer = null;
   }, duration);
+}
+
+/* ============================================================
+   ПРЕДЗАГРУЗКА КАРТИНОК
+   ============================================================ */
+function preloadImages() {
+  Object.values(LOCATION_BG).forEach(url => {
+    if (!url) return;
+    const img = new Image();
+    img.src = url;
+  });
+  Object.values(INSERT_IMG).forEach(url => {
+    if (!url) return;
+    const img = new Image();
+    img.src = url;
+  });
 }
 
 /* ============================================================
@@ -1831,6 +1873,7 @@ function init() {
   loadGame();
   startMusic();
   initParticles();
+  preloadImages();
 
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button, .history-btn');
