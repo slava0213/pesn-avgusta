@@ -2,883 +2,196 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Песнь Августа</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; }
-html, body {
-  margin: 0; padding: 0; height: 100%;
-  font-family: 'Georgia', 'Times New Roman', serif;
-  background: #0a0a14; color: #eee;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
+:root{
+  --ink:#f4ecd8; --dim:#c9c0a6;
+  --bg1:#0e1330; --bg2:#1c2350; --panel:#171c3d;
+  --gold:#f2c14e; --amber:#e08a4c; --moss:#8bab7a; --line:rgba(242,193,78,.25);
 }
-.bg-layer {
-  position: fixed; inset: 0;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-color: #0a0a14;
-  z-index: 1; pointer-events: none;
-  opacity: 1;
-  transition: opacity 0.8s ease-in-out;
-  will-change: opacity, transform;
-  animation: kenBurns 28s ease-in-out infinite alternate;
-}
-@keyframes kenBurns {
-  0%   { transform: scale(1)    translate(0, 0); }
-  100% { transform: scale(1.08) translate(-1.2%, -1%); }
-}
-.particles-layer {
-  position: fixed; inset: 0;
-  pointer-events: none;
-  z-index: 3;
-  overflow: hidden;
-}
-.particle {
-  position: absolute;
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,220,120,1) 0%, rgba(255,180,50,0.6) 40%, transparent 70%);
-  box-shadow: 0 0 8px rgba(255,200,80,0.9), 0 0 16px rgba(255,180,50,0.5);
-  opacity: 0;
-  animation: floatUp linear infinite;
-}
-@keyframes floatUp {
-  0%   { transform: translateY(0) translateX(0) scale(0.6); opacity: 0; }
-  10%  { opacity: 0.85; }
-  90%  { opacity: 0.65; }
-  100% { transform: translateY(-110vh) translateX(40px) scale(1.1); opacity: 0; }
-}
-.insert-layer {
-  position: fixed; inset: 0;
-  z-index: 80;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.7s ease, visibility 0.7s ease;
-  background-color: #000;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  transform: scale(1);
-}
-.insert-layer.active {
-  opacity: 1;
-  visibility: visible;
-  animation: insertZoom 6s ease-out forwards;
-}
-@keyframes insertZoom {
-  from { transform: scale(1); }
-  to   { transform: scale(1.06); }
-}
-.vignette-layer {
-  position: fixed; inset: 0; pointer-events: none; z-index: 4;
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){ --ink:#2c2412; --dim:#5b503a; }}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%;}
+*{box-sizing:inherit;}
+body{
+  margin:0;min-height:100%;font-family:'Lora',Georgia,serif;color:var(--ink);
   background:
-    radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0,0,0,0.7) 100%),
-    linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 25%, transparent 65%, rgba(0,0,0,0.7) 100%);
+    radial-gradient(ellipse at 20% 0%, #2a2f66 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, #3a2a5c 0%, transparent 50%),
+    linear-gradient(180deg,var(--bg1),var(--bg2) 60%,#0a0d24);
+  overflow-x:hidden;position:relative;
 }
-.loading-screen {
-  position: fixed; inset: 0; z-index: 5000;
-  background: radial-gradient(ellipse at center, #14101e 0%, #0a0a14 100%);
-  display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 24px;
-  transition: opacity 0.8s ease;
+.fireflies{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.firefly{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 6px 2px var(--gold);opacity:.7;animation:drift linear infinite;}
+@keyframes drift{
+  0%{transform:translate(0,0);opacity:.2;}
+  50%{opacity:.9;}
+  100%{transform:translate(var(--dx),var(--dy));opacity:.2;}
 }
-.loading-screen.hidden { opacity: 0; pointer-events: none; }
-.loading-spinner {
-  width: 72px; height: 72px;
-  border: 3px solid rgba(251,191,36,0.12);
-  border-top-color: #FBBF24;
-  border-right-color: rgba(251,191,36,0.5);
-  border-radius: 50%;
-  animation: spin 1.1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  box-shadow: 0 0 40px rgba(251,191,36,0.35), inset 0 0 20px rgba(251,191,36,0.15);
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text {
-  color: #FBBF24; font-size: 14px;
-  letter-spacing: 6px; text-transform: uppercase;
-  animation: pulse 1.8s ease-in-out infinite;
-  text-shadow: 0 0 16px rgba(251,191,36,0.7);
-}
-@keyframes pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce){ .firefly{animation:none;opacity:.5;} .fade{animation:none !important;} }
 
-.click-layer {
-  position: fixed; inset: 0; z-index: 90;
-  background: transparent; cursor: pointer; display: none;
-}
-.click-layer.enabled { display: block; }
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;
+  justify-content:space-between;padding:.7rem 1.1rem;background:rgba(10,13,36,.75);backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);gap:.6rem;flex-wrap:wrap;}
+header h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.25rem;margin:0;letter-spacing:.02em;color:var(--gold);}
+.header-right{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
+.inv{display:flex;gap:.45rem;font-size:1.15rem;min-height:1.6rem;}
+.inv span{opacity:.25;transition:opacity .4s,transform .4s;cursor:help;}
+.inv span.got{opacity:1;transform:scale(1.1);filter:drop-shadow(0 0 6px var(--gold));}
+.iconbtn{background:none;border:1px solid var(--line);color:var(--dim);border-radius:999px;
+  padding:.3rem .7rem;font-size:.85rem;cursor:pointer;font-family:'Lora',serif;transition:all .2s;}
+.iconbtn:hover{color:var(--gold);border-color:var(--gold);}
+.iconbtn.active{color:var(--gold);border-color:var(--gold);background:rgba(242,193,78,.1);}
 
-.dialogue-box {
-  position: fixed; left: 50%; bottom: 3vh;
-  transform: translateX(-50%);
-  width: min(1240px, 94vw);
-  max-height: 34vh;
-  background: linear-gradient(180deg, rgba(28,22,14,0.92) 0%, rgba(14,10,6,0.97) 100%);
-  border: 1px solid rgba(244,197,66,0.6);
-  border-radius: 4px;
-  box-shadow:
-    0 -40px 80px rgba(0,0,0,0.7),
-    0 24px 70px rgba(0,0,0,0.8),
-    0 0 0 1px rgba(0,0,0,0.7),
-    0 0 60px rgba(255,200,80,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    inset 0 0 80px rgba(255,180,50,0.04);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  z-index: 100;
-  display: flex; flex-direction: column;
-  animation: dialogueIn 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow: visible; cursor: pointer;
-}
-.dialogue-box::before, .dialogue-box::after {
-  content: ''; position: absolute;
-  width: 28px; height: 28px;
-  border: 2px solid rgba(244,197,66,0.85);
-  pointer-events: none; z-index: 3;
-}
-.dialogue-box::before {
-  top: -2px; left: -2px;
-  border-right: none; border-bottom: none;
-  border-radius: 4px 0 0 0;
-  box-shadow: -2px -2px 12px rgba(255,200,80,0.3);
-}
-.dialogue-box::after {
-  bottom: -2px; right: -2px;
-  border-left: none; border-top: none;
-  border-radius: 0 0 4px 0;
-  box-shadow: 2px 2px 12px rgba(255,200,80,0.3);
-}
-.dialogue-box .top-line {
-  position: absolute; top: -1px; left: 15%; right: 15%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,220,120,0.9), transparent);
-  pointer-events: none; z-index: 3;
-}
-@keyframes dialogueIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(40px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-.speaker-name {
-  position: absolute; top: -26px; left: 34px;
-  min-width: 150px; max-width: 360px;
-  padding: 10px 26px 9px;
-  background: linear-gradient(180deg, rgba(217,119,6,1) 0%, rgba(160,75,10,1) 100%);
-  color: #FFF8E7;
-  font-size: clamp(14px, 1.2vw, 18px);
-  font-weight: bold; border-radius: 3px;
-  border: 1px solid rgba(244,197,66,0.95);
-  box-shadow:
-    0 10px 28px rgba(0,0,0,0.7),
-    0 0 24px rgba(255,180,50,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.3),
-    inset 0 -6px 12px rgba(0,0,0,0.25);
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.85);
-  letter-spacing: 2px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  z-index: 4;
-}
-.speaker-name::after {
-  content: ''; position: absolute;
-  bottom: -6px; left: 22px;
-  width: 0; height: 0;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-top: 7px solid rgba(160,75,10,1);
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
-}
-.dialogue-text {
-  width: 100%; flex: 1;
-  min-height: 13vh; max-height: 26vh;
-  color: #f5ecd7;
-  font-size: clamp(15px, 1.2vw, 19px);
-  line-height: 1.85;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.95);
-  padding: 34px 44px 30px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #FBBF24 rgba(255,243,196,0.1);
-  letter-spacing: 0.2px;
-}
-.dialogue-text b { color: #FFE9A8; font-weight: bold; }
-.dialogue-text i { color: #d8c9a8; font-style: italic; }
-.type-cursor {
-  display: inline-block; color: #FFD700;
-  animation: cursorBlink 0.8s steps(2, start) infinite;
-  font-weight: bold; margin-left: 2px;
-  text-shadow: 0 0 10px rgba(255,215,0,0.95);
-}
-@keyframes cursorBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
-.next-hint {
-  position: absolute; right: 26px; bottom: 16px;
-  color: #FFD700;
-  font-size: clamp(18px, 1.5vw, 24px);
-  opacity: 0.85;
-  animation: nextPulse 1.5s ease-in-out infinite;
-  pointer-events: none;
-  text-shadow: 0 0 14px rgba(255,215,0,0.9);
-}
-@keyframes nextPulse {
-  0%,100% { transform: translateY(0); opacity: 0.4; }
-  50%     { transform: translateY(6px); opacity: 1; }
-}
-.dialogue-box.narrator { border-color: rgba(200,160,80,0.55); }
-.dialogue-box.narrator .speaker-name { background: linear-gradient(180deg, rgba(180,130,40,1) 0%, rgba(130,90,25,1) 100%); }
-.dialogue-box.narrator .speaker-name::after { border-top-color: rgba(130,90,25,1); }
-.dialogue-box.mira { border-color: rgba(230,126,34,0.85); box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 60px rgba(230,126,34,0.2), inset 0 1px 0 rgba(255,255,255,0.08); }
-.dialogue-box.mira .speaker-name { background: linear-gradient(180deg, rgba(230,126,34,1) 0%, rgba(190,90,15,1) 100%); }
-.dialogue-box.mira .speaker-name::after { border-top-color: rgba(190,90,15,1); }
-.dialogue-box.bruno { border-color: rgba(170,170,170,0.8); }
-.dialogue-box.bruno .speaker-name { background: linear-gradient(180deg, rgba(120,120,120,1) 0%, rgba(70,70,70,1) 100%); color: #F5F5F5; }
-.dialogue-box.bruno .speaker-name::after { border-top-color: rgba(70,70,70,1); }
-.dialogue-box.selesta { border-color: rgba(160,120,210,0.85); }
-.dialogue-box.selesta .speaker-name { background: linear-gradient(180deg, rgba(130,90,180,1) 0%, rgba(95,65,135,1) 100%); }
-.dialogue-box.selesta .speaker-name::after { border-top-color: rgba(95,65,135,1); }
-.dialogue-box.cornelius { border-color: rgba(80,120,210,0.85); }
-.dialogue-box.cornelius .speaker-name { background: linear-gradient(180deg, rgba(60,100,180,1) 0%, rgba(35,65,135,1) 100%); }
-.dialogue-box.cornelius .speaker-name::after { border-top-color: rgba(35,65,135,1); }
-.dialogue-box.august {
-  border-color: rgba(255,210,70,1);
-  box-shadow:
-    0 -40px 80px rgba(0,0,0,0.7),
-    0 24px 70px rgba(0,0,0,0.8),
-    0 0 70px rgba(255,200,50,0.45),
-    inset 0 1px 0 rgba(255,220,100,0.4);
-}
-.dialogue-box.august .speaker-name { background: linear-gradient(180deg, rgba(255,210,70,1) 0%, rgba(220,160,20,1) 100%); color: #2A1500; }
-.dialogue-box.august .speaker-name::after { border-top-color: rgba(220,160,20,1); }
-.dialogue-box.olven { border-style: dashed; border-color: rgba(170,130,70,0.9); background: linear-gradient(180deg, rgba(50,38,22,0.94) 0%, rgba(28,20,10,0.97) 100%); }
-.dialogue-box.olven .speaker-name { background: linear-gradient(180deg, rgba(150,110,55,1) 0%, rgba(100,70,30,1) 100%); }
-.dialogue-box.olven .speaker-name::after { border-top-color: rgba(100,70,30,1); }
-.dialogue-box.olven .dialogue-text { font-style: italic; color: #f0e3c8; }
-.dialogue-box.final-box {
-  border-color: rgba(255,215,0,1);
-  box-shadow:
-    0 -40px 80px rgba(0,0,0,0.7),
-    0 24px 70px rgba(0,0,0,0.8),
-    0 0 80px rgba(255,215,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.15);
-}
-.dialogue-box.final-box .speaker-name { background: linear-gradient(180deg, rgba(255,215,0,1) 0%, rgba(200,150,20,1) 100%); color: #2A1500; }
-.dialogue-box.final-box .speaker-name::after { border-top-color: rgba(200,150,20,1); }
+main{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:1.6rem 1.2rem 4rem;}
+.card{background:linear-gradient(180deg,rgba(23,28,61,.9),rgba(14,19,48,.92));
+  border:1px solid var(--line);border-radius:14px;padding:1.8rem 1.6rem;
+  box-shadow:0 0 40px rgba(242,193,78,.06), inset 0 0 60px rgba(242,193,78,.03);}
+.fade{animation:fadein .5s ease both;}
+@keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+h2.title{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.5rem;color:var(--amber);
+  margin:0 0 .9rem;}
+h2.title.gold{color:var(--gold);}
+h2.title.moss{color:var(--moss);}
+.scene{width:100%;border-radius:10px;overflow:hidden;margin-bottom:1.1rem;border:1px solid var(--line);
+  background:#0a0d24;aspect-ratio:16/8;}
+.scene svg{width:100%;height:100%;display:block;}
+.glow{animation:glowpulse 3s ease-in-out infinite;}
+@keyframes glowpulse{0%,100%{opacity:.55;}50%{opacity:1;}}
+@media (prefers-reduced-motion: reduce){ .glow{animation:none;opacity:.85;} }
+.passage p{line-height:1.75;margin:0 0 .95rem;color:var(--ink);}
+.passage em{color:var(--gold);font-style:italic;}
+.passage strong{color:var(--gold);font-weight:600;}
+blockquote{border-left:2px solid var(--amber);margin:1rem 0;padding:.2rem 0 .2rem 1rem;
+  color:var(--dim);font-style:italic;}
+.choices{display:flex;flex-direction:column;gap:.6rem;margin-top:1.3rem;}
+.choice{text-align:left;background:rgba(242,193,78,.06);border:1px solid var(--line);
+  color:var(--ink);padding:.7rem 1rem;border-radius:9px;font-family:'Lora',serif;font-size:1rem;
+  cursor:pointer;transition:background .2s,border-color .2s,transform .15s;position:relative;}
+.choice:hover:not(.disabled){background:rgba(242,193,78,.14);border-color:var(--gold);transform:translateX(3px);}
+.choice:active:not(.disabled){transform:translateX(1px) scale(.99);}
+.choice .tag{color:var(--moss);font-size:.85em;}
+.choice.disabled{opacity:.45;cursor:not-allowed;border-style:dashed;}
+.choice.disabled::before{content:'🔒 ';color:var(--dim);}
+.choice .need{color:#e07b39;font-size:.85em;font-style:italic;margin-left:.3em;}
+.ending{border-color:var(--gold);}
+.restart{margin-top:1.4rem;width:100%;background:linear-gradient(90deg,var(--amber),var(--gold));
+  border:none;color:#241a06;font-weight:600;padding:.75rem;border-radius:9px;cursor:pointer;font-size:1rem;
+  font-family:'Cormorant Garamond',serif;letter-spacing:.02em;transition:transform .15s;}
+.restart:hover{transform:translateY(-1px);}
+.beetle{display:inline-block;filter:drop-shadow(0 0 6px var(--gold));animation:pulse 2.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.15);}}
+footer{text-align:center;color:var(--dim);font-size:.8rem;padding:1rem;opacity:.6;position:relative;z-index:1;
+  padding-bottom:calc(1rem + env(safe-area-inset-bottom,0px));}
 
-/* === КЛАССЫ ДЛЯ ТИК-ТАКА И ИГРОКА === */
-.dialogue-box.tik_tak { border-color: rgba(200,180,100,0.85); }
-.dialogue-box.tik_tak .speaker-name { background: linear-gradient(180deg, rgba(180,160,80,1) 0%, rgba(130,110,50,1) 100%); color: #FFF8E7; }
-.dialogue-box.tik_tak .speaker-name::after { border-top-color: rgba(130,110,50,1); }
-.dialogue-box.player { border-color: rgba(100,200,255,0.85); }
-.dialogue-box.player .speaker-name { background: linear-gradient(180deg, rgba(60,140,200,1) 0%, rgba(35,90,150,1) 100%); color: #F0F8FF; }
-.dialogue-box.player .speaker-name::after { border-top-color: rgba(35,90,150,1); }
+/* === Модальные окна === */
+.modal-overlay{position:fixed;inset:0;background:rgba(5,7,20,.85);backdrop-filter:blur(6px);
+  z-index:100;display:none;align-items:center;justify-content:center;padding:1rem;
+  animation:fadein .3s ease;}
+.modal-overlay.show{display:flex;}
+.modal{background:linear-gradient(180deg,rgba(23,28,61,.98),rgba(14,19,48,.99));
+  border:1px solid var(--line);border-radius:14px;padding:1.6rem;
+  max-width:560px;width:100%;max-height:80vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.7);animation:fadein .4s ease;}
+.modal h2{font-family:'Cormorant Garamond',serif;color:var(--gold);margin:0 0 1rem;
+  font-size:1.4rem;letter-spacing:.03em;border-bottom:1px solid var(--line);padding-bottom:.7rem;}
+.modal h3{color:var(--amber);font-size:.9rem;text-transform:uppercase;letter-spacing:.15em;
+  margin:1.2rem 0 .6rem;font-family:'Lora',serif;font-weight:500;}
+.modal .item-row{display:flex;gap:.7rem;align-items:flex-start;padding:.55rem 0;
+  border-bottom:1px solid rgba(242,193,78,.1);}
+.modal .item-row:last-child{border-bottom:none;}
+.modal .item-icon{font-size:1.5rem;line-height:1;flex-shrink:0;}
+.modal .item-icon.locked{opacity:.25;filter:grayscale(1);}
+.modal .item-info{flex:1;}
+.modal .item-name{color:var(--ink);font-weight:500;}
+.modal .item-name.locked{color:var(--dim);}
+.modal .item-hint{color:var(--dim);font-size:.82rem;font-style:italic;margin-top:.15rem;}
+.modal .ending-status{padding:.6rem .8rem;border-radius:8px;margin-bottom:.5rem;
+  display:flex;justify-content:space-between;align-items:center;font-size:.9rem;}
+.modal .ending-status.ready{background:rgba(139,171,122,.12);border:1px solid rgba(139,171,122,.4);color:var(--moss);}
+.modal .ending-status.locked{background:rgba(224,138,76,.08);border:1px solid rgba(224,138,76,.3);color:var(--dim);}
+.modal .ending-status .status-need{font-size:.78rem;color:#e07b39;margin-top:.2rem;}
+.modal .ach-row{display:flex;gap:.7rem;align-items:center;padding:.6rem .3rem;border-radius:6px;transition:background .2s;}
+.modal .ach-row:hover{background:rgba(242,193,78,.06);}
+.modal .ach-row.locked{opacity:.35;filter:grayscale(.8);}
+.modal .ach-icon{font-size:1.6rem;}
+.modal .ach-title{color:var(--gold);font-weight:500;}
+.modal .ach-desc{color:var(--dim);font-size:.8rem;}
+.modal .settings-row{display:flex;justify-content:space-between;align-items:center;padding:.7rem 0;
+  border-bottom:1px solid rgba(242,193,78,.1);gap:1rem;flex-wrap:wrap;}
+.modal .settings-row:last-child{border-bottom:none;}
+.modal .settings-row label{color:var(--ink);font-size:.9rem;}
+.modal select,.modal input[type=range]{background:#0e1330;color:var(--ink);border:1px solid var(--line);
+  padding:.4rem .6rem;border-radius:6px;font-family:'Lora',serif;font-size:.85rem;cursor:pointer;}
+.modal .btn-close{margin-top:1.2rem;width:100%;background:linear-gradient(90deg,var(--amber),var(--gold));
+  border:none;color:#241a06;font-weight:600;padding:.7rem;border-radius:9px;cursor:pointer;
+  font-size:1rem;font-family:'Cormorant Garamond',serif;letter-spacing:.02em;}
 
-.choice-box {
-  position: fixed; left: 50%; bottom: 40vh;
-  transform: translateX(-50%); z-index: 101;
-  display: flex; flex-direction: column; gap: 14px;
-  width: min(780px, 88vw);
-  animation: choicesIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s backwards;
-}
-@keyframes choicesIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(24px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-.choice-box a {
-  position: relative;
-  width: 100%; display: block; text-align: left;
-  padding: 16px 26px 16px 60px;
-  background: linear-gradient(180deg, rgba(28,22,14,0.94) 0%, rgba(14,10,6,0.97) 100%);
-  color: #F5ECD7;
-  border: 1px solid rgba(244,197,66,0.5);
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: clamp(13px, 1.05vw, 16px);
-  font-weight: normal;
-  line-height: 1.4;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
-  letter-spacing: 0.4px; overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.choice-box a::before {
-  content: '▸'; position: absolute;
-  left: 22px; top: 50%;
-  transform: translateY(-50%);
-  color: #FBBF24; font-size: 18px;
-  transition: all 0.3s ease;
-  text-shadow: 0 0 10px rgba(255,200,80,0.7);
-}
-.choice-box a::after {
-  content: ''; position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,200,80,0.15), transparent);
-  transition: left 0.6s ease;
-  pointer-events: none;
-}
-.choice-box a:hover::after { left: 100%; }
-.choice-box a > span { position: relative; z-index: 1; }
-.choice-box a:hover {
-  background: linear-gradient(180deg, rgba(244,197,66,0.18) 0%, rgba(180,120,20,0.12) 100%);
-  border-color: rgba(244,197,66,0.95);
-  color: #FFF8E7;
-  transform: translateX(6px);
-  box-shadow:
-    0 14px 38px rgba(0,0,0,0.7),
-    0 0 30px rgba(255,200,80,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.12);
-}
-.choice-box a:hover::before { color: #FFD700; transform: translateY(-50%) translateX(4px); text-shadow: 0 0 16px rgba(255,215,0,1); }
-.choice-box a:active { transform: translateX(6px) scale(0.995); }
-.choice-box a.disabled {
-  opacity: 0.45; cursor: not-allowed; filter: grayscale(0.4);
-}
-.choice-box a.disabled:hover {
-  transform: none;
-  background: linear-gradient(180deg, rgba(28,22,14,0.94) 0%, rgba(14,10,6,0.97) 100%);
-  border-color: rgba(244,197,66,0.5);
-}
-.choice-box a.disabled::before { content: '🔒'; color: #888; text-shadow: none; }
+/* === Карточка предмета === */
+.item-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.85);
+  z-index:200;background:linear-gradient(180deg,rgba(23,28,61,.98),rgba(14,19,48,.99));
+  border:2px solid var(--gold);border-radius:14px;padding:1.4rem 2rem;text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.85),0 0 60px rgba(242,193,78,.5);
+  opacity:0;pointer-events:none;transition:opacity .5s,transform .5s cubic-bezier(.22,1,.36,1);}
+.item-popup.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.item-popup .popup-icon{font-size:3rem;margin-bottom:.5rem;filter:drop-shadow(0 0 20px var(--gold));}
+.item-popup .popup-label{color:var(--gold);font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;margin-bottom:.4rem;}
+.item-popup .popup-name{color:var(--ink);font-size:1.2rem;font-weight:600;font-family:'Cormorant Garamond',serif;letter-spacing:.03em;}
+.item-popup .popup-hint{color:var(--dim);font-size:.82rem;font-style:italic;margin-top:.5rem;}
 
-.history-controls {
-  position: fixed; top: 18px; left: 18px;
-  display: flex; gap: 12px; z-index: 300;
-  pointer-events: auto;
-}
-.history-btn {
-  width: 50px; height: 50px;
-  border-radius: 50%;
-  border: 1px solid rgba(244,197,66,0.7);
-  background: linear-gradient(180deg, rgba(28,22,14,0.9) 0%, rgba(14,10,6,0.95) 100%);
-  color: #FBBF24;
-  font-size: 22px; font-weight: bold;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
-  user-select: none;
-  font-family: 'Georgia', serif;
-  padding: 0;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  -webkit-tap-highlight-color: transparent;
-}
-.history-btn:hover:not(:disabled) {
-  transform: translateY(-3px) scale(1.08);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 24px rgba(255,200,80,0.5);
-  border-color: rgba(244,197,66,1);
-  color: #FFD700;
-}
-.history-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(0.8); }
+/* === Уведомления === */
+.notification{position:fixed;top:80px;right:20px;background:linear-gradient(180deg,rgba(224,138,76,.97),rgba(160,75,10,.97));
+  color:#fff8e7;padding:.8rem 1.3rem;border:1px solid var(--gold);border-left:4px solid var(--gold);
+  border-radius:8px;font-size:.85rem;z-index:150;opacity:0;transform:translateX(80px);
+  transition:all .4s cubic-bezier(.22,1,.36,1);pointer-events:none;max-width:300px;
+  box-shadow:0 10px 30px rgba(0,0,0,.6);}
+.notification.show{opacity:1;transform:translateX(0);}
+.notification.warn{background:linear-gradient(180deg,rgba(180,60,30,.97),rgba(120,30,10,.97));
+  border-color:#f87171;border-left-color:#f87171;}
+.notification b{display:block;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.25rem;color:#ffe9a8;}
 
-.game-menu {
-  position: fixed; top: 18px; right: 18px;
-  display: flex; gap: 12px; z-index: 300;
-}
-.game-menu button {
-  position: relative;
-  width: 50px; height: 50px;
-  border-radius: 50%;
-  border: 1px solid rgba(244,197,66,0.7);
-  background: linear-gradient(180deg, rgba(28,22,14,0.9) 0%, rgba(14,10,6,0.95) 100%);
-  color: #FBBF24;
-  font-size: 20px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
-  padding: 0; overflow: hidden;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  -webkit-tap-highlight-color: transparent;
-}
-.game-menu button:hover {
-  transform: translateY(-3px) scale(1.08);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.7), 0 0 24px rgba(255,200,80,0.5);
-  border-color: rgba(244,197,66,1);
-  color: #FFD700;
-}
-
-.notification {
-  position: fixed; top: 90px; right: 24px;
-  background: linear-gradient(180deg, rgba(217,119,6,0.97) 0%, rgba(160,75,10,0.97) 100%);
-  color: #FFF8E7;
-  padding: 16px 26px 16px 30px;
-  border: 1px solid rgba(244,197,66,0.9);
-  border-left: 4px solid #FBBF24;
-  border-radius: 6px;
-  box-shadow:
-    0 14px 40px rgba(0,0,0,0.7),
-    0 0 30px rgba(255,180,50,0.4),
-    inset 0 1px 0 rgba(255,255,255,0.25);
-  font-size: 14px;
-  z-index: 400;
-  opacity: 0;
-  transform: translateX(80px);
-  transition: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
-  max-width: 340px;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-.notification.show { opacity: 1; transform: translateX(0); }
-.notification b {
-  color: #FFE9A8; display: block; margin-bottom: 5px;
-  font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
-}
-.notification.warn {
-  background: linear-gradient(180deg, rgba(180,60,30,0.97) 0%, rgba(120,30,10,0.97) 100%);
-  border-left-color: #F87171;
-  border-color: rgba(248,113,113,0.9);
-  box-shadow: 0 14px 40px rgba(0,0,0,0.7), 0 0 30px rgba(248,113,113,0.4), inset 0 1px 0 rgba(255,255,255,0.25);
-}
-.notification.warn b { color: #FECACA; }
-
-/* === ВСПЛЫВАЮЩАЯ КАРТОЧКА ПРЕДМЕТА === */
-.item-popup {
-  position: fixed; top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(0.85);
-  z-index: 450;
-  background: linear-gradient(180deg, rgba(28,22,14,0.97) 0%, rgba(14,10,6,0.99) 100%);
-  border: 2px solid rgba(244,197,66,0.95);
-  border-radius: 10px;
-  padding: 26px 40px;
-  text-align: center;
-  box-shadow:
-    0 30px 80px rgba(0,0,0,0.85),
-    0 0 60px rgba(255,200,80,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.15);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.item-popup.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.item-popup .popup-icon {
-  font-size: 52px; margin-bottom: 10px;
-  filter: drop-shadow(0 0 20px rgba(255,200,80,0.9));
-}
-.item-popup .popup-label {
-  color: #FBBF24; font-size: 11px; letter-spacing: 3px;
-  text-transform: uppercase; margin-bottom: 8px;
-}
-.item-popup .popup-name {
-  color: #FFF8E7; font-size: 20px; font-weight: bold;
-  letter-spacing: 1px; text-shadow: 0 0 14px rgba(255,220,100,0.7);
-}
-.item-popup .popup-hint {
-  color: #d8c9a8; font-size: 13px; font-style: italic;
-  margin-top: 10px; max-width: 320px;
-}
-
-.title-screen {
-  position: fixed; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: space-between;
-  padding: 8vh 20px 6vh; z-index: 200;
-  background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0.85) 100%);
-}
-.title-logo { text-align: center; animation: titleFadeIn 1.3s ease-out; }
-@keyframes titleFadeIn {
-  from { opacity: 0; transform: translateY(-30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.title-main {
-  font-size: clamp(38px, 6vw, 76px);
-  color: #FFF8E7;
-  text-shadow:
-    -3px -3px 0 #8B4513, 3px -3px 0 #8B4513,
-    -3px 3px 0 #8B4513, 3px 3px 0 #8B4513,
-     0 0 40px rgba(255, 220, 100, 1),
-     0 0 80px rgba(255, 180, 50, 0.7),
-     6px 6px 30px rgba(0, 0, 0, 0.9);
-  letter-spacing: 8px; margin: 0; font-weight: bold;
-  animation: titleGlow 3.6s ease-in-out infinite;
-}
-@keyframes titleGlow {
-  0%,100% {
-    text-shadow:
-      -3px -3px 0 #8B4513, 3px -3px 0 #8B4513,
-      -3px 3px 0 #8B4513, 3px 3px 0 #8B4513,
-      0 0 40px rgba(255,220,100,1),
-      0 0 80px rgba(255,180,50,0.7),
-      6px 6px 30px rgba(0,0,0,0.9);
-  }
-  50% {
-    text-shadow:
-      -3px -3px 0 #8B4513, 3px -3px 0 #8B4513,
-      -3px 3px 0 #8B4513, 3px 3px 0 #8B4513,
-      0 0 65px rgba(255,240,150,1),
-      0 0 120px rgba(255,200,80,0.9),
-      6px 6px 30px rgba(0,0,0,0.9);
-  }
-}
-.title-sub {
-  font-size: clamp(14px, 1.2vw, 19px);
-  color: #FFF3C4;
-  text-shadow: 2px 2px 0 #8B4513, 3px 3px 8px rgba(0,0,0,0.95);
-  font-style: italic; margin-top: 14px; letter-spacing: 6px;
-  text-transform: uppercase;
-}
-.title-menu {
-  display: flex; flex-direction: column; gap: 14px;
-  width: min(340px, 80vw);
-  animation: titleFadeIn 1s ease-out 0.4s backwards;
-}
-.title-menu button {
-  display: block;
-  background: linear-gradient(180deg, rgba(28,22,14,0.9) 0%, rgba(14,10,6,0.95) 100%);
-  color: #FFE9A8;
-  padding: 15px 26px;
-  border-radius: 4px;
-  border: 1px solid rgba(244,197,66,0.6);
-  cursor: pointer;
-  font-size: clamp(13px, 1.05vw, 16px);
-  font-weight: bold; font-family: inherit; text-align: center;
-  letter-spacing: 2.5px; text-transform: uppercase;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  -webkit-tap-highlight-color: transparent;
-  position: relative; overflow: hidden;
-}
-.title-menu button::after {
-  content: ''; position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,200,80,0.2), transparent);
-  transition: left 0.6s ease;
-  pointer-events: none;
-}
-.title-menu button:hover:not(:disabled)::after { left: 100%; }
-.title-menu button:hover:not(:disabled) {
-  background: linear-gradient(180deg, rgba(244,197,66,0.2) 0%, rgba(180,120,20,0.15) 100%);
-  color: #FFF8E7;
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 30px rgba(255,200,80,0.5);
-  border-color: rgba(244,197,66,1);
-}
-.title-menu button:disabled { opacity: 0.35; cursor: not-allowed; filter: grayscale(0.7); }
-.title-footer {
-  font-size: clamp(11px, 0.9vw, 13px);
-  color: #FFF3C4;
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.95);
-  letter-spacing: 4px; font-style: italic; opacity: 0.9; margin: 0;
-  text-transform: uppercase;
-  animation: titleFadeIn 1s ease-out 0.8s backwards;
-}
-.title-endings {
-  position: fixed; left: 50%; bottom: 12vh;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.82);
-  color: #FFD700;
-  padding: 12px 32px;
-  border: 1px solid rgba(255,215,0,0.9);
-  border-radius: 999px;
-  font-size: clamp(12px, 1vw, 15px);
-  letter-spacing: 2px;
-  text-shadow: 0 0 10px rgba(255,215,0,0.8), 1px 1px 4px rgba(0,0,0,0.95);
-  box-shadow: 0 8px 32px rgba(255,215,0,0.35), 0 0 40px rgba(255,215,0,0.15);
-  z-index: 210;
-  animation: titleFadeIn 1s ease-out 1s backwards;
-  text-transform: uppercase;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.85);
-  z-index: 1000;
-  display: flex; align-items: center; justify-content: center;
-  animation: fadeIn 0.3s ease-out;
-  padding: 20px;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.modal-overlay.hidden { display: none; }
-.modal {
-  background: linear-gradient(180deg, #1a1410 0%, #0d0a08 100%);
-  border: 1px solid rgba(244,197,66,0.6);
-  max-width: 660px; width: 100%; max-height: 84vh;
-  overflow-y: auto; padding: 30px;
-  border-radius: 6px;
-  box-shadow:
-    0 40px 100px rgba(0,0,0,0.9),
-    0 0 60px rgba(255,200,80,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.06);
-  animation: modalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-@keyframes modalIn {
-  from { opacity: 0; transform: scale(0.95) translateY(20px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-.modal h2 {
-  margin: 0 0 22px; color: #FBBF24;
-  text-transform: uppercase; font-size: 18px; letter-spacing: 3px;
-  text-shadow: 0 0 16px rgba(251,191,36,0.6);
-  border-bottom: 1px solid rgba(244,197,66,0.25);
-  padding-bottom: 14px;
-}
-.modal .row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 0; border-bottom: 1px solid rgba(244,197,66,0.12);
-  gap: 12px; flex-wrap: wrap;
-}
-.modal .row:last-of-type { border-bottom: none; }
-.modal label { color: #ddd; letter-spacing: 0.5px; }
-.modal select, .modal input[type=range] {
-  background: #1c1813; color: #eee;
-  border: 1px solid #4a3f2f;
-  padding: 8px 12px; border-radius: 4px;
-  font-family: inherit; font-size: 14px;
-  cursor: pointer;
-}
-.modal .buttons { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; flex-wrap: wrap; }
-.modal button {
-  background: linear-gradient(180deg, rgba(60,100,180,0.95) 0%, rgba(35,65,135,0.95) 100%);
-  color: #fff; border: 1px solid rgba(100,140,220,0.9);
-  padding: 11px 24px; border-radius: 4px;
-  cursor: pointer; font-family: inherit; font-size: 14px;
-  font-weight: bold; letter-spacing: 1.5px; transition: all 0.25s ease;
-  text-transform: uppercase;
-  -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
-}
-.modal button:hover {
-  background: linear-gradient(180deg, rgba(80,130,220,1) 0%, rgba(45,85,165,1) 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 26px rgba(0,0,0,0.6), 0 0 24px rgba(100,150,255,0.4);
-}
-.modal .ach-list { display: flex; flex-direction: column; gap: 10px; }
-.modal .ach {
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 18px; border-radius: 6px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(244,197,66,0.15);
-  transition: all 0.3s ease;
-}
-.modal .ach:not(.locked):hover {
-  background: rgba(251,191,36,0.1);
-  border-color: rgba(251,191,36,0.45);
-  transform: translateX(6px);
-}
-.modal .ach.locked { opacity: 0.35; filter: grayscale(1); }
-.modal .ach .icon { font-size: 26px; }
-.modal .ach .info { display: flex; flex-direction: column; gap: 3px; }
-.modal .ach .title { color: #FBBF24; font-weight: bold; font-size: 14px; }
-.modal .ach .desc { color: #999; font-size: 12px; }
-
-.cutscene-layer {
-  position: fixed; inset: 0;
-  z-index: 95;
-  background: #000;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.7s ease, visibility 0.7s ease;
-  overflow: hidden;
-  cursor: pointer;
-}
-.cutscene-layer.active { opacity: 1; visibility: visible; }
-.cutscene-frame {
-  position: absolute; inset: 0;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-color: #000;
-  opacity: 0;
-  transform: scale(1);
-  transition: opacity 0.9s ease, transform 9s ease-out;
-  will-change: opacity, transform;
-}
-.cutscene-frame.current { opacity: 1; z-index: 1; }
-.cutscene-frame.next    { opacity: 0; z-index: 2; }
-.cutscene-frame.visible { opacity: 1; }
-.cutscene-frame.effect-fade.next { opacity: 0; transition: opacity 1s ease; }
-.cutscene-frame.effect-fade.next.visible { opacity: 1; }
-.cutscene-frame.effect-zoom-in.next.visible { transform: scale(1.08); }
-.cutscene-frame.effect-zoom-out.next.visible { transform: scale(0.94); }
-.cutscene-frame.effect-slide-left.next {
-  transform: translateX(100%);
-  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
-}
-.cutscene-frame.effect-slide-left.next.visible { transform: translateX(0); }
-.cutscene-frame.effect-slide-right.next {
-  transform: translateX(-100%);
-  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
-}
-.cutscene-frame.effect-slide-right.next.visible { transform: translateX(0); }
-.cutscene-layer::after {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(0,0,0,0.75) 100%);
-  pointer-events: none; z-index: 3;
-}
-.cutscene-progress {
-  position: absolute;
-  left: 0; bottom: 0;
-  height: 4px; width: 0%;
-  background: linear-gradient(90deg, #FBBF24, #F59E0B, #FBBF24);
-  background-size: 200% 100%;
-  box-shadow: 0 0 16px rgba(255,200,100,0.9);
-  z-index: 4;
-  transition: width 0.2s linear;
-  animation: progressShine 2s linear infinite;
-}
-@keyframes progressShine {
-  from { background-position: 200% 0; }
-  to   { background-position: -200% 0; }
-}
-.cutscene-controls {
-  position: absolute;
-  top: 24px; right: 24px;
-  display: flex; gap: 12px;
-  z-index: 5;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-.cutscene-layer.active .cutscene-controls { opacity: 1; }
-.cs-btn {
-  padding: 11px 22px;
-  background: rgba(0,0,0,0.7);
-  border: 1px solid rgba(244,197,66,0.85);
-  border-radius: 4px;
-  color: #FFD700;
-  font-family: inherit;
-  font-size: 13px; font-weight: bold;
-  letter-spacing: 2px; cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  text-transform: uppercase;
-  -webkit-tap-highlight-color: transparent;
-}
-.cs-btn:hover {
-  background: rgba(244,197,66,0.9);
-  color: #1a0d00;
-  transform: scale(1.05);
-  box-shadow: 0 0 24px rgba(255,200,80,0.6);
-}
-.cutscene-caption {
-  position: absolute;
-  left: 50%; bottom: 10vh;
-  transform: translateX(-50%);
-  max-width: 80vw;
-  padding: 16px 32px;
-  background: rgba(0,0,0,0.8);
-  border: 1px solid rgba(244,197,66,0.85);
-  border-radius: 4px;
-  color: #FFF8E7;
-  font-size: clamp(15px, 1.25vw, 19px);
-  line-height: 1.65;
-  text-align: center;
-  text-shadow: 1px 1px 5px rgba(0,0,0,0.95);
-  z-index: 4;
-  animation: captionIn 0.7s ease-out;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 40px rgba(255,200,80,0.2);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-@keyframes captionIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(24px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-body.cutscene-active .game-area,
-body.cutscene-active .click-layer,
-body.cutscene-active .history-controls,
-body.cutscene-active .particles-layer {
-  pointer-events: none;
-  opacity: 0.25;
-}
-
-.dialogue-text::-webkit-scrollbar, .modal::-webkit-scrollbar { width: 6px; }
-.dialogue-text::-webkit-scrollbar-track, .modal::-webkit-scrollbar-track {
-  background: rgba(255,243,196,0.1); border-radius: 3px;
-}
-.dialogue-text::-webkit-scrollbar-thumb, .modal::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #FBBF24, #F59E0B);
-  border-radius: 3px;
-}
-
-@media (max-width: 768px) {
-  .dialogue-box { width: 94vw; max-height: 42vh; bottom: 2vh; }
-  .speaker-name { top: -22px; left: 22px; padding: 8px 20px 7px; font-size: 14px; min-width: 110px; letter-spacing: 1.5px; }
-  .dialogue-text { font-size: 15px; padding: 30px 26px 26px; min-height: 14vh; max-height: 34vh; line-height: 1.7; }
-  .choice-box { bottom: 48vh; width: 92vw; gap: 10px; }
-  .choice-box a { padding: 13px 20px 13px 50px; font-size: 14px; }
-  .choice-box a::before { left: 18px; font-size: 16px; }
-  .history-btn, .game-menu button { width: 44px; height: 44px; font-size: 18px; }
-  .title-endings { bottom: 16vh; padding: 10px 24px; }
-  .notification { top: 76px; right: 14px; font-size: 12px; padding: 12px 18px 12px 22px; max-width: 280px; }
-  .modal { padding: 22px; }
-  .cs-btn { padding: 9px 16px; font-size: 12px; }
-  .item-popup { padding: 20px 28px; }
-  .item-popup .popup-icon { font-size: 40px; }
-  .item-popup .popup-name { font-size: 17px; }
-}
-@media (max-width: 480px) {
-  .dialogue-box { width: 96vw; max-height: 48vh; bottom: 1.5vh; border-radius: 3px; }
-  .speaker-name { top: -20px; left: 16px; padding: 6px 16px 6px; font-size: 13px; letter-spacing: 1px; }
-  .dialogue-text { font-size: 14px; padding: 28px 20px 22px; line-height: 1.65; }
-  .choice-box { bottom: 54vh; width: 96vw; gap: 8px; }
-  .choice-box a { padding: 11px 16px 11px 42px; font-size: 13px; }
-  .choice-box a::before { left: 14px; font-size: 14px; }
-  .history-btn, .game-menu button { width: 40px; height: 40px; font-size: 16px; }
-  .title-main { font-size: 30px; letter-spacing: 4px; }
-  .title-sub { font-size: 11px; letter-spacing: 3px; }
-  .history-controls, .game-menu { top: 12px; }
-  .history-controls { left: 12px; }
-  .game-menu { right: 12px; }
-  .cs-btn { padding: 8px 12px; font-size: 11px; letter-spacing: 1px; }
-}
-
-.hidden { display: none !important; }
+/* === Экран концовки === */
+.ending-screen{text-align:center;padding:1rem 0;}
+.ending-screen .big-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;
+  margin:0 0 .5rem;letter-spacing:.04em;}
+.ending-screen .big-title.harmony{color:var(--gold);text-shadow:0 0 30px rgba(242,193,78,.6);}
+.ending-screen .big-title.mastery{color:var(--moss);text-shadow:0 0 30px rgba(139,171,122,.6);}
+.ending-screen .sub{color:var(--dim);font-style:italic;margin-bottom:1.5rem;font-size:.95rem;}
+.ending-screen .btn-row{display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem;}
+.ending-screen .btn-row button{padding:.7rem 1rem;border-radius:9px;border:1px solid var(--line);
+  background:rgba(242,193,78,.06);color:var(--ink);font-family:'Lora',serif;font-size:.95rem;cursor:pointer;
+  transition:all .2s;}
+.ending-screen .btn-row button:hover{background:rgba(242,193,78,.14);border-color:var(--gold);}
+.ending-screen .btn-row button.primary{background:linear-gradient(90deg,var(--amber),var(--gold));
+  border:none;color:#241a06;font-weight:600;font-family:'Cormorant Garamond',serif;font-size:1rem;}
 </style>
 </head>
 <body>
-
-<div class="loading-screen" id="loadingScreen">
-  <div class="loading-spinner"></div>
-  <div class="loading-text">Загрузка долины...</div>
-</div>
-
-<audio id="bgMusic" loop preload="auto" src="audio/main_theme.mp3"></audio>
-
-<div class="bg-layer" id="bgLayer"></div>
-<div class="insert-layer" id="insertLayer"></div>
-<div class="particles-layer" id="particlesLayer"></div>
-<div class="vignette-layer"></div>
-
-<div class="cutscene-layer" id="cutsceneLayer">
-  <div class="cutscene-frame current" id="csFrameCurrent"></div>
-  <div class="cutscene-frame next"    id="csFrameNext"></div>
-  <div class="cutscene-progress" id="csProgress"></div>
-  <div class="cutscene-controls" id="csControls">
-    <button class="cs-btn" id="csSkip">⏭ Пропустить</button>
-    <button class="cs-btn" id="csPause">⏸</button>
+<div class="fireflies" id="fireflies"></div>
+<header>
+  <h1><span class="beetle">✨</span> Песнь Августа</h1>
+  <div class="header-right">
+    <div class="inv" id="inv">
+      <span data-k="feather" title="Перо Лазурной Сойки">🪶</span>
+      <span data-k="crystal" title="Кристалл Горного Кварца">💎</span>
+      <span data-k="drops" title="Капли Селесты">🧪</span>
+      <span data-k="key" title="Латунный ключ Тик-Така">🗝️</span>
+      <span data-k="scheme" title="Схема Олвена">📜</span>
+    </div>
+    <button class="iconbtn" id="journalBtn" title="Журнал">📖</button>
+    <button class="iconbtn" id="achBtn" title="Достижения">🏆</button>
+    <button class="iconbtn" id="setBtn" title="Настройки">⚙</button>
+    <button class="iconbtn" id="soundBtn">🔈 звук</button>
   </div>
-</div>
+</header>
+<main><div class="card" id="card"></div></main>
+<footer>Интерактивная сказка · выборы и предметы определяют финал</footer>
 
-<div class="click-layer" id="clickLayer"></div>
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
 
-<div class="history-controls" id="historyControls" style="display:none;">
-  <button class="history-btn" id="btnBack" title="Назад (←)">←</button>
-  <button class="history-btn" id="btnForward" title="Вперёд (→)">→</button>
-</div>
-
-<div id="gameArea"></div>
-
-<div class="notification" id="notification"></div>
 <div class="item-popup" id="itemPopup">
   <div class="popup-icon" id="popupIcon">✨</div>
   <div class="popup-label">Получен предмет</div>
@@ -886,1759 +199,539 @@ body.cutscene-active .particles-layer {
   <div class="popup-hint" id="popupHint"></div>
 </div>
 
-<div class="modal-overlay hidden" id="modalOverlay">
-  <div class="modal" id="modalContent"></div>
-</div>
+<div class="notification" id="notification"></div>
 
 <script>
 /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v14.0
-   2 концовки. Проверка предметов. Экран «Что дальше?».
+   ПЕСНЬ АВГУСТА — объединённая версия
+   Визуал/звук: SVG + Web Audio (без внешних файлов)
+   2 финала, проверка предметов, сохранения, журнал, достижения
    ============================================================ */
 
-/* ===== ФОНЫ ===== */
-const LOCATION_BG = {
-  title:              'images/bg_01.png',
-  title_night:        'images/bg_01.png',
-  start:              'images/bg_02.png',
-  player_outside:     'images/bg_03.png',
-  player_inside:      'images/bg_04.png',
-  letter_close:       'images/bg_05.png',
-  player_table:       'images/bg_06.png',
-  letter_hand:        'images/bg_07.png',
-  parchment:          'images/bg_08.png',
-  player_table2:      'images/bg_09.png',
-  epilogue:           'images/bg_09.png',
-
-  // === МОСТ ===
-  most_bridge:        'images/1.png',
-  most:               'images/2.png',
-  most_awake:         'images/3.png',
-  most_empty:         'images/4.png',
-
-  // === ЛАВКА СЕЛЕСТЫ ===
-  lavka:              'images/sprite/bg_03.png',
-
-  // === БАШНЯ ===
-  tower:              'images/sprite/bg_03.png',
-  tower_inside:       'images/sprite/bg_04.png',
-  observatory:        'images/sprite/bg_04.png',
-  august_sleep:       'images/sprite/bg_04.png',
-  final:              'images/sprite/bg_01.png',
-  festival:           'images/sprite/bg_01.png',
-  festival_night:     'images/sprite/bg_01.png',
-  festival_sunset:    'images/sprite/bg_01.png'
-};
-
-/* ===== ВСТАВКИ ===== */
-const INSERT_IMG = {
-  city:        'images/sprite/bg_02.png',
-  sunset:      'images/sprite/bg_01.png',
-  letter_wax:  'images/sprite/bg_05.png',
-  letter_open: 'images/sprite/bg_07.png',
-  epilogue:    'images/sprite/bg_09.png',
-  bruno_block: 'images/2.png',
-  bruno_awake: 'images/3.png',
-  most_free:   'images/4.png',
-  selesta:     'images/sprite/bg_03.png',
-  tower:       'images/sprite/bg_03.png',
-  observatory: 'images/sprite/bg_04.png',
-  august_sleep:'images/sprite/bg_04.png',
-  august_fly:  'images/sprite/bg_01.png'
-};
-
-const SPEAKER_MAP = {
-  'Мира': 'mira', 'Бруно': 'bruno',
-  'Бабушка Селеста': 'selesta', 'Селеста': 'selesta',
-  'Корнелиус': 'cornelius', 'Господин Корнелиус': 'cornelius',
-  'Мастер Олвен': 'olven', 'Август': 'august',
-  'Тик-Так': 'tik_tak', 'Вы': 'player'
-};
-
-const ACHIEVEMENTS = {
-  feather:    { icon: '🪶', title: 'Перо Лазурной Сойки', desc: 'Получить перо у Бруно' },
-  crystal:    { icon: '💎', title: 'Кристалл Кварца',      desc: 'Получить кристалл у Бруно' },
-  vial:       { icon: '🧪', title: 'Флакон Селесты',       desc: 'Получить флакон от Селесты' },
-  key:        { icon: '🔑', title: 'Латунный ключ',        desc: 'Взять ключ у Тик-Така' },
-  scheme:     { icon: '📜', title: 'Схема Олвена',         desc: 'Изучить чертёж мастера Олвена' },
-  allEndings: { icon: '👑', title: 'Обе концовки',         desc: 'Открыть оба финала' }
-};
-
-/* ===== ПРЕДМЕТЫ (для всплывающих карточек и журнала) ===== */
-const ITEM_DATA = {
-  has_feather:      { icon: '🪶', name: 'Перо Лазурной Сойки',   hint: 'Очищает звуковые трубки от пыли веков' },
-  has_crystal:      { icon: '💎', name: 'Кристалл Горного Кварца', hint: 'Фокусирует оптику маяка' },
-  has_selesta_vial: { icon: '🧪', name: 'Флакон Селесты',        hint: 'Пробуждает Августа лакомством' },
-  has_key:          { icon: '🔑', name: 'Латунный ключ',         hint: 'Калибровка призм главного механизма' },
-  has_scheme:       { icon: '📜', name: 'Схема Олвена',          hint: 'Угол 45° к центральной линзе' },
-  has_clue:         { icon: '🔍', name: 'Зацепка от Бруно',      hint: 'Сквозняк сбил настройку колоколов ночью' }
-};
-
-const CUTSCENES = {
-  ending_harmony: { frames: [
-    { img: 'images/sprite/bg_01.png', duration: 3500, effect: 'fade' },
-    { img: 'images/sprite/bg_09.png', duration: 3500, effect: 'zoom-in' },
-    { img: 'images/sprite/bg_01.png', duration: 3500, effect: 'fade' },
-    { img: 'images/sprite/bg_09.png', duration: 4500, effect: 'zoom-out' }
-  ]},
-  ending_mastery: { frames: [
-    { img: 'images/sprite/bg_01.png', duration: 3500, effect: 'fade' },
-    { img: 'images/sprite/bg_09.png', duration: 4500, effect: 'zoom-in' }
-  ]}
-};
-
-const SFX_MAP = {
-  click: 'audio/sfx/click.mp3',
-  choice: 'audio/sfx/choice.mp3',
-  achievement: 'audio/sfx/achievement.mp3',
-  transition: 'audio/sfx/transition.mp3'
-};
-const sfxCache = {};
-const SFX_VOLUME = 0.6;
-
-/* ============================================================
-   ПАССАЖИ
-   ============================================================ */
-const PASSAGES = {
-  title: { isTitle: true },
-
-  Start1: {
-    location: 'start',
-    insert: INSERT_IMG.city,
-    insertDuration: 1800,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой — а по утрам солнце поднимается из-за маяка и заливает золотом черепичные крыши.`,
-    next: 'Start2'
-  },
-  Start2: {
-    location: 'start',
-    insert: INSERT_IMG.sunset,
-    insertDuration: 1800,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Сегодня — особенный день. Праздник Осенней Звезды. Город украшен гирляндами из яблок, трактиры пекут пироги, а ремесленники развешивают флаги. Но что-то пошло не так.`,
-    next: 'Start3'
-  },
-  Start3: {
-    location: 'player_outside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы — молодой травник, ученик мастера Олвена. Ваш дом стоит на краю города, среди яблоневых садов. Этим утром вы проснулись от тишины: обычно в это время над озером уже гудели пчёлы и сновали лодки. Сегодня — тихо.`,
-    next: 'Start4'
-  },
-  Start4: {
-    location: 'player_outside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `На столе в доме лежало письмо: плотный пергамент, запечатанный красным воском с оттиском кленового листа — личный знак мастера Олвена.`,
-    next: 'Start5'
-  },
-  Start5: {
-    location: 'player_inside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы вернулись в дом. За окном — знакомый вид на маяк. На столе — письмо и чашка остывшего травяного чая. И тут за спиной послышались лёгкие шаги.`,
-    next: 'Start6'
-  },
-  Start6: {
-    location: 'player_table',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Подъём, Хранитель трав и ветров! Мастер Олвен передал, что в маяке заклинило рунный резонатор. Я взяла отмычки, разводной ключ и банку лучшей графитовой смазки. А у тебя что в письме?`,
-    choices: [
-      { text: 'Вскрыть письмо мастера Олвена прямо сейчас', to: 'ОткрытьПисьмо' },
-      { text: 'Сначала обсудить маршрут к маяку', to: 'ВыборПути' },
-      { text: 'Пошутить над Мирой и её чехлом с инструментами', to: 'РазговорСМирой1' }
-    ]
-  },
-  ОткрытьПисьмо: {
-    location: 'letter_close',
-    insert: INSERT_IMG.letter_open,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы берёте письмо. Красный воск тёплый на ощупь, оттиск кленового листа чёткий, будто только что сделан. За окном — солнце, тишина и далёкий маяк.`,
-    next: 'ПисьмоОлвена'
-  },
-  ПисьмоОлвена: {
-    location: 'parchment',
-    speaker: 'Мастер Олвен', boxClass: 'olven',
-    text: `«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы и фальшивых нот. Если механизм замер, ищите причину не в поломке металла, а в нарушении гармонии. Возьмите с собой частицу стихии и помните: свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».`,
-    next: 'ПисьмоОлвена2'
-  },
-  ПисьмоОлвена2: {
-    location: 'player_table2',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— «Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?`,
-    choices: [
-      { text: 'Пойти через Старый каменный мост', to: 'СтарыйМост' },
-      { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
-    ]
-  },
-
-  ВыборПути: {
-    location: 'player_table2',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы прячете письмо во внутренний карман.`,
-    next: 'ВыборПути2'
-  },
-  ВыборПути2: {
-    location: 'player_table2',
-    speaker: 'Вы', boxClass: 'player',
-    text: `— Разберёмся по дороге. Сначала — к маяку.`,
-    next: 'ВыборПути3'
-  },
-  ВыборПути3: {
-    location: 'player_table2',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Мира кивает и закидывает чехол на плечо.`,
-    next: 'ВыборПути4'
-  },
-  ВыборПути4: {
-    location: 'player_table2',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Тогда решай, как пойдём. Через Старый мост — дольше, но спокойнее. Или заглянем к бабушке Селесте — она всегда что-то подскажет.`,
-    choices: [
-      { text: 'Пойти через Старый каменный мост', to: 'СтарыйМост' },
-      { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
-    ]
-  },
-
-  РазговорСМирой1: {
-    location: 'player_table2',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы с улыбкой оглядываете её внушительный багаж.`,
-    next: 'РазговорСМирой2'
-  },
-  РазговорСМирой2: {
-    location: 'player_table2',
-    speaker: 'Вы', boxClass: 'player',
-    text: `— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`,
-    next: 'РазговорСМирой3'
-  },
-  РазговорСМирой3: {
-    location: 'player_table2',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Мира театрально постучала медным ключом по ладони.`,
-    next: 'РазговорСМирой4'
-  },
-  РазговорСМирой4: {
-    location: 'player_table2',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Или у Корнелиуса снова заржавел механизм для колки орехов? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?`,
-    next: 'ОткрытьПисьмо'
-  },
-
-  /* === СТАРЫЙ МОСТ === */
-  СтарыйМост: {
-    location: 'most_bridge',
-    insert: INSERT_IMG.bruno_block,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. По обе стороны — фонари и осенние деревья. Но что это? Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно.`,
-    next: 'СтарыйМост2'
-  },
-  СтарыйМост2: {
-    location: 'most',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Его каменные крылья были увиты мхом, хвост с кисточкой мирно покачивался в воздухе, а из приоткрытой пасти вырывался лёгкий храп. Он перегородил весь проход.`,
-    next: 'СтарыйМост3'
-  },
-  СтарыйМост3: {
-    location: 'most',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Эй, дядюшка Бруно! Просыпайся, соня!`,
-    next: 'СтарыйМост4'
-  },
-  СтарыйМост4: {
-    location: 'most_awake',
-    insert: INSERT_IMG.bruno_awake,
-    insertDuration: 2200,
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Ба, знакомые лица! Куда путь держите в такой важный день? Уж не к маяку ли?`,
-    next: 'СтарыйМост5'
-  },
-  СтарыйМост5: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Церемонии — основа порядка в долине! Но ради праздника я не стану мучить вас тремя испытаниями. Одной загадки довольно. Слушайте: «Не имеет крыльев, а летает; не имеет голоса, а воет; в стужу жалит, в зной ласкает, а сожмёшь в кулак — исчезнет без следа».`,
-    choices: [
-      { text: 'Ответить с уверенностью: «Это горный ветер!»', to: 'МостВетер' },
-      { text: 'Попробовать поэтический ответ: «Это лесное эхо»', to: 'МостЭхо' },
-      { text: 'Достать из сумки медовое сушеное яблоко и угостить Бруно', to: 'МостУгощение' },
-      { text: 'Расспросить Бруно: не видел ли он, что стряслось с башней ночью?', to: 'МостРасспросы' }
-    ]
-  },
-  МостВетер: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Бруно хлопнул кожистыми крыльями, подняв облачко безвредной каменной пыли.`,
-    next: 'МостВетер2'
-  },
-  МостВетер2: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— В самую точку! Кому как не ученику Хранителя ветров знать повадки воздуха. Ты заслужил свободный проход!`,
-    next: 'МостВетер3'
-  },
-  МостВетер3: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Он полез лапой под мостовую плиту и выкатил вам под ноги диковинку.`,
-    next: 'МостВетер4'
-  },
-  МостВетер4: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Вот, держи. Это Перо Лазурной Сойки-Вестницы. Оно зачаровано на лёгкое дыхание. Если в механизмах башни застрянет пыль веков — взмахни им, и сквозняк сделает всю работу чисто и без поломок!`,
-    set: { has_feather: true },
-    next: 'МостВетер5'
-  },
-  МостВетер5: {
-    location: 'most_empty',
-    insert: INSERT_IMG.most_free,
-    insertDuration: 2200,
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Прекрасный подарок! Спасибо, Бруно! Дорога свободна — идём к маяку!`,
-    next: 'БашняСнаружи'
-  },
-  МостЭхо: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Бруно басовито захохотал, сотрясая каменные перила.`,
-    next: 'МостЭхо2'
-  },
-  МостЭхо2: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Ох, молодёжь! Поэзии в тебе хоть отбавляй, а вот физика хромает! Разве эхо может ласкать в зной или жалить в стужу? Это ветер! Но за дерзость и красивый слог я не стану вас задерживать. Идите с миром, да смотрите под ноги на крутом подъёме.`,
-    next: 'МостЭхо3'
-  },
-  МостЭхо3: {
-    location: 'most_empty',
-    insert: INSERT_IMG.most_free,
-    insertDuration: 2000,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Мира помахала гаргулю рукой, и вы поспешили дальше по вымощенной плитами дорожке.`,
-    next: 'БашняСнаружи'
-  },
-  МостУгощение: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы достаёте из мешочка крупный янтарный ломтик вяленого яблока, пропитанный густым липовым мёдом. Аромат пряностей мгновенно окутывает мост.`,
-    next: 'МостУгощение2'
-  },
-  МостУгощение2: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— О великие горы... Это то самое? С пасеки мастера Олвена?!`,
-    next: 'МостУгощение3'
-  },
-  МостУгощение3: {
-    location: 'most_awake',
-    speaker: 'Вы', boxClass: 'player',
-    text: `— Специально для хранителя покоя долины.`,
-    next: 'МостУгощение4'
-  },
-  МостУгощение4: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Бруно бережно подхватил ломтик, сунул в пасть и зажмурился от блаженства.`,
-    next: 'МостУгощение5'
-  },
-  МостУгощение5: {
-    location: 'most_empty',
-    insert: INSERT_IMG.most_free,
-    insertDuration: 2200,
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Боги гранита, какая сладость! Забирайте мост, забирайте реку, проходите скорее! И погодите... вот, возьмите! На днях с карниза маяка упал чистейший Кристалл Горного Кварца. Я подобрал, чтобы не растоптали. В оптике маяка ему самое место!`,
-    set: { has_crystal: true },
-    next: 'БашняСнаружи'
-  },
-  МостРасспросы: {
-    location: 'most_awake',
-    speaker: 'Вы', boxClass: 'player',
-    text: `— Бруно, ты ведь сидишь здесь круглые сутки. Скажи, ночью над башней ничего странного не происходило?`,
-    next: 'МостРасспросы2'
-  },
-  МостРасспросы2: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Гаргуль задумался, почесывая каменное ухо когтем.`,
-    next: 'МостРасспросы3'
-  },
-  МостРасспросы3: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Хм-м... Знаете, около полуночи с вершины башни сорвался лёгкий серебристый всполох. А потом послышался такой звук: динь-дон-хрясь! Ветер тогда дул с Заброшенной Обсерватории.`,
-    set: { has_clue: true },
-    next: 'МостРасспросы4'
-  },
-  МостРасспросы4: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Мира нахмурилась.`,
-    next: 'МостРасспросы5'
-  },
-  МостРасспросы5: {
-    location: 'most_awake',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Сквозняк мог сбить настройку балансира! Спасибо, дядюшка Бруно, это важная зацепка.`,
-    next: 'МостРасспросы6'
-  },
-  МостРасспросы6: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Ну а загадку отгадывать будете, сыщики?`,
-    choices: [
-      { text: 'Ответить: «Это горный ветер!»', to: 'МостВетер' },
-      { text: 'Угостить Бруно медовым лакомством', to: 'МостУгощение' }
-    ]
-  },
-
-  /* === ЛАВКА СЕЛЕСТЫ === */
-  ЛавкаСелесты: {
-    location: 'lavka',
-    insert: INSERT_IMG.selesta,
-    insertDuration: 2000,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы сворачиваете на улочку Травников к круглому домику бабушки Селесты.`,
-    next: 'ЛавкаСелесты2'
-  },
-  ЛавкаСелесты2: {
-    location: 'lavka',
-    speaker: 'Бабушка Селеста', boxClass: 'selesta',
-    text: `— Батюшки, юные мастера! Беда с маяком, весь посёлок гудит! Вы на маяк?`,
-    next: 'ЛавкаСелесты3'
-  },
-  ЛавкаСелесты3: {
-    location: 'lavka',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Да, бабушка Селеста. Нам нужно оживить резонатор.`,
-    next: 'ЛавкаСелесты4'
-  },
-  ЛавкаСелесты4: {
-    location: 'lavka',
-    speaker: 'Бабушка Селеста', boxClass: 'selesta',
-    text: `— Возьмите-ка вот это. Это капли лунного зверобоя и сладкой мелиссы. Если Август закапризничает — пара капель вернут ему бодрость духа.`,
-    set: { has_selesta_vial: true },
-    next: 'БашняСнаружи'
-  },
-
-  /* === БАШНЯ === */
-  БашняСнаружи: {
-    location: 'tower',
-    insert: INSERT_IMG.tower,
-    insertDuration: 2200,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Перед вами вздымалась Башня Светлячков. Массивные дубовые двери были заперты. На бронзовой накладке замка — циферблат с четырьмя стихийными знаками.`,
-    next: 'БашняСнаружи2'
-  },
-  БашняСнаружи2: {
-    location: 'tower',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Загадка гильдии архитекторов! «Лишь союз тепла и движения пробудит спящий свет». Что крутить будем?`,
-    next: 'БашняСнаружи3'
-  },
-  БашняСнаружи3: {
-    location: 'tower',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Что выбираем?`,
-    choices: [
-      { text: 'Выставить комбинацию: «Солнце и Ветер»', to: 'ДверьОткрыта' },
-      { text: 'Выставить комбинацию: «Вода и Росток»', to: 'ДверьОшибкаДобро' },
-      { text: 'Осмотреть окрестности: вдруг есть другой проход?', to: 'ОсмотрСтенБашни' }
-    ]
-  },
-  ДверьОткрыта: {
-    location: 'tower_inside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Щёлк-щёлк-клац! Медные шестерни весело зажужжали. Двери распахнулись.`,
-    set: { door_opened: true },
-    next: 'ВнутриБашни'
-  },
-  ДверьОшибкаДобро: {
-    location: 'tower',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Освежает! Но подсказка гласила: «Тепло и движение»! Попробуем ещё раз?`,
-    next: 'ДверьОткрыта'
-  },
-  ОсмотрСтенБашни: {
-    location: 'tower',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Окно приоткрыто. Можем подняться в Обсерваторию или открыть парадную дверь.`,
-    choices: [
-      { text: 'Открыть парадную дверь', to: 'ДверьОткрыта' },
-      { text: 'Залезть в окно Обсерватории', to: 'Обсерватория' }
-    ]
-  },
-  Обсерватория: {
-    location: 'observatory',
-    insert: INSERT_IMG.observatory,
-    insertDuration: 2200,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы оказались в комнате с медными звёздными картами и огромным телескопом, направленным на залив. На столе спал заводной кот Тик-Так с латунным ключом на ошейнике.`,
-    next: 'Обсерватория2'
-  },
-  Обсерватория2: {
-    location: 'observatory',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Кот доверчиво протянул лапку.`,
-    choices: [
-      { text: 'Взять латунный ключ', to: 'ВзятьКлюч' },
-      { text: 'Оставить ключ и спуститься', to: 'ВнутриБашни' }
-    ]
-  },
-  ВзятьКлюч: {
-    location: 'observatory',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы аккуратно отстёгиваете ключ. Тик-Так следует за вами.`,
-    set: { has_key: true },
-    next: 'ВнутриБашни'
-  },
-  ВнутриБашни: {
-    location: 'tower_inside',
-    insert: INSERT_IMG.august_sleep,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Главный зал башни поражал размахом. В центре метался старый смотритель Корнелиус. На постаменте спал Август — Звёздный Светляк размером с сенбернара.`,
-    next: 'Корнелиус1'
-  },
-  Корнелиус1: {
-    location: 'tower_inside',
-    speaker: 'Корнелиус', boxClass: 'cornelius',
-    text: `— Беда! Катастрофа долины! Фестиваль через два часа, а наш золотой мальчик спит без задних лапок!`,
-    next: 'Корнелиус2'
-  },
-  Корнелиус2: {
-    location: 'tower_inside',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Господин Корнелиус, спокойствие! Олвен прислал подкрепление!`,
-    next: 'Корнелиус3'
-  },
-  Корнелиус3: {
-    location: 'tower_inside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Смотритель замер, развернулся и уставился на вас через тройные линзы.`,
-    next: 'Корнелиус4'
-  },
-  Корнелиус4: {
-    location: 'tower_inside',
-    speaker: 'Корнелиус', boxClass: 'cornelius',
-    text: `— Ох... Хвала небесам! Вы здесь! Спасите Августа!`,
-    choices: [
-      { text: 'Показать Корнелиусу письмо Олвена со схемой', to: 'ПоказатьСхему1' },
-      { text: 'Осмотреть колокольный механизм и хрустальные линзы', to: 'ОсмотрМеханизма1' },
-      { text: 'Подойти к Августу и тихо заговорить с ним', to: 'ОсмотрАвгуста1' }
-    ]
-  },
-  ПоказатьСхему1: {
-    location: 'tower_inside',
-    speaker: 'Корнелиус', boxClass: 'cornelius',
-    text: `— Батюшки! Да ведь это же настройка гармонического строя третьей октавы!`,
-    set: { has_scheme: true },
-    next: 'ГлавнаяПочинка'
-  },
-  ОсмотрМеханизма1: {
-    location: 'tower_inside',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Работа ясна! Мы можем сделать это несколькими путями!`,
-    set: { inspected_mechanism: true },
-    next: 'ГлавнаяПочинка'
-  },
-  ОсмотрАвгуста1: {
-    location: 'tower_inside',
-    insert: INSERT_IMG.august_sleep,
-    insertDuration: 1800,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы тихонько проводите ладонью по его пушистой голове. Август приоткрывает огромный фиолетовый глаз.`,
-    set: { has_met_august: true },
-    next: 'ГлавнаяПочинка'
-  },
-  ГлавнаяПочинка: {
-    location: 'tower_inside',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `Корнелиус замер в ожидании с маслёнкой наготове. Какой план действий вы выберете?`,
-    choices: [
-      { text: 'План 1: Полная синхронизация всех сил — природа, наука и дружба вместе', to: 'ФиналГармония' },
-      { text: 'План 2: Полагаться на инженерную смекалку и точный расчёт', to: 'ФиналМастерство' }
-    ]
-  },
-
-  /* === 2 ФИНАЛА === */
-  ФиналГармония: {
-    location: 'final',
-    insert: INSERT_IMG.august_fly,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы разворачиваете схему Олвена. Мира выставляет колокола под углом сорок пять градусов. Корнелиус дрожащими руками подаёт вам флакон Селесты — золотистые капли лунного зверобоя падают на сахарную пластину.<br><br>Перо Лазурной Сойки взмахивает над серебряными лепестками — пыль веков слетает, и колокола оживают чистым хрустальным звоном. Август приоткрывает фиолетовый глаз... и встаёт во весь рост!`,
-    next: 'КонецГармония'
-  },
-  ФиналМастерство: {
-    location: 'final',
-    insert: INSERT_IMG.august_fly,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Мира берёт дело в свои руки. Ключ на двенадцать от Тик-Така, кристалл кварца Бруно — в оправу оптической оси. Все шестерёнки встают на места с идеальным кликом: <i>тик-так, тик-так</i>.<br><br>Механическая карусель оживает без единого скрипа. Зеркала выстраиваются в идеальную спираль — и Август, очарованный безупречной гармонией движения, взмывает в центр конструкции!`,
-    next: 'КонецМастерство'
-  },
-
-  КонецГармония: {
-    location: 'epilogue',
-    cutscene: 'ending_harmony',
-    speaker: 'Финал', boxClass: 'final-box', ending: 'harmony',
-    text: `<b>КОНЕЦ: Финал Гармонии</b><br><br><i>Вы доказали, что природа, наука и тепло сердец вместе способны оживить даже самое хрупкое волшебство.</i>`,
-    endingScreen: 'harmony'
-  },
-  КонецМастерство: {
-    location: 'epilogue',
-    cutscene: 'ending_mastery',
-    speaker: 'Финал', boxClass: 'final-box', ending: 'mastery',
-    text: `<b>КОНЕЦ: Финал Мастерства</b><br><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>`,
-    endingScreen: 'mastery'
-  }
-};
-
-/* ============================================================
-   ПРОГРЕСС
-   ============================================================ */
-const SAVE_KEY          = 'pesn_augusta_save';
-const PROGRESS_KEY      = 'pesn_augusta_progress';
-const ENDINGS_KEY       = 'pesn_augusta_endings';
-const ACHIEVEMENTS_KEY  = 'pesn_augusta_achievements';
-const SETTINGS_KEY      = 'pesn_augusta_settings';
-
-const gameState = {
-  currentPassage: 'title',
-  history: [], historyIndex: -1,
-  variables: {}, endings: {}, achievements: {},
-  progress: {
-    passages: {}, cutscenes: {}, choices: {}, locations: {},
-    journal: [], playCount: 0, totalPlayTime: 0, lastPassage: null
-  },
-  settings: { textSpeed: 40, musicVolume: 0.6, typewriter: 'on', sfx: 'on' },
-  isTyping: false, typewriterTimer: null, isSwitching: false,
-  sessionStart: Date.now()
-};
-
-function createEmptyProgress() {
-  return { passages: {}, cutscenes: {}, choices: {}, locations: {}, journal: [], playCount: 0, totalPlayTime: 0, lastPassage: null };
-}
-function loadProgress() {
-  try {
-    const raw = localStorage.getItem(PROGRESS_KEY);
-    if (!raw) return createEmptyProgress();
-    return Object.assign(createEmptyProgress(), JSON.parse(raw));
-  } catch (e) { return createEmptyProgress(); }
-}
-function saveProgress() {
-  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(gameState.progress)); return true; }
-  catch (e) { return false; }
-}
-function markPassageVisited(id) {
-  if (!gameState.progress.passages[id]) {
-    gameState.progress.passages[id] = true;
-    gameState.progress.lastPassage = id;
-    saveProgress();
+/* ---------- AUDIO (synthesised) ---------- */
+let actx=null, droneOn=false, gainNode=null, osc1=null, osc2=null;
+function ensureAudio(){ if(!actx){ try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } }
+function toggleDrone(){
+  ensureAudio(); if(!actx) return;
+  if(!droneOn){
+    gainNode=actx.createGain(); gainNode.gain.value=0;
+    osc1=actx.createOscillator(); osc1.type='sine'; osc1.frequency.value=110;
+    osc2=actx.createOscillator(); osc2.type='sine'; osc2.frequency.value=165;
+    const lfo=actx.createOscillator(); lfo.type='sine'; lfo.frequency.value=.12;
+    const lfoGain=actx.createGain(); lfoGain.gain.value=.015;
+    lfo.connect(lfoGain); lfoGain.connect(gainNode.gain);
+    osc1.connect(gainNode); osc2.connect(gainNode); gainNode.connect(actx.destination);
+    osc1.start(); osc2.start(); lfo.start();
+    gainNode.gain.linearRampToValueAtTime(.05*(state.settings.volume||1), actx.currentTime+1.2);
+    droneOn=true; document.getElementById('soundBtn').textContent='🔊 звук';
+    document.getElementById('soundBtn').classList.add('active');
+  } else {
+    gainNode.gain.linearRampToValueAtTime(0, actx.currentTime+.6);
+    setTimeout(()=>{ try{osc1.stop();osc2.stop();}catch(e){} },700);
+    droneOn=false; document.getElementById('soundBtn').textContent='🔈 звук';
+    document.getElementById('soundBtn').classList.remove('active');
   }
 }
-function markCutsceneWatched(key) {
-  if (!gameState.progress.cutscenes[key]) {
-    gameState.progress.cutscenes[key] = true;
-    saveProgress();
-  }
+function tick(freq){
+  if(!state.settings.sfx) return;
+  ensureAudio(); if(!actx) return;
+  const o=actx.createOscillator(), g=actx.createGain();
+  o.type='triangle'; o.frequency.value=freq||740;
+  g.gain.value=.04*(state.settings.volume||1); o.connect(g); g.connect(actx.destination);
+  o.start(); g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime+.18); o.stop(actx.currentTime+.2);
 }
-function markLocationVisited(key) {
-  if (key && !gameState.progress.locations[key]) {
-    gameState.progress.locations[key] = true;
-    saveProgress();
-  }
+function chime(){
+  if(!state.settings.sfx) return;
+  ensureAudio(); if(!actx) return;
+  [660, 880, 1320].forEach((f,i)=>{
+    const o=actx.createOscillator(), g=actx.createGain();
+    o.type='sine'; o.frequency.value=f;
+    g.gain.value=0; o.connect(g); g.connect(actx.destination);
+    o.start(); 
+    const t=actx.currentTime+i*0.1;
+    g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(.06,t+.05);
+    g.gain.exponentialRampToValueAtTime(.0001,t+.8);
+    o.stop(t+.9);
+  });
 }
-function markChoice(id, to) { gameState.progress.choices[id] = to; saveProgress(); }
-function isPassageVisited(id) { return !!gameState.progress.passages[id]; }
-function countVisitedPassages() { return Object.keys(gameState.progress.passages).length; }
-function countTotalPassages() { return Object.keys(PASSAGES).filter(k => !PASSAGES[k].isTitle).length; }
-function countWatchedCutscenes() { return Object.keys(gameState.progress.cutscenes).length; }
-function countVisitedLocations() { return Object.keys(gameState.progress.locations).length; }
-function getCompletionPercent() {
-  const total = countTotalPassages();
-  return total === 0 ? 0 : Math.round((countVisitedPassages() / total) * 100);
+
+/* ---------- FIREFLIES ---------- */
+const fc=document.getElementById('fireflies');
+for(let i=0;i<22;i++){
+  const f=document.createElement('div'); f.className='firefly';
+  f.style.left=Math.random()*100+'vw'; f.style.top=Math.random()*100+'vh';
+  f.style.setProperty('--dx',(Math.random()*160-80)+'px'); f.style.setProperty('--dy',(Math.random()*160-80)+'px');
+  f.style.animationDuration=(6+Math.random()*8)+'s'; f.style.animationDelay=(-Math.random()*8)+'s';
+  fc.appendChild(f);
 }
-function saveGame() {
-  try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({
-      version: 14, timestamp: Date.now(),
-      currentPassage: gameState.currentPassage,
-      history: gameState.history, historyIndex: gameState.historyIndex,
-      variables: gameState.variables,
-      endings: gameState.endings,
-      achievements: gameState.achievements
-    }));
-    saveProgress();
+
+/* ---------- STATE + SAVE ---------- */
+const SAVE_KEY='pesn_augusta_v1';
+const state={
+  scene:'start',
+  items:{feather:false,crystal:false,drops:false,key:false,scheme:false},
+  endings:{harmony:false, mastery:false},
+  achievements:{},
+  settings:{volume:1, sfx:true}
+};
+function save(){
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({
+    scene:state.scene, items:state.items, endings:state.endings,
+    achievements:state.achievements, settings:state.settings
+  })); }catch(e){}
+}
+function load(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY); if(!raw) return false;
+    const d=JSON.parse(raw);
+    if(d.scene) state.scene=d.scene;
+    if(d.items) Object.assign(state.items, d.items);
+    if(d.endings) Object.assign(state.endings, d.endings);
+    if(d.achievements) state.achievements=d.achievements;
+    if(d.settings) Object.assign(state.settings, d.settings);
     return true;
-  } catch (e) { return false; }
+  }catch(e){ return false; }
 }
-function loadGame() {
-  try {
-    const raw = localStorage.getItem(SAVE_KEY);
-    if (!raw) return false;
-    const s = JSON.parse(raw);
-    if (!s || !s.currentPassage) return false;
-    gameState.currentPassage = s.currentPassage;
-    gameState.history = s.history || [];
-    gameState.historyIndex = (typeof s.historyIndex === 'number') ? s.historyIndex : gameState.history.length - 1;
-    gameState.variables = s.variables || {};
-    gameState.endings = Object.assign({}, gameState.endings, s.endings || {});
-    gameState.achievements = Object.assign({}, gameState.achievements, s.achievements || {});
-    return true;
-  } catch (e) { return false; }
-}
-function hasSave() { try { return !!localStorage.getItem(SAVE_KEY); } catch (e) { return false; } }
-function loadEndingsFromStorage() {
-  try { const s = localStorage.getItem(ENDINGS_KEY); if (s) gameState.endings = Object.assign({}, JSON.parse(s), gameState.endings); } catch (e) {}
-}
-function saveEndingsToStorage() {
-  try { localStorage.setItem(ENDINGS_KEY, JSON.stringify(gameState.endings)); } catch (e) {}
-}
-function countEndings() { return ['harmony','mastery'].filter(k => gameState.endings[k]).length; }
-function loadAchievementsFromStorage() {
-  try { const s = localStorage.getItem(ACHIEVEMENTS_KEY); if (s) gameState.achievements = Object.assign({}, JSON.parse(s), gameState.achievements); } catch (e) {}
-}
-function saveAchievementsToStorage() {
-  try { localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(gameState.achievements)); } catch (e) {}
-}
-function unlockAchievement(key) {
-  if (gameState.achievements[key]) return;
-  gameState.achievements[key] = true;
-  saveAchievementsToStorage();
-  const a = ACHIEVEMENTS[key];
-  if (a) { showNotification('🏆 Достижение', `${a.icon} ${a.title}`); playSfx('achievement'); }
-}
-function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(gameState.settings)); } catch (e) {} }
-function loadSettings() {
-  try { const s = localStorage.getItem(SETTINGS_KEY); if (s) Object.assign(gameState.settings, JSON.parse(s)); } catch (e) {}
-}
-function resetProgress() {
-  gameState.progress = createEmptyProgress();
-  gameState.endings = {};
-  gameState.achievements = {};
-  gameState.variables = {};
-  gameState.history = [];
-  gameState.historyIndex = -1;
-  try {
-    localStorage.removeItem(PROGRESS_KEY);
-    localStorage.removeItem(ENDINGS_KEY);
-    localStorage.removeItem(ACHIEVEMENTS_KEY);
-    localStorage.removeItem(SAVE_KEY);
-  } catch (e) {}
-}
-function resetPassagesOnly() {
-  gameState.progress.passages = {};
-  gameState.progress.choices = {};
-  gameState.progress.locations = {};
-  gameState.progress.cutscenes = {};
-  saveProgress();
+function resetAll(){
+  state.scene='start';
+  Object.keys(state.items).forEach(k=>state.items[k]=false);
+  state.endings={harmony:false, mastery:false};
+  state.achievements={};
+  save();
 }
 
-/* ============================================================
-   ПРОВЕРКА ПРЕДМЕТОВ ДЛЯ ФИНАЛОВ
-   ============================================================ */
-function canDoHarmony() {
-  return !!(gameState.variables.has_selesta_vial && gameState.variables.has_scheme);
-}
-function canDoMastery() {
-  return !!(gameState.variables.has_key || gameState.variables.has_crystal);
-}
-function getMissingForHarmony() {
-  const missing = [];
-  if (!gameState.variables.has_selesta_vial) missing.push('🧪 Флакон Селесты');
-  if (!gameState.variables.has_scheme) missing.push('📜 Схема Олвена');
-  return missing;
-}
-function getMissingForMastery() {
-  const missing = [];
-  if (!gameState.variables.has_key && !gameState.variables.has_crystal) {
-    missing.push('🔑 Латунный ключ или 💎 Кристалл Кварца');
+/* ---------- INVENTORY ---------- */
+function give(items){ items.forEach(k=>state.items[k]=true); renderInv(); }
+function renderInv(){ document.querySelectorAll('#inv span').forEach(s=>{
+  s.classList.toggle('got', !!state.items[s.dataset.k]); }); }
+function has(k){ return !!state.items[k]; }
+
+/* ---------- ACHIEVEMENTS ---------- */
+const ACH={
+  feather:{icon:'🪶',title:'Перо Лазурной Сойки',desc:'Отгадать загадку Бруно'},
+  crystal:{icon:'💎',title:'Кристалл Кварца',desc:'Угостить Бруно яблоком'},
+  drops:{icon:'🧪',title:'Капли Селесты',desc:'Заглянуть к травнице'},
+  key:{icon:'🗝️',title:'Латунный ключ',desc:'Взять ключ у Тик-Така'},
+  scheme:{icon:'📜',title:'Схема Олвена',desc:'Показать письмо Корнелиусу'},
+  harmony:{icon:'✨',title:'Финал Гармонии',desc:'Пройти путь единства'},
+  mastery:{icon:'⚙',title:'Финал Мастерства',desc:'Пройти путь инженерии'},
+  allEndings:{icon:'👑',title:'Обе концовки',desc:'Открыть оба финала'}
+};
+function unlockAch(key){
+  if(state.achievements[key]) return;
+  state.achievements[key]=true; save();
+  const a=ACH[key]; if(a){
+    showNotification('🏆 Достижение', `${a.icon} ${a.title}`);
+    chime();
   }
-  return missing;
+  if(state.endings.harmony && state.endings.mastery) unlockAch('allEndings');
 }
 
-/* ============================================================
-   АУДИО
-   ============================================================ */
-const bgMusic = document.getElementById('bgMusic');
-let musicStarted = false;
-
-function playSfx(type) {
-  if (gameState.settings.sfx !== 'on') return;
-  const src = SFX_MAP[type];
-  if (!src) return;
-  if (!sfxCache[type]) {
-    const a = new Audio(src);
-    a.preload = 'auto'; a.volume = SFX_VOLUME;
-    a.onerror = () => console.warn('SFX не найден:', src);
-    sfxCache[type] = a;
-  }
-  const s = sfxCache[type].cloneNode();
-  s.volume = SFX_VOLUME;
-  s.play().catch(() => {});
-}
-function startMusic() {
-  if (musicStarted || !bgMusic) return;
-  bgMusic.volume = gameState.settings.musicVolume;
-  const p = bgMusic.play();
-  if (p && p.catch) {
-    p.then(() => { musicStarted = true; }).catch(() => {
-      const kick = () => {
-        bgMusic.play().then(() => {
-          musicStarted = true;
-          document.removeEventListener('click', kick);
-          document.removeEventListener('keydown', kick);
-        }).catch(() => {});
-      };
-      document.addEventListener('click', kick);
-      document.addEventListener('keydown', kick);
-    });
-  } else { musicStarted = true; }
-}
-function setMusicVolume(v) {
-  gameState.settings.musicVolume = v;
-  if (bgMusic) bgMusic.volume = v;
-}
-
-let notifyTimer = null;
-function showNotification(title, text, type) {
-  const el = document.getElementById('notification');
-  if (!el) return;
-  el.innerHTML = `<b>${title}</b>${text}`;
-  el.classList.remove('warn');
-  if (type === 'warn') el.classList.add('warn');
+/* ---------- UI HELPERS ---------- */
+let notifyTimer=null;
+function showNotification(title, text, type){
+  const el=document.getElementById('notification');
+  el.innerHTML=`<b>${title}</b>${text}`;
+  el.classList.toggle('warn', type==='warn');
   el.classList.add('show');
-  if (notifyTimer) clearTimeout(notifyTimer);
-  notifyTimer = setTimeout(() => el.classList.remove('show'), 3200);
+  if(notifyTimer) clearTimeout(notifyTimer);
+  notifyTimer=setTimeout(()=>el.classList.remove('show'), 3200);
+}
+let popupTimer=null;
+function showItemPopup(key){
+  const data=ITEMS[key]; if(!data) return;
+  document.getElementById('popupIcon').textContent=data.icon;
+  document.getElementById('popupName').textContent=data.name;
+  document.getElementById('popupHint').textContent=data.hint;
+  const p=document.getElementById('itemPopup');
+  p.classList.add('show');
+  if(popupTimer) clearTimeout(popupTimer);
+  popupTimer=setTimeout(()=>p.classList.remove('show'), 2500);
 }
 
-/* ===== ВСПЛЫВАЮЩАЯ КАРТОЧКА ПРЕДМЕТА ===== */
-let popupTimer = null;
-function showItemPopup(itemKey) {
-  const data = ITEM_DATA[itemKey];
-  if (!data) return;
-  const popup = document.getElementById('itemPopup');
-  document.getElementById('popupIcon').textContent = data.icon;
-  document.getElementById('popupName').textContent = data.name;
-  document.getElementById('popupHint').textContent = data.hint;
-  popup.classList.add('show');
-  playSfx('achievement');
-  if (popupTimer) clearTimeout(popupTimer);
-  popupTimer = setTimeout(() => popup.classList.remove('show'), 2800);
-}
-
-/* ============================================================
-   ФОН И ВСТАВКИ
-   ============================================================ */
-let bgSwapTimer = null;
-function setBackground(locationKey) {
-  const bg = document.getElementById('bgLayer');
-  const url = LOCATION_BG[locationKey];
-  const currentUrl = bg.style.backgroundImage;
-  if (url && currentUrl && currentUrl.includes(url)) return;
-  if (bgSwapTimer) { clearTimeout(bgSwapTimer); bgSwapTimer = null; }
-  bg.style.opacity = '0';
-  bgSwapTimer = setTimeout(() => {
-    bg.style.backgroundImage = url ? `url("${url}")` : 'none';
-    bg.style.opacity = '1';
-    bgSwapTimer = null;
-  }, 500);
-}
-
-let insertTimer = null;
-let insertClearTimer = null;
-function showInsert(imgUrl, duration) {
-  const layer = document.getElementById('insertLayer');
-  if (!layer || !imgUrl) return;
-  if (insertTimer) { clearTimeout(insertTimer); insertTimer = null; }
-  if (insertClearTimer) { clearTimeout(insertClearTimer); insertClearTimer = null; }
-  layer.style.backgroundImage = `url("${imgUrl}")`;
-  layer.classList.remove('active');
-  void layer.offsetWidth;
-  layer.classList.add('active');
-  insertTimer = setTimeout(() => {
-    layer.classList.remove('active');
-    insertClearTimer = setTimeout(() => {
-      layer.style.backgroundImage = '';
-      insertClearTimer = null;
-    }, 700);
-    insertTimer = null;
-  }, duration);
-}
-
-/* ============================================================
-   ЧАСТИЦЫ
-   ============================================================ */
-function initParticles() {
-  const layer = document.getElementById('particlesLayer');
-  if (!layer) return;
-  layer.innerHTML = '';
-  const count = 22;
-  for (let i = 0; i < count; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.bottom = '-20px';
-    p.style.animationDuration = (14 + Math.random() * 18) + 's';
-    p.style.animationDelay = (Math.random() * 15) + 's';
-    const scale = 0.5 + Math.random() * 1.4;
-    p.style.width = (3 * scale) + 'px';
-    p.style.height = (3 * scale) + 'px';
-    layer.appendChild(p);
-  }
-}
-
-/* ============================================================
-   ПЕЧАТАЮЩИЙСЯ ТЕКСТ
-   ============================================================ */
-function typeText(element, html, speed, callback) {
-  const tokens = [];
-  let i = 0;
-  while (i < html.length) {
-    if (html[i] === '<') {
-      const end = html.indexOf('>', i);
-      if (end === -1) { tokens.push(html[i]); i++; continue; }
-      tokens.push(html.slice(i, end + 1));
-      i = end + 1;
-    } else { tokens.push(html[i]); i++; }
-  }
-  element.innerHTML = '';
-  const cursor = document.createElement('span');
-  cursor.className = 'type-cursor';
-  cursor.textContent = '▍';
-  element.appendChild(cursor);
-
-  let idx = 0;
-  function step() {
-    if (idx >= tokens.length) {
-      cursor.remove();
-      element.innerHTML = html;
-      gameState.isTyping = false;
-      if (callback) callback();
-      return;
-    }
-    const t = tokens[idx++];
-    cursor.insertAdjacentHTML('beforebegin', t);
-    if (t.startsWith('<')) step();
-    else gameState.typewriterTimer = setTimeout(step, speed);
-  }
-  step();
-}
-
-/* ============================================================
-   КАСТСЦЕНЫ
-   ============================================================ */
-const CutscenePlayer = {
-  current: null, frameIndex: 0, timer: null, paused: false, onFinish: null,
-
-  play(sceneKey, onFinish) {
-    const scene = CUTSCENES[sceneKey];
-    if (!scene || !scene.frames || scene.frames.length === 0) {
-      if (onFinish) onFinish();
-      return;
-    }
-    this.current = scene;
-    this.frameIndex = 0;
-    this.paused = false;
-    this.onFinish = onFinish;
-    markCutsceneWatched(sceneKey);
-
-    const layer = document.getElementById('cutsceneLayer');
-    document.body.classList.add('cutscene-active');
-    layer.classList.add('active');
-
-    scene.frames.forEach(f => { const img = new Image(); img.src = f.img; });
-
-    const firstFrame = scene.frames[0];
-    const currentEl = document.getElementById('csFrameCurrent');
-    const nextEl = document.getElementById('csFrameNext');
-    currentEl.style.backgroundImage = `url("${firstFrame.img}")`;
-    currentEl.className = 'cutscene-frame current';
-    nextEl.className = 'cutscene-frame next';
-    nextEl.style.backgroundImage = '';
-    nextEl.style.transform = '';
-
-    const progress = document.getElementById('csProgress');
-    progress.style.transition = 'none';
-    progress.style.width = '0%';
-
-    setTimeout(() => this.showFrame(1), firstFrame.duration);
-  },
-
-  showFrame(index) {
-    if (!this.current || index >= this.current.frames.length) { this.finish(); return; }
-    this.frameIndex = index;
-    const frame = this.current.frames[index];
-    const currentEl = document.getElementById('csFrameCurrent');
-    const nextEl    = document.getElementById('csFrameNext');
-    const effect = frame.effect || 'fade';
-
-    nextEl.className = 'cutscene-frame next effect-' + effect;
-    nextEl.style.backgroundImage = `url("${frame.img}")`;
-    nextEl.style.transform = '';
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => { nextEl.classList.add('visible'); });
-    });
-
-    let captionEl = document.querySelector('.cutscene-caption');
-    if (captionEl) captionEl.remove();
-    if (frame.text) {
-      captionEl = document.createElement('div');
-      captionEl.className = 'cutscene-caption';
-      captionEl.textContent = frame.text;
-      document.getElementById('cutsceneLayer').appendChild(captionEl);
-    }
-
-    if (frame.sfx) playSfx(frame.sfx);
-
-    const progress = document.getElementById('csProgress');
-    progress.style.transition = 'none';
-    const basePercent = (index / this.current.frames.length) * 100;
-    const targetPercent = ((index + 1) / this.current.frames.length) * 100;
-    progress.style.width = basePercent + '%';
-    requestAnimationFrame(() => {
-      progress.style.transition = `width ${frame.duration}ms linear`;
-      progress.style.width = targetPercent + '%';
-    });
-
-    this.clearTimer();
-    this.timer = setTimeout(() => {
-      currentEl.className = 'cutscene-frame current';
-      currentEl.style.backgroundImage = `url("${frame.img}")`;
-      nextEl.className = 'cutscene-frame next';
-      nextEl.style.backgroundImage = '';
-      nextEl.style.transform = '';
-      this.showFrame(index + 1);
-    }, frame.duration);
-  },
-
-  togglePause() {
-    if (!this.current) return;
-    if (this.paused) {
-      this.paused = false;
-      document.getElementById('csPause').textContent = '⏸';
-      this.showFrame(this.frameIndex);
-    } else {
-      this.paused = true;
-      document.getElementById('csPause').textContent = '▶';
-      this.clearTimer();
-    }
-  },
-  skip() { this.finish(); },
-  finish() {
-    this.clearTimer();
-    const layer = document.getElementById('cutsceneLayer');
-    layer.classList.remove('active');
-    document.body.classList.remove('cutscene-active');
-    const cap = document.querySelector('.cutscene-caption');
-    if (cap) cap.remove();
-    const cb = this.onFinish;
-    this.current = null; this.onFinish = null;
-    setTimeout(() => {
-      document.getElementById('csFrameCurrent').style.backgroundImage = '';
-      document.getElementById('csFrameNext').style.backgroundImage = '';
-      if (cb) cb();
-    }, 700);
-  },
-  clearTimer() { if (this.timer) { clearTimeout(this.timer); this.timer = null; } }
+/* ---------- ITEM DATA ---------- */
+const ITEMS={
+  feather:{icon:'🪶',name:'Перо Лазурной Сойки',hint:'Сметает пыль веков с колоколов'},
+  crystal:{icon:'💎',name:'Кристалл Горного Кварца',hint:'Фокусирует оптику маяка'},
+  drops:{icon:'🧪',name:'Капли Селесты',hint:'Возвращают Августу бодрость духа'},
+  key:{icon:'🗝️',name:'Латунный ключ Тик-Така',hint:'Калибрует призмы механизма'},
+  scheme:{icon:'📜',name:'Схема Олвена',hint:'Угол 45° к центральной линзе'}
 };
 
-document.addEventListener('click', (e) => {
-  if (e.target.id === 'csSkip') { e.stopPropagation(); CutscenePlayer.skip(); return; }
-  if (e.target.id === 'csPause') { e.stopPropagation(); CutscenePlayer.togglePause(); return; }
-  const layer = document.getElementById('cutsceneLayer');
-  if (!layer.classList.contains('active')) return;
-  if (e.target.closest('.cs-btn')) return;
-  if (CutscenePlayer.paused) return;
-  if (CutscenePlayer.current) {
-    CutscenePlayer.clearTimer();
-    CutscenePlayer.showFrame(CutscenePlayer.frameIndex + 1);
-  }
-});
-document.addEventListener('keydown', (e) => {
-  const layer = document.getElementById('cutsceneLayer');
-  if (!layer.classList.contains('active')) return;
-  if (e.key === ' ' || e.key === 'Enter') {
-    e.preventDefault();
-    if (CutscenePlayer.paused) return;
-    CutscenePlayer.clearTimer();
-    CutscenePlayer.showFrame(CutscenePlayer.frameIndex + 1);
-  }
-  if (e.key === 'Escape') { e.preventDefault(); CutscenePlayer.skip(); }
-});
-
-/* ============================================================
-   ПЕРЕХОДЫ
-   ============================================================ */
-function advance() {
-  if (gameState.isSwitching) return;
-  const passage = PASSAGES[gameState.currentPassage];
-  if (!passage || passage.isTitle) return;
-
-  if (gameState.isTyping) {
-    if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
-    const textEl = document.getElementById('dialogueText');
-    if (textEl) textEl.innerHTML = passage.text || '';
-    gameState.isTyping = false;
-    return;
-  }
-  if (passage.choices && passage.choices.length > 0) return;
-  if (passage.next) {
-    const to = passage.next;
-    if (to === 'title') {
-      gameState.history = []; gameState.historyIndex = -1;
-      renderPassage('title', false);
-    } else {
-      renderPassage(to);
-    }
-  }
+/* ---------- FINAL CHECK ---------- */
+function canDoHarmony(){ return has('drops') && has('scheme'); }
+function canDoMastery(){ return has('key') || has('crystal'); }
+function missingHarmony(){
+  const m=[]; if(!has('drops'))m.push('🧪 Капли Селесты'); if(!has('scheme'))m.push('📜 Схема Олвена'); return m;
+}
+function missingMastery(){
+  const m=[]; if(!has('key') && !has('crystal'))m.push('🗝️ Ключ или 💎 Кристалл'); return m;
 }
 
-function clearTitleElements() {
-  document.querySelectorAll('.title-screen, .title-endings').forEach(el => el.remove());
-}
-function clearDialogueElements() {
-  document.querySelectorAll('.dialogue-box, .choice-box, .game-menu').forEach(el => el.remove());
-}
+/* ---------- STORY ---------- */
+const P={
+start:{ t:`Утро в Верхнем Шепоте пахнет мочёными яблоками и речной мятой. На столе — письмо мастера Олвена, запечатанное воском с кленовым листом. Во двор влетает <strong>Мира</strong> с чехлом инструментов: «Подъём, Хранитель трав! В маяке заклинило рунный резонатор — Главный Маяк погас на самый праздник Осенней Звезды!»`,
+  c:[ {l:'Вскрыть письмо Олвена прямо сейчас', t:'letter'},
+      {l:'Спрятать письмо и сразу обсудить маршрут', t:'route'},
+      {l:'Пошутить над чехлом с инструментами', t:'joke'} ]},
+joke:{ t:`«Ты собралась чинить маяк или перестраивать часовую башню столицы?» Мира фыркает: «Настоящий механик готов ко всему! Ну так что пишет Олвен?»`,
+  c:[{l:'Открыть письмо', t:'letter'}]},
+letter:{ t:`Внутри — схема линз, начерченная серебряными чернилами: <blockquote>«Сердце маяка — живой Звёздный Светляк по имени Август. Он не терпит грубой силы и фальшивых нот. Ищите причину не в поломке металла, а в нарушении гармонии. Возьмите частицу стихии — свет рождается из дружбы, а не из принуждения.»</blockquote> Мира: «Красиво сказано, но без шестерёнок он не закрутится! Как пойдём к холму Светлячков?»`,
+  c:[ {l:'Через Старый каменный мост', t:'bridge'},
+      {l:'Заглянуть в беседку травницы Селесты', t:'selesta'} ]},
+route:{ t:`Вы придерживаете письмо в кармане и киваете на дорогу: время дорого. Мира сверяется с картой: «Мост или к Селесте?»`,
+  c:[ {l:'Через Старый каменный мост', t:'bridge'},
+      {l:'Заглянуть в беседку травницы Селесты', t:'selesta'} ]},
+selesta:{ t:`Бабушка Селеста поливает колокольчики у круглого домика, пахнущего корицей. «Август вчера слишком грустно пел, чуяло моё сердце!» Она вручает пузырёк золотистого настоя: «Капли лунного зверобоя. Если Август загрустит — пара капель на сахарную пластину вернёт ему бодрость».`,
+  give:['drops'],
+  c:[ {l:'Пойти к Старому мосту', t:'bridge'} ]},
+bridge:{ t:`На Старом мосту дремлет гаргуль <strong>Бруно</strong>. «Куда путь держите в такой день?» Он щурит янтарный глаз: «Одной загадки будет довольно: <em>«Не имеет крыльев, а летает; не имеет голоса, а воет; в стужу жалит, в зной ласкает, а сожмёшь в кулак — исчезнет без следа»</em>.»`,
+  c:[ {l:'«Это горный ветер!»', t:'bridge_wind'},
+      {l:'«Это лесное эхо»', t:'bridge_echo'},
+      {l:'Угостить Бруно медовым яблоком', t:'bridge_gift'},
+      {l:'Расспросить: что творилось у башни ночью?', t:'bridge_ask'} ]},
+bridge_ask:{ t:`«Около полуночи с вершины сорвался серебристый всполох, и раздалось: динь-дон-хрясь! Корнелиус бегал по балкону в ночном колпаке — ветер дул с Заброшенной Обсерватории». Мира: «Сквозняк мог сбить балансир! Спасибо, дядюшка Бруно».`,
+  c:[ {l:'«Это горный ветер!»', t:'bridge_wind'}, {l:'Угостить Бруно яблоком', t:'bridge_gift'} ]},
+bridge_wind:{ t:`«В самую точку! Ученику Хранителя ветров и положено знать повадки воздуха». Бруно выкатывает диковинку: <strong>Перо Лазурной Сойки-Вестницы</strong> — зачаровано на лёгкое дыхание, сметает пыль веков без единой поломки.`,
+  give:['feather'], c:[{l:'Спешить к башне', t:'tower_out'}]},
+bridge_echo:{ t:`Бруно хохочет: «Поэзии хоть отбавляй, а физика хромает — эхо не жалит и не ласкает! Но за дерзкий слог я не стану вас держать. Идите с миром».`,
+  c:[{l:'Спешить к башне', t:'tower_out'}]},
+bridge_gift:{ t:`Вы протягиваете ломтик мёда с пасеки Олвена. Гаргуль зажмуривается от блаженства: «Забирайте мост, забирайте реку! И вот — на днях с карниза маяка упал <strong>Кристалл Горного Кварца</strong>. В оптике маяка ему самое место».`,
+  give:['crystal'], c:[{l:'Поспешить к башне', t:'tower_out'}]},
+tower_out:{ t:`Башня Светлячков — белый резной известняк, увитый плющом. Под стеклянным куполом застыл потухший хрустальный шар. На замке — циферблат с четырьмя дисками: Солнце, Ветер, Вода, Росток. Надпись гласит: <blockquote>«Лишь союз тепла и движения пробудит спящий свет»</blockquote>`,
+  c:[ {l:'Выставить «Солнце и Ветер»', t:'door_ok'},
+      {l:'Выставить «Вода и Росток»', t:'door_wrong'},
+      {l:'Осмотреть окрестности — вдруг есть другой ход', t:'walls'} ]},
+door_wrong:{ t:`Замок звенит колокольчиком — и из сопла брызгает мятная родниковая вода прямо в лицо! Мира хохочет: «Вежливый механизм! Но подсказка звучала «тепло и движение» — пробуем ещё раз?»`,
+  c:[{l:'Выставить «Солнце и Ветер»', t:'door_ok'}]},
+walls:{ t:`Вдоль цветущих кустов шиповника из скалы выступает железная лестница к окну Обсерватории. Окно приоткрыто.`,
+  c:[ {l:'Открыть парадную дверь «Солнце и Ветер»', t:'door_ok'},
+      {l:'Залезть по лестнице в окно', t:'observatory'} ]},
+observatory:{ t:`В полукруглой комнате со звёздными картами спит заводной кот <strong>Тик-Так</strong>. На ошейнике у него висит запасной латунный ключ от панели главного механизма. Кот доверчиво протягивает лапку.`,
+  c:[ {l:'Взять латунный ключ', t:'take_key'}, {l:'Оставить ключ и спуститься вниз', t:'tower_in'} ]},
+take_key:{ t:`Вы отстёгиваете ключик. Тик-Так мурлычет и деловито семенит с вами вниз по ступеням.`,
+  give:['key'], c:[{l:'Спуститься в главный зал', t:'tower_in'}]},
+door_ok:{ t:`Щёлк-щёлк-клац! Шестерни весело зажужжали, дубовые двери распахнулись в прохладный холл башни.`,
+  c:[{l:'Войти внутрь', t:'tower_in'}]},
+tower_in:{ t:`В главном зале, у постамента с хрустальными призмами, мечется старый смотритель <strong>Корнелиус</strong>: «Фестиваль через два часа, а наш золотой мальчик спит! Ночью ветер сбил настройку трёх резонансных колоколов — Август уснул от скуки и тишины!» На шёлковом гнезде дремлет <span class="beetle">🪲</span> Звёздный Светляк Август размером с сенбернара.`,
+  c:[ {l:'Показать Корнелиусу схему Олвена', t:'show_scheme'},
+      {l:'Осмотреть колокола и линзы', t:'exam_mech'},
+      {l:'Тихо заговорить с Августом', t:'exam_aug'} ]},
+show_scheme:{ t:`Корнелиус ахает: «Настройка гармонического строя третьей октавы! Колокола нужно свести под углом сорок пять градусов к центральной линзе!» Мира вскидывает ключ: «Выставлю угол за пять минут — но нужно ещё очистить трубки и разбудить Августа лакомством».`,
+  give:['scheme'], c:[{l:'Приступить к починке', t:'repair'}]},
+exam_mech:{ t:`Три резонансных колокола из лунного серебра (один заклинило на креплении), трубки лунного сиропа с сахарными пробками, оптическая карусель зеркал, ждущая точной фокусировки. «Работа ясна, — кивает Мира. — Путей несколько, смотря что у нас с собой».`,
+  c:[{l:'Приступить к починке', t:'repair'}]},
+exam_aug:{ t:`Вы гладите Августа между усиками — он мурлычет, приоткрывает фиолетовый глаз: только лёгкая грусть и дремота, никакой злобы. Мира: «Ему нужна музыка и немного заботы».`,
+  c:[{l:'Приступить к оживлению маяка', t:'repair'}]},
 
-function renderPassage(id, addToHistory = true) {
-  const passage = PASSAGES[id];
-  if (!passage) { console.error('Пассаж не найден:', id); return; }
+repair:{ t:`Корнелиус замер с масленкой наготове, инструменты Миры разложены на ступенях. Всё готово к главному действию — какой путь выберете?`,
+  c:[ {l:'✨ Гармония: природа, музыка и дружба вместе', t:'end_harmony'},
+      {l:'⚙ Мастерство: инженерия и точный расчёт', t:'end_mastery'} ]},
 
-  if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
-  gameState.isTyping = false;
-  gameState.currentPassage = id;
+end_harmony:{ end:true, ending:'harmony',
+  t:`Вы разворачиваете схему Олвена — колокола сходятся под углом сорок пять градусов. Корнелиус дрожащими руками подаёт <strong>флакон Селесты</strong>: золотистые капли лунного зверобоя падают на сахарную пластину.<br><br>`
+  + (has('feather')
+      ? `Перо Лазурной Сойки взмахивает над серебряными лепестками — пыль веков слетает, и колокола оживают чистым хрустальным звоном.`
+      : `Мира осторожно сдувает пыль с колоколов, и они отзываются робким, но чистым звоном.`)
+  + `<br><br>Август приоткрывает фиолетовый глаз... и встаёт во весь рост! Его крылья трепещут, заливая зал тёплым медовым светом. Вы направляете луч на долину — реку внизу усыпают золотые рыбки, на площади Верхнего Шепота вспыхивают гирлянды. <strong>КОНЕЦ: Финал Гармонии.</strong> Природа, наука и тепло сердец вместе оживили самое хрупкое волшебство.`},
 
-  if (passage.isTitle) { renderTitleScreen(); return; }
+end_mastery:{ end:true, ending:'mastery',
+  t:`Мира берёт дело в свои руки. `
+  + (has('key') && has('crystal')
+      ? `Ключ на двенадцать от Тик-Така и кристалл кварца Бруно — в оправу оптической оси.`
+      : has('key')
+        ? `Ключ на двенадцать от Тик-Така калибрует призмы.`
+        : has('crystal')
+          ? `Кристалл кварца Бруно встаёт в оправу оптической оси.`
+          : `Мира подкручивает крепления голыми руками — точность расчёта заменяет инструменты.`)
+  + ` Все шестерёнки встают на места с идеальным кликом: <i>тик-так, тик-так</i>.<br><br>Механическая карусель оживает без единого скрипа. Зеркала выстраиваются в геометрическую спираль, и очарованный гармонией движения Август взмывает в центр конструкции, живым фокусом маяка! Луч чертит над лесом гигантскую светящуюся звезду. <strong>КОНЕЦ: Финал Мастерства.</strong> Точный расчёт и крепкая дружба творят чудеса почище заклятий.`}
+};
 
-  clearTitleElements();
+/* ---------- SCENE ILLUSTRATIONS ---------- */
+const DEFS=`<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#161c46"/><stop offset="1" stop-color="#0a0d24"/></linearGradient>
+<radialGradient id="glow"><stop offset="0" stop-color="#f2c14e" stop-opacity=".9"/><stop offset="1" stop-color="#f2c14e" stop-opacity="0"/></radialGradient>
+</defs>`;
+function firefliesSVG(n,seed){let s='';for(let i=0;i<n;i++){const x=(seed*37+i*53)%400,y=20+(seed*19+i*29)%120,r=1.4+((i+seed)%3)*.5;
+  s+=`<circle class="glow" cx="${x}" cy="${y}" r="${r}" fill="#f2c14e" style="animation-delay:${(i*.4)%3}s"/>`;}return s;}
+const SCENES={
+home:`<svg viewBox="0 0 400 200">${DEFS}<rect width="400" height="200" fill="url(#sky)"/>
+<circle cx="70" cy="45" r="22" fill="#e9d9a8" opacity=".85"/>
+<polygon points="0,200 0,150 60,110 130,150 130,200" fill="#20264d"/>
+<polygon points="0,110 65,80 130,110" fill="#161c46"/>
+<rect x="55" y="140" width="20" height="26" fill="#f2c14e" opacity=".85"/>
+<path d="M150 200 Q200 150 260 200" fill="#141a3d"/>
+<path d="M260 200 Q320 130 400 200" fill="#10153a"/>
+${firefliesSVG(6,3)}</svg>`,
+forest:`<svg viewBox="0 0 400 200">${DEFS}<rect width="400" height="200" fill="url(#sky)"/>
+<polygon points="30,200 70,60 110,200" fill="#161c46"/>
+<polygon points="120,200 165,40 210,200" fill="#1c2350"/>
+<polygon points="220,200 260,70 300,200" fill="#161c46"/>
+<polygon points="290,200 340,50 390,200" fill="#1c2350"/>
+<circle cx="95" cy="175" r="6" fill="#8bab7a" class="glow"/>
+<circle cx="230" cy="185" r="5" fill="#8bab7a" class="glow" style="animation-delay:1s"/>
+<circle cx="310" cy="178" r="6" fill="#8bab7a" class="glow" style="animation-delay:2s"/>
+${firefliesSVG(7,7)}</svg>`,
+bridge:`<svg viewBox="0 0 400 200">${DEFS}<rect width="400" height="200" fill="url(#sky)"/>
+<rect y="160" width="400" height="40" fill="#0d1136"/>
+<path d="M40 200 L40 130 Q200 40 360 130 L360 200 Z" fill="none" stroke="#4a5490" stroke-width="10"/>
+<rect x="30" y="120" width="340" height="12" fill="#2a3363"/>
+<circle cx="205" cy="90" r="10" fill="#3a4270"/>
+<circle cx="205" cy="82" r="4" fill="#f2c14e" class="glow"/>
+${firefliesSVG(4,11)}</svg>`,
+tower_ext:`<svg viewBox="0 0 400 200">${DEFS}<rect width="400" height="200" fill="url(#sky)"/>
+<polygon points="150,200 150,60 250,60 250,200" fill="#20264d"/>
+<circle cx="200" cy="45" r="28" fill="#0a0d24" stroke="#4a5490" stroke-width="3"/>
+<circle cx="200" cy="45" r="10" fill="#f2c14e" opacity=".35" class="glow"/>
+<rect x="182" y="150" width="36" height="50" fill="#141a3d" stroke="#e08a4c" stroke-width="2"/>
+<circle cx="200" cy="175" r="12" fill="none" stroke="#f2c14e" stroke-width="2" opacity=".7"/>
+${firefliesSVG(3,17)}</svg>`,
+tower_int:`<svg viewBox="0 0 400 200">${DEFS}<rect width="400" height="200" fill="url(#sky)"/>
+<polygon points="120,200 200,30 280,200" fill="#161c46"/>
+<circle cx="200" cy="120" r="34" fill="url(#glow)"/>
+<circle cx="200" cy="120" r="16" fill="#f2c14e" class="glow"/>
+<line x1="150" y1="60" x2="150" y2="90" stroke="#8892c9" stroke-width="3"/>
+<line x1="250" y1="60" x2="250" y2="90" stroke="#8892c9" stroke-width="3"/>
+<circle cx="150" cy="94" r="7" fill="#3a4270"/><circle cx="250" cy="94" r="7" fill="#3a4270"/>
+${firefliesSVG(5,23)}</svg>`,
+ending_harmony:`<svg viewBox="0 0 400 200">${DEFS}<rect width="400" height="200" fill="url(#sky)"/>
+<polygon points="170,200 200,55 230,200" fill="#20264d"/>
+<circle cx="200" cy="70" r="55" fill="url(#glow)"/>
+<circle cx="200" cy="70" r="18" fill="#fff6de" class="glow"/>
+<line x1="200" y1="70" x2="40" y2="195" stroke="#f2c14e" stroke-width="2" opacity=".35"/>
+<line x1="200" y1="70" x2="360" y2="195" stroke="#f2c14e" stroke-width="2" opacity=".35"/>
+<line x1="200" y1="70" x2="200" y2="198" stroke="#f2c14e" stroke-width="2" opacity=".25"/>
+<line x1="200" y1="70" x2="80" y2="30" stroke="#f2c14e" stroke-width="1.5" opacity=".25"/>
+<line x1="200" y1="70" x2="320" y2="30" stroke="#f2c14e" stroke-width="1.5" opacity=".25"/>
+${firefliesSVG(12,31)}</svg>`,
+ending_mastery:`<svg viewBox="0 0 400 200">${DEFS}<rect width="400" height="200" fill="url(#sky)"/>
+<polygon points="170,200 200,55 230,200" fill="#20264d"/>
+<circle cx="200" cy="70" r="45" fill="url(#glow)" style="--c:#8bab7a"/>
+<circle cx="200" cy="70" r="16" fill="#c8e6b8" class="glow"/>
+<line x1="200" y1="70" x2="40" y2="195" stroke="#8bab7a" stroke-width="2" opacity=".5"/>
+<line x1="200" y1="70" x2="360" y2="195" stroke="#8bab7a" stroke-width="2" opacity=".5"/>
+<line x1="200" y1="70" x2="200" y2="198" stroke="#8bab7a" stroke-width="2" opacity=".35"/>
+<polygon points="200,20 210,45 235,45 215,62 225,88 200,72 175,88 185,62 165,45 190,45" fill="none" stroke="#f2c14e" stroke-width="1.5" opacity=".7"/>
+${firefliesSVG(8,41)}</svg>`
+};
+const SCENE_MAP={
+  start:'home',joke:'home',letter:'home',route:'home',
+  selesta:'forest',
+  bridge:'bridge',bridge_ask:'bridge',bridge_wind:'bridge',bridge_echo:'bridge',bridge_gift:'bridge',
+  tower_out:'tower_ext',door_wrong:'tower_ext',walls:'tower_ext',observatory:'tower_ext',take_key:'tower_ext',door_ok:'tower_ext',
+  tower_in:'tower_int',show_scheme:'tower_int',exam_mech:'tower_int',exam_aug:'tower_int',repair:'tower_int',
+  end_harmony:'ending_harmony',end_mastery:'ending_mastery'
+};
 
-  // === УСТАНОВКА ФЛАГОВ + ВСПЛЫВАЮЩИЕ КАРТОЧКИ ПРЕДМЕТОВ ===
-  if (passage.set) {
-    const itemFlags = ['has_feather', 'has_crystal', 'has_selesta_vial', 'has_key', 'has_scheme'];
-    const newItems = [];
-    for (const key of itemFlags) {
-      if (passage.set[key] && !gameState.variables[key]) {
-        newItems.push(key);
-      }
-    }
-    Object.assign(gameState.variables, passage.set);
-
-    const itemAch = {
-      has_feather: 'feather', has_crystal: 'crystal',
-      has_selesta_vial: 'vial', has_key: 'key',
-      has_scheme: 'scheme'
-    };
-    for (const [k, a] of Object.entries(itemAch)) {
-      if (passage.set[k]) unlockAchievement(a);
-    }
-
-    // Показываем карточки предметов с задержкой
-    newItems.forEach((key, i) => {
-      setTimeout(() => showItemPopup(key), 600 + i * 1200);
-    });
+/* ---------- RENDER ---------- */
+const card=document.getElementById('card');
+function go(id, skipSave){
+  const p=P[id];
+  if(!p) return;
+  if(p.give){
+    const newItems=p.give.filter(k=>!state.items[k]);
+    give(p.give);
+    newItems.forEach((k,i)=>setTimeout(()=>{
+      showItemPopup(k);
+      unlockAch(k);
+    }, 500 + i*1400));
   }
+  tick();
+  state.scene=id;
+  if(!skipSave) save();
 
-  if (passage.ending) {
-    gameState.endings[passage.ending] = true;
-    saveEndingsToStorage();
-    if (countEndings() >= 2) unlockAchievement('allEndings');
-  }
-  if (addToHistory) {
-    gameState.history = gameState.history.slice(0, gameState.historyIndex + 1);
-    gameState.history.push(id);
-    gameState.historyIndex = gameState.history.length - 1;
-  }
-  markPassageVisited(id);
-  if (passage.location) markLocationVisited(passage.location);
+  const isEnd=!!p.end;
+  const sceneKey=SCENE_MAP[id]||'home';
 
-  if (passage.cutscene) {
-    const ga = document.getElementById('gameArea');
-    if (ga) ga.style.opacity = '0';
-    CutscenePlayer.play(passage.cutscene, () => {
-      if (ga) ga.style.opacity = '1';
-      renderPassageInner(id, passage);
-    });
-    return;
-  }
-  renderPassageInner(id, passage);
-}
+  card.classList.remove('fade'); void card.offsetWidth; card.classList.add('fade');
 
-function renderPassageInner(id, passage) {
-  clearTitleElements();
-  clearDialogueElements();
-
-  setBackground(passage.location);
-
-  if (passage.insert) {
-    showInsert(passage.insert, passage.insertDuration || 2200);
-  }
-
-  let navHTML = '';
-  if (passage.choices && passage.choices.length > 0) {
-    navHTML = '<div class="choice-box">' + passage.choices.map(c =>
-      `<a data-to="${c.to}"><span>${c.text}</span></a>`
-    ).join('') + '</div>';
-  }
-
-  const gameMenuHTML = `
-    <div class="game-menu">
-      <button id="btnJournal" title="Журнал">📖</button>
-      <button id="btnSave" title="Сохранить игру">💾</button>
-      <button id="btnMenu" title="В главное меню">🏠</button>
-    </div>
-  `;
-
-  const boxClass = passage.boxClass || 'narrator';
-  const speaker = passage.speaker || '';
-
-  const boxHTML = `
-    <div class="dialogue-box ${boxClass}">
-      <div class="top-line"></div>
-      ${speaker ? `<div class="speaker-name">${speaker}</div>` : ''}
-      <div class="dialogue-text" id="dialogueText"></div>
-      ${(!passage.choices || passage.choices.length === 0) && passage.next ? '<div class="next-hint">▼</div>' : ''}
-    </div>
-  `;
-
-  const gameArea = document.getElementById('gameArea');
-  gameArea.style.opacity = '1';
-  gameArea.innerHTML = boxHTML + navHTML + gameMenuHTML;
-
-  const currentPassageId = id;
-
-  // === ОСОБАЯ ЛОГИКА ДЛЯ ГЛАВНОЙ ПОЧИНКИ ===
-  if (id === 'ГлавнаяПочинка') {
-    const choiceBox = gameArea.querySelector('.choice-box');
-    if (choiceBox) {
-      const links = choiceBox.querySelectorAll('a');
-      const linkHarmony = links[0];
-      const linkMastery = links[1];
-
-      if (linkHarmony && !canDoHarmony()) {
-        linkHarmony.classList.add('disabled');
-        linkHarmony.dataset.disabled = 'true';
-        const missing = getMissingForHarmony();
-        linkHarmony.innerHTML = `<span>План 1: Полная синхронизация <em style="color:#e07b39;font-style:normal;font-size:0.85em;">(нужно: ${missing.join(', ')})</em></span>`;
-      }
-      if (linkMastery && !canDoMastery()) {
-        linkMastery.classList.add('disabled');
-        linkMastery.dataset.disabled = 'true';
-        const missing = getMissingForMastery();
-        linkMastery.innerHTML = `<span>План 2: Инженерный расчёт <em style="color:#e07b39;font-style:normal;font-size:0.85em;">(нужно: ${missing.join(', ')})</em></span>`;
-      }
-
-      // Перехватываем клики по заблокированным кнопкам
-      choiceBox.querySelectorAll('a[data-disabled="true"]').forEach(el => {
-        el.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const missing = el === linkHarmony ? getMissingForHarmony() : getMissingForMastery();
-          showNotification('⚠ Не хватает предметов', `Соберите: ${missing.join(', ')}`, 'warn');
-          playSfx('click');
-        }, true);
-      });
-    }
-
-    // Визуальная подсказка над диалогом
-    const box = gameArea.querySelector('.dialogue-box');
-    if (box) {
-      const hint = document.createElement('div');
-      hint.style.cssText = `
-        position:absolute; top:-52px; right:24px;
-        background:rgba(0,0,0,0.85); border:1px solid rgba(244,197,66,0.6);
-        border-radius:6px; padding:8px 16px; font-size:12px; color:#FBBF24;
-        letter-spacing:1px; text-transform:uppercase;
-        box-shadow:0 8px 24px rgba(0,0,0,0.6);
-        backdrop-filter:blur(8px); pointer-events:none;
-      `;
-      hint.textContent = '📖 Откройте журнал для подсказки';
-      box.appendChild(hint);
-    }
-  }
-
-  gameArea.querySelectorAll('[data-to]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      if (btn.dataset.disabled === 'true') return;
-      e.stopPropagation();
-      playSfx('choice');
-      const to = btn.dataset.to;
-      markChoice(currentPassageId, to);
-      saveGame();
-      if (to === 'title') {
-        gameState.history = []; gameState.historyIndex = -1;
-        renderPassage('title', false);
-      } else {
-        renderPassage(to);
-      }
-    });
-  });
-
-  const dialogueBox = gameArea.querySelector('.dialogue-box');
-  if (dialogueBox) {
-    dialogueBox.addEventListener('click', (e) => {
-      if (e.target.closest('[data-to]')) return;
-      if (e.target.closest('.game-menu')) return;
-      if (e.target.closest('.history-controls')) return;
-      e.stopPropagation();
-      playSfx('click');
-      advance();
-    });
-  }
-
-  const saveBtn = document.getElementById('btnSave');
-  if (saveBtn) saveBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (saveGame()) {
-      saveBtn.textContent = '✅';
-      showNotification('💾 Сохранено', 'Игра успешно сохранена');
-      setTimeout(() => { saveBtn.textContent = '💾'; }, 1000);
-    } else {
-      showNotification('⚠ Ошибка', 'Не удалось сохранить игру', 'warn');
-    }
-  });
-
-  const menuBtn = document.getElementById('btnMenu');
-  if (menuBtn) menuBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (confirm('Вернуться в главное меню? Несохранённый прогресс будет потерян.')) {
-      gameState.history = []; gameState.historyIndex = -1;
-      renderPassage('title', false);
-    }
-  });
-
-  const journalBtn = document.getElementById('btnJournal');
-  if (journalBtn) journalBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    openJournal();
-  });
-
-  updateHistoryButtons();
-
-  const textEl = document.getElementById('dialogueText');
-  const text = passage.text || '';
-
-  if (gameState.settings.typewriter === 'on') {
-    gameState.isTyping = true;
-    typeText(textEl, text, gameState.settings.textSpeed, () => { gameState.isTyping = false; });
-  } else {
-    textEl.innerHTML = text;
-  }
-
-  const clickLayer = document.getElementById('clickLayer');
-  if (clickLayer) {
-    if (passage.choices && passage.choices.length > 0) {
-      clickLayer.classList.remove('enabled');
-    } else {
-      clickLayer.classList.add('enabled');
-    }
-  }
-
-  // === ЭКРАН ПОСЛЕ КОНЦОВКИ ===
-  if (passage.endingScreen) {
-    setTimeout(() => {
-      showEndingScreen(passage.endingScreen);
-    }, 4000);
-  }
-}
-
-/* ============================================================
-   ЭКРАН ПОСЛЕ КОНЦОВКИ
-   ============================================================ */
-function showEndingScreen(endingKey) {
-  clearDialogueElements();
-  clearTitleElements();
-
-  const clickLayer = document.getElementById('clickLayer');
-  if (clickLayer) clickLayer.classList.remove('enabled');
-
-  const isHarmony = endingKey === 'harmony';
-  const title = isHarmony ? '✨ Финал Гармонии' : '⚙ Финал Мастерства';
-  const subtitle = isHarmony
-    ? 'Природа, наука и тепло сердец — вместе'
-    : 'Точный расчёт и крепкая дружба';
-  const color = isHarmony ? '#FBBF24' : '#4ADE80';
-  const accent = isHarmony ? 'rgba(251,191,36,' : 'rgba(74,222,128,';
-
-  const gameArea = document.getElementById('gameArea');
-  gameArea.style.opacity = '1';
-  gameArea.innerHTML = `
-    <div class="title-screen" style="background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.9) 100%);">
-      <div class="title-logo">
-        <h1 class="title-main" style="color:${color};text-shadow:0 0 40px ${accent}1),0 0 80px ${accent}0.7),6px 6px 30px rgba(0,0,0,0.9);">${title}</h1>
-        <p class="title-sub" style="color:${color};">${subtitle}</p>
-      </div>
-      <div class="title-menu">
-        <button id="btnPlayAgain">🔄 Пройти заново</button>
-        <button id="btnOtherEnding">🎭 Другая концовка</button>
-        <button id="btnToMenu">🏠 В главное меню</button>
-      </div>
-      <p class="title-footer">Верхний Шепот · Праздник Осенней Звезды</p>
-    </div>
-  `;
-
-  document.getElementById('btnPlayAgain').addEventListener('click', () => {
-    gameState.history = [];
-    gameState.historyIndex = -1;
-    gameState.variables = {};
-    clearTitleElements();
-    renderPassage('Start1');
-  });
-
-  document.getElementById('btnOtherEnding').addEventListener('click', () => {
-    gameState.history = [];
-    gameState.historyIndex = -1;
-    clearTitleElements();
-    // Оставляем предметы, но возвращаемся к башне для другого финала
-    renderPassage('БашняСнаружи');
-  });
-
-  document.getElementById('btnToMenu').addEventListener('click', () => {
-    gameState.history = [];
-    gameState.historyIndex = -1;
-    renderPassage('title', false);
-  });
-
-  updateHistoryButtons();
-}
-
-function renderTitleScreen() {
-  gameState.currentPassage = 'title';
-  clearDialogueElements();
-  clearTitleElements();
-
-  setBackground('title');
-  const clickLayer = document.getElementById('clickLayer');
-  if (clickLayer) clickLayer.classList.remove('enabled');
-
-  const gameArea = document.getElementById('gameArea');
-  const count = countEndings();
-  const canLoad = hasSave();
-
-  gameArea.style.opacity = '1';
-  gameArea.innerHTML = `
-    <div class="title-screen">
-      <div class="title-logo">
-        <h1 class="title-main">Песнь Августа</h1>
-        <p class="title-sub">Интерактивная сказка</p>
-      </div>
-      <div class="title-menu">
-        <button id="btnStart">▶ Начать историю</button>
-        <button id="btnLoad" ${canLoad ? '' : 'disabled'}>📂 Загрузить</button>
-        <button id="btnProgress">🗺 Карта прогресса</button>
-        <button id="btnAchievements">🏆 Достижения</button>
-        <button id="btnSettings">⚙ Настройки</button>
-        <button id="btnResetEndings">🔄 Сбросить прогресс</button>
-      </div>
-      <p class="title-footer">Верхний Шепот · Праздник Осенней Звезды</p>
-    </div>
-    <div class="title-endings">🏆 Концовок открыто: <b>${count} / 2</b></div>
-  `;
-
-  document.getElementById('btnStart').addEventListener('click', () => {
-    gameState.history = []; gameState.historyIndex = -1;
-    gameState.variables = {};
-    clearTitleElements();
-    renderPassage('Start1');
-  });
-  document.getElementById('btnLoad').addEventListener('click', () => {
-    if (loadGame()) {
-      clearTitleElements();
-      renderPassage(gameState.currentPassage, false);
-    } else {
-      showNotification('⚠ Ошибка', 'Сохранение не найдено', 'warn');
-    }
-  });
-  document.getElementById('btnProgress').addEventListener('click', openProgress);
-  document.getElementById('btnAchievements').addEventListener('click', openAchievements);
-  document.getElementById('btnSettings').addEventListener('click', openSettings);
-  document.getElementById('btnResetEndings').addEventListener('click', () => {
-    if (confirm('Сбросить весь прогресс: концовки, достижения и открытые пассажи?')) {
-      resetProgress();
-      renderTitleScreen();
-    }
-  });
-  updateHistoryButtons();
-}
-
-function updateHistoryButtons() {
-  const back = document.getElementById('btnBack');
-  const fwd = document.getElementById('btnForward');
-  const controls = document.getElementById('historyControls');
-  if (gameState.currentPassage === 'title') { controls.style.display = 'none'; return; }
-  controls.style.display = 'flex';
-  back.disabled = gameState.historyIndex <= 0;
-  fwd.disabled = gameState.historyIndex >= gameState.history.length - 1;
-}
-function goBack() {
-  if (gameState.isSwitching) return;
-  if (gameState.historyIndex <= 0) return;
-  gameState.historyIndex--;
-  renderPassage(gameState.history[gameState.historyIndex], false);
-}
-function goForward() {
-  if (gameState.isSwitching) return;
-  if (gameState.historyIndex >= gameState.history.length - 1) return;
-  gameState.historyIndex++;
-  renderPassage(gameState.history[gameState.historyIndex], false);
-}
-
-/* ============================================================
-   МОДАЛЬНЫЕ ОКНА
-   ============================================================ */
-function openSettings() {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  content.innerHTML = `
-    <h2>⚙ Настройки</h2>
-    <div class="row"><label>Скорость текста</label>
-      <select id="setSpeed">
-        <option value="20" ${gameState.settings.textSpeed==20?'selected':''}>Медленно</option>
-        <option value="40" ${gameState.settings.textSpeed==40?'selected':''}>Обычно</option>
-        <option value="60" ${gameState.settings.textSpeed==60?'selected':''}>Быстро</option>
-        <option value="80" ${gameState.settings.textSpeed==80?'selected':''}>Мгновенно</option>
-      </select>
-    </div>
-    <div class="row"><label>Печатающийся текст</label>
-      <select id="setTypewriter">
-        <option value="on" ${gameState.settings.typewriter=='on'?'selected':''}>Включён</option>
-        <option value="off" ${gameState.settings.typewriter=='off'?'selected':''}>Выключен</option>
-      </select>
-    </div>
-    <div class="row"><label>Звуковые эффекты</label>
-      <select id="setSfx">
-        <option value="on" ${gameState.settings.sfx=='on'?'selected':''}>Включены</option>
-        <option value="off" ${gameState.settings.sfx=='off'?'selected':''}>Выключены</option>
-      </select>
-    </div>
-    <div class="row"><label>Громкость музыки: <span id="volLabel">${Math.round(gameState.settings.musicVolume*100)}%</span></label>
-      <input type="range" id="setVolume" min="0" max="1" step="0.05" value="${gameState.settings.musicVolume}" style="width:180px;">
-    </div>
-    <div class="buttons"><button id="setClose">Закрыть</button></div>
-  `;
-  overlay.classList.remove('hidden');
-  document.getElementById('setSpeed').addEventListener('change', e => { gameState.settings.textSpeed = Number(e.target.value); saveSettings(); });
-  document.getElementById('setTypewriter').addEventListener('change', e => { gameState.settings.typewriter = e.target.value; saveSettings(); });
-  document.getElementById('setSfx').addEventListener('change', e => { gameState.settings.sfx = e.target.value; saveSettings(); });
-  document.getElementById('setVolume').addEventListener('input', e => {
-    const v = Number(e.target.value);
-    setMusicVolume(v);
-    document.getElementById('volLabel').textContent = Math.round(v*100) + '%';
-    saveSettings();
-  });
-  document.getElementById('setClose').addEventListener('click', () => overlay.classList.add('hidden'));
-}
-
-function openAchievements() {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  let html = '<h2>🏆 Достижения</h2><div class="ach-list">';
-  for (const [key, a] of Object.entries(ACHIEVEMENTS)) {
-    const unlocked = !!gameState.achievements[key];
-    html += `
-      <div class="ach ${unlocked ? '' : 'locked'}">
-        <div class="icon">${unlocked ? a.icon : '🔒'}</div>
-        <div class="info">
-          <div class="title">${a.title}</div>
-          <div class="desc">${a.desc}</div>
+  // Если это финал — показываем экран концовки вместо обычной сцены
+  if(isEnd){
+    const isHarmony=p.ending==='harmony';
+    if(p.ending) { state.endings[p.ending]=true; save(); unlockAch(p.ending); }
+    card.innerHTML = `
+      <div class="scene">${SCENES[sceneKey]}</div>
+      <div class="ending-screen">
+        <h2 class="big-title ${isHarmony?'harmony':'mastery'}">${isHarmony?'✨ Финал Гармонии':'⚙ Финал Мастерства'}</h2>
+        <p class="sub">${isHarmony?'Природа, наука и тепло сердец — вместе':'Точный расчёт и крепкая дружба'}</p>
+        <div class="passage">${p.t}</div>
+        <div class="btn-row">
+          <button class="primary" id="againBtn">🔄 Пройти заново</button>
+          <button id="otherBtn">🎭 Другая концовка</button>
+          <button id="menuBtn">📜 К началу</button>
         </div>
-      </div>
-    `;
+      </div>`;
+    document.getElementById('againBtn').onclick=()=>{ resetAll(); renderInv(); go('start'); };
+    document.getElementById('otherBtn').onclick=()=>{
+      // Оставляем предметы, но возвращаемся к башне
+      go('tower_in', true);
+    };
+    document.getElementById('menuBtn').onclick=()=>{ resetAll(); renderInv(); go('start'); };
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
   }
-  html += '</div><div class="buttons"><button id="achClose">Закрыть</button></div>';
-  content.innerHTML = html;
-  overlay.classList.remove('hidden');
-  document.getElementById('achClose').addEventListener('click', () => overlay.classList.add('hidden'));
+
+  // Обычная сцена
+  const choicesHTML=(p.c||[]).map(ch=>{
+    let cls='choice', extra='';
+    if(ch.t==='end_harmony' && !canDoHarmony()){
+      cls+=' disabled';
+      extra=`<span class="need">(нужно: ${missingHarmony().join(', ')})</span>`;
+    }
+    if(ch.t==='end_mastery' && !canDoMastery()){
+      cls+=' disabled';
+      extra=`<span class="need">(нужно: ${missingMastery().join(', ')})</span>`;
+    }
+    return `<button class="${cls}" data-t="${ch.t}">${ch.l}${extra}</button>`;
+  }).join('');
+
+  card.innerHTML = `
+    <div class="scene">${SCENES[sceneKey]}</div>
+    <div class="passage"><p>${p.t}</p></div>
+    <div class="choices">${choicesHTML}</div>`;
+
+  card.querySelectorAll('.choice').forEach(b=>{
+    b.onclick=()=>{
+      if(b.classList.contains('disabled')){
+        const isH=b.dataset.t==='end_harmony';
+        const missing=isH?missingHarmony():missingMastery();
+        showNotification('⚠ Не хватает предметов', `Соберите: ${missing.join(', ')}`, 'warn');
+        tick(400);
+        return;
+      }
+      go(b.dataset.t);
+    };
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function openJournal() {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  let html = '<h2>📖 Журнал</h2>';
+/* ---------- MODALS ---------- */
+const overlay=document.getElementById('modalOverlay');
+const modalContent=document.getElementById('modalContent');
+function closeModal(){ overlay.classList.remove('show'); }
+overlay.onclick=(e)=>{ if(e.target===overlay) closeModal(); };
 
-  // === ПРЕДМЕТЫ ===
-  const items = [
-    { key: 'has_feather',       icon: '🪶', name: 'Перо Лазурной Сойки',    hint: 'Очищает звуковые трубки' },
-    { key: 'has_crystal',       icon: '💎', name: 'Кристалл Горного Кварца', hint: 'Фокусирует оптику маяка' },
-    { key: 'has_selesta_vial',  icon: '🧪', name: 'Флакон Селесты',         hint: 'Пробуждает Августа лакомством' },
-    { key: 'has_key',           icon: '🔑', name: 'Латунный ключ',          hint: 'Калибровка призм' },
-  ];
-  const owned = items.filter(i => gameState.variables[i.key]);
-
-  html += '<div style="margin-bottom:16px;"><div style="color:#FBBF24;font-size:12px;letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">Предметы</div>';
-  if (owned.length === 0) {
-    html += '<div style="color:#888;font-style:italic;">Пока ничего не найдено</div>';
+function openJournal(){
+  let html='<h2>📖 Журнал</h2>';
+  html+='<h3>Предметы</h3>';
+  const allKeys=['feather','crystal','drops','key','scheme'];
+  const owned=allKeys.filter(k=>state.items[k]);
+  if(owned.length===0){
+    html+='<p style="color:var(--dim);font-style:italic;font-size:.85rem;">Пока ничего не найдено</p>';
   } else {
-    owned.forEach(i => {
-      html += `<div style="padding:8px 0;color:#eee;border-bottom:1px solid rgba(244,197,66,0.1);">
-        <div>${i.icon} <b>${i.name}</b></div>
-        <div style="color:#999;font-size:12px;font-style:italic;margin-top:2px;">${i.hint}</div>
+    owned.forEach(k=>{
+      const it=ITEMS[k];
+      html+=`<div class="item-row">
+        <div class="item-icon">${it.icon}</div>
+        <div class="item-info">
+          <div class="item-name">${it.name}</div>
+          <div class="item-hint">${it.hint}</div>
+        </div>
       </div>`;
     });
   }
-  html += '</div>';
-
-  // === СОБЫТИЯ ===
-  const flags = [
-    { key: 'has_clue',          name: 'Зацепка от Бруно',      hint: 'Сквозняк сбил колокола ночью' },
-    { key: 'has_scheme',        name: 'Схема Олвена изучена',  hint: 'Угол 45° к центральной линзе' },
-    { key: 'has_met_august',    name: 'Знакомство с Августом', hint: 'Он ждёт праздника' },
-    { key: 'inspected_mechanism', name: 'Механизм осмотрен',   hint: 'Три узла поломки' },
-    { key: 'door_opened',       name: 'Дверь башни открыта',   hint: 'Солнце + Ветер' },
-  ];
-  const activeFlags = flags.filter(f => gameState.variables[f.key]);
-
-  html += '<div style="margin-bottom:16px;"><div style="color:#FBBF24;font-size:12px;letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">События</div>';
-  if (activeFlags.length === 0) {
-    html += '<div style="color:#888;font-style:italic;">Пока ничего не произошло</div>';
-  } else {
-    activeFlags.forEach(f => {
-      html += `<div style="padding:8px 0;color:#eee;border-bottom:1px solid rgba(244,197,66,0.1);">
-        <div>• <b>${f.name}</b></div>
-        <div style="color:#999;font-size:12px;font-style:italic;margin-top:2px;">${f.hint}</div>
-      </div>`;
-    });
-  }
-  html += '</div>';
-
-  // === ПОДСКАЗКА ПО ФИНАЛАМ ===
-  const harmonyReady = canDoHarmony();
-  const masteryReady = canDoMastery();
-  html += `<div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:8px;padding:14px 18px;margin-bottom:16px;">
-    <div style="color:#FBBF24;font-size:12px;letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">Доступные финалы</div>
-    <div style="padding:6px 0;color:${harmonyReady ? '#4ADE80' : '#888'};">
-      ${harmonyReady ? '✅' : '🔒'} Финал Гармонии
-      ${harmonyReady ? '' : `<div style="color:#e07b39;font-size:12px;margin-top:2px;">Нужно: ${getMissingForHarmony().join(', ')}</div>`}
-    </div>
-    <div style="padding:6px 0;color:${masteryReady ? '#4ADE80' : '#888'};">
-      ${masteryReady ? '✅' : '🔒'} Финал Мастерства
-      ${masteryReady ? '' : `<div style="color:#e07b39;font-size:12px;margin-top:2px;">Нужно: ${getMissingForMastery().join(', ')}</div>`}
+  html+='<h3>Доступные финалы</h3>';
+  const hReady=canDoHarmony(), mReady=canDoMastery();
+  html+=`<div class="ending-status ${hReady?'ready':'locked'}">
+    <div>
+      <div>${hReady?'✅':'🔒'} ✨ Финал Гармонии</div>
+      ${hReady?'':'<div class="status-need">Нужно: '+missingHarmony().join(', ')+'</div>'}
     </div>
   </div>`;
-
-  html += '<div class="buttons"><button id="journalClose">Закрыть</button></div>';
-  content.innerHTML = html;
-  overlay.classList.remove('hidden');
-  document.getElementById('journalClose').addEventListener('click', () => overlay.classList.add('hidden'));
+  html+=`<div class="ending-status ${mReady?'ready':'locked'}">
+    <div>
+      <div>${mReady?'✅':'🔒'} ⚙ Финал Мастерства</div>
+      ${mReady?'':'<div class="status-need">Нужно: '+missingMastery().join(', ')+'</div>'}
+    </div>
+  </div>`;
+  html+='<button class="btn-close" onclick="closeModal()">Закрыть</button>';
+  modalContent.innerHTML=html;
+  overlay.classList.add('show');
 }
 
-function openProgress() {
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  const p = gameState.progress;
-
-  const totalPassages = countTotalPassages();
-  const visitedPassages = countVisitedPassages();
-  const percent = getCompletionPercent();
-  const totalLocations = Object.keys(LOCATION_BG).filter(k => k !== 'title' && k !== 'title_night').length;
-  const visitedLocations = countVisitedLocations();
-  const endingsCount = countEndings();
-  const totalSec = p.totalPlayTime || 0;
-  const hours = Math.floor(totalSec / 3600);
-  const minutes = Math.floor((totalSec % 3600) / 60);
-
-  const bar = (val, max) => {
-    const pc = max > 0 ? Math.round((val / max) * 100) : 0;
-    return `
-      <div style="background:#1c1813;border-radius:6px;height:12px;overflow:hidden;margin-top:6px;">
-        <div style="background:linear-gradient(90deg,#FBBF24,#F59E0B);height:100%;width:${pc}%;transition:width 0.4s ease;box-shadow:0 0 10px rgba(255,200,100,0.7);"></div>
+function openAchievements(){
+  let html='<h2>🏆 Достижения</h2>';
+  Object.entries(ACH).forEach(([k,a])=>{
+    const got=!!state.achievements[k];
+    html+=`<div class="ach-row ${got?'':'locked'}">
+      <div class="ach-icon">${got?a.icon:'🔒'}</div>
+      <div>
+        <div class="ach-title">${a.title}</div>
+        <div class="ach-desc">${a.desc}</div>
       </div>
-      <div style="color:#888;font-size:11px;margin-top:4px;">${val} / ${max} (${pc}%)</div>
-    `;
+    </div>`;
+  });
+  html+='<button class="btn-close" onclick="closeModal()">Закрыть</button>';
+  modalContent.innerHTML=html;
+  overlay.classList.add('show');
+}
+
+function openSettings(){
+  const s=state.settings;
+  let html='<h2>⚙ Настройки</h2>';
+  html+=`<div class="settings-row">
+    <label>Звуковые эффекты</label>
+    <select id="sfxSel">
+      <option value="1" ${s.sfx?'selected':''}>Включены</option>
+      <option value="0" ${!s.sfx?'selected':''}>Выключены</option>
+    </select>
+  </div>`;
+  html+=`<div class="settings-row">
+    <label>Громкость: <span id="volLabel">${Math.round((s.volume||1)*100)}%</span></label>
+    <input type="range" id="volRange" min="0" max="1" step="0.05" value="${s.volume||1}" style="width:140px;">
+  </div>`;
+  html+='<button class="btn-close" id="resetBtn" style="background:linear-gradient(90deg,#8b2020,#c04040);color:#fff;margin-bottom:.5rem;">🗑 Сбросить весь прогресс</button>';
+  html+='<button class="btn-close" onclick="closeModal()">Закрыть</button>';
+  modalContent.innerHTML=html;
+  overlay.classList.add('show');
+
+  document.getElementById('sfxSel').onchange=(e)=>{
+    state.settings.sfx=e.target.value==='1'; save();
   };
-
-  content.innerHTML = `
-    <h2>🗺 Карта прогресса</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-      <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">📖 ПАССАЖИ</div>${bar(visitedPassages, totalPassages)}</div>
-      <div><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🌄 ЛОКАЦИИ</div>${bar(visitedLocations, totalLocations)}</div>
-      <div style="grid-column:1/-1;"><div style="color:#FBBF24;font-size:12px;letter-spacing:1.5px;margin-bottom:8px;">🏁 КОНЦОВКИ</div>${bar(endingsCount, 2)}</div>
-    </div>
-    <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:14px 18px;margin-bottom:20px;text-align:center;">
-      <div style="font-size:28px;color:#FBBF24;font-weight:bold;letter-spacing:2px;">${percent}%</div>
-      <div style="color:#ccc;font-size:12px;letter-spacing:1px;">ОБЩЕЕ ПРОХОЖДЕНИЕ</div>
-      <div style="color:#888;font-size:11px;margin-top:8px;">🎮 Игр начато: ${p.playCount || 1} · ⏱ Время: ${hours}ч ${minutes}м</div>
-    </div>
-    <div class="buttons">
-      <button id="progReset">Сбросить прохождение</button>
-      <button id="progClose">Закрыть</button>
-    </div>
-  `;
-  overlay.classList.remove('hidden');
-  document.getElementById('progClose').addEventListener('click', () => overlay.classList.add('hidden'));
-  document.getElementById('progReset').addEventListener('click', () => {
-    if (confirm('Сбросить только карту прохождения?')) { resetPassagesOnly(); openProgress(); }
-  });
+  document.getElementById('volRange').oninput=(e)=>{
+    state.settings.volume=parseFloat(e.target.value);
+    document.getElementById('volLabel').textContent=Math.round(state.settings.volume*100)+'%';
+    if(droneOn && gainNode) gainNode.gain.value=.05*state.settings.volume;
+    save();
+  };
+  document.getElementById('resetBtn').onclick=()=>{
+    if(confirm('Сбросить весь прогресс: предметы, концовки, достижения?')){
+      resetAll(); renderInv(); closeModal(); go('start');
+    }
+  };
 }
 
-/* ============================================================
-   ИНИЦИАЛИЗАЦИЯ
-   ============================================================ */
-let playTimeInterval = null;
+/* ---------- EVENT LISTENERS ---------- */
+document.getElementById('soundBtn').onclick=toggleDrone;
+document.getElementById('journalBtn').onclick=openJournal;
+document.getElementById('achBtn').onclick=openAchievements;
+document.getElementById('setBtn').onclick=openSettings;
 
-function init() {
-  loadEndingsFromStorage();
-  loadAchievementsFromStorage();
-  loadSettings();
-  gameState.progress = loadProgress();
-  gameState.progress.playCount = (gameState.progress.playCount || 0) + 1;
-  saveProgress();
+// Клик по иконке предмета в шапке — показать подсказку
+document.querySelectorAll('#inv span').forEach(s=>{
+  s.onclick=()=>{
+    const k=s.dataset.k;
+    if(state.items[k]) showItemPopup(k);
+    else showNotification('🔒 Ещё не найдено', ITEMS[k].name+' — ищите в долине', 'warn');
+  };
+});
 
-  if (bgMusic) bgMusic.volume = gameState.settings.musicVolume;
-  startMusic();
+// ESC — закрыть модалку
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape') closeModal();
+});
 
-  initParticles();
-
-  if (playTimeInterval) clearInterval(playTimeInterval);
-  playTimeInterval = setInterval(() => {
-    gameState.progress.totalPlayTime = (gameState.progress.totalPlayTime || 0) + 1;
-    if (gameState.progress.totalPlayTime % 30 === 0) saveProgress();
-  }, 1000);
-
-  window.addEventListener('beforeunload', () => {
-    saveProgress();
-    if (gameState.currentPassage && gameState.currentPassage !== 'title') saveGame();
-  });
-
-  document.getElementById('btnBack').addEventListener('click', goBack);
-  document.getElementById('btnForward').addEventListener('click', goForward);
-
-  const clickLayerEl = document.getElementById('clickLayer');
-  if (clickLayerEl) clickLayerEl.addEventListener('click', advance);
-
-  document.addEventListener('keydown', ev => {
-    const tag = (ev.target.tagName || '').toLowerCase();
-    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
-    if (ev.ctrlKey || ev.altKey || ev.metaKey) return;
-    if (ev.key === 'ArrowLeft') { ev.preventDefault(); goBack(); }
-    else if (ev.key === 'ArrowRight') { ev.preventDefault(); goForward(); }
-    else if (ev.key === ' ' || ev.key === 'Enter') {
-      const layer = document.getElementById('cutsceneLayer');
-      if (layer.classList.contains('active')) return;
-      ev.preventDefault();
-      playSfx('click');
-      advance();
-    }
-    else if (ev.key === 'Escape') {
-      const overlay = document.getElementById('modalOverlay');
-      if (!overlay.classList.contains('hidden')) overlay.classList.add('hidden');
-    }
-  });
-
-  document.getElementById('modalOverlay').addEventListener('click', ev => {
-    if (ev.target.id === 'modalOverlay') ev.target.classList.add('hidden');
-  });
-
-  setTimeout(() => {
-    const loading = document.getElementById('loadingScreen');
-    if (loading) loading.classList.add('hidden');
-  }, 700);
-
-  renderPassage('title', false);
+/* ---------- INIT ---------- */
+function init(){
+  load();
+  renderInv();
+  go(state.scene || 'start', true);
+  // Автозапуск звука при первом клике
+  const kick=()=>{ if(!droneOn) toggleDrone(); document.removeEventListener('click',kick); };
+  document.addEventListener('click', kick, {once:true});
 }
-
-document.addEventListener('DOMContentLoaded', init);
+init();
 </script>
 </body>
 </html>
