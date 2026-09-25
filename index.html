@@ -928,78 +928,89 @@ html, body {
 
 <script>
 /* ============================================================
-   ПЕСНЬ АВГУСТА — полная версия (4 концовки, 3 маршрута помощников)
-   Изображения теперь пронумерованы:
-   images/bg/1.png ... images/bg/21.png    — фоны локаций
-   images/insert/1.png ... images/insert/41.png — вставки-действия
-   Соответствие имён и номеров — см. таблицу в чате.
+   ПЕСНЬ АВГУСТА — полная версия
+   ============================================================
+   РАСПОРЯДОК КАРТИНОК В НАЧАЛЕ:
+   1.png  — титульник (Мира и герой на поляне)
+   2.png  — панорама города (Start1)
+   3.png  — осенний переулок (Start2) ← новая локация "street"
+   4.png  — дом травника снаружи (Start3, Start4)
+   5.png  — комната травника изнутри (Start5)
+   6.png  — стол с письмом (Start4 + ОткрытьПисьмо)
+   7.png  — Мира входит (Start6)
+   8.png  — вставка: рука ломает печать (ОткрытьПисьмо)
+   9.png  — Мира и герой за столом (ПисьмоОлвена2)
+
+   Остальные (10–21) — заглушки, заменишь когда сгенерируешь.
    ============================================================ */
+
 const LOCATION_BG = {
-  "title": "images/bg/1.png",
-  "start": "images/bg/2.png",
-  "player_outside": "images/bg/3.png",
-  "player_inside": "images/bg/4.png",
-  "letter_close": "images/bg/5.png",
-  "player_table": "images/bg/6.png",
-  "parchment": "images/bg/7.png",
-  "player_table2": "images/bg/8.png",
-  "epilogue": "images/bg/9.png",
-  "most_bridge": "images/bg/10.png",
-  "most_sleep": "images/bg/11.png",
-  "most_awake": "images/bg/12.png",
-  "most_empty": "images/bg/13.png",
-  "grib_tropa": "images/bg/14.png",
-  "grib_action": "images/bg/15.png",
-  "lavka": "images/bg/16.png",
-  "tower": "images/bg/17.png",
-  "tower_secret": "images/bg/18.png",
-  "observatory": "images/bg/19.png",
-  "tower_inside": "images/bg/20.png",
-  "final": "images/bg/21.png",
+  "title":          "images/bg/1.png",
+  "start":          "images/bg/2.png",
+  "street":         "images/bg/3.png",
+  "player_outside": "images/bg/4.png",
+  "player_inside":  "images/bg/5.png",
+  "letter_close":   "images/bg/6.png",
+  "player_table":   "images/bg/7.png",
+  "player_table2":  "images/bg/9.png",
+  "parchment":      "images/bg/6.png",   // временно — потом заменишь на отдельную схему линз
+  "epilogue":       "images/bg/9.png",   // временно — потом заменишь
+  "most_bridge":    "images/bg/10.png",
+  "most_sleep":     "images/bg/11.png",
+  "most_awake":     "images/bg/12.png",
+  "most_empty":     "images/bg/13.png",
+  "grib_tropa":     "images/bg/14.png",
+  "grib_action":    "images/bg/15.png",
+  "lavka":          "images/bg/16.png",
+  "tower":          "images/bg/17.png",
+  "tower_secret":   "images/bg/18.png",
+  "observatory":    "images/bg/19.png",
+  "tower_inside":   "images/bg/20.png",
+  "final":          "images/bg/21.png",
 };
 
 const INSERT_IMG = {
-  "city_holiday": "images/insert/1.png",
-  "sunrise_lighthouse": "images/insert/2.png",
-  "letter_seal": "images/insert/3.png",
-  "mira_arrive": "images/insert/4.png",
-  "mira_joke": "images/insert/5.png",
-  "olven_scheme": "images/insert/6.png",
-  "bruno_block": "images/insert/7.png",
-  "bruno_awake": "images/insert/8.png",
-  "bruno_riddle": "images/insert/9.png",
-  "bruno_wind": "images/insert/10.png",
-  "bruno_feather": "images/insert/11.png",
-  "bruno_apple": "images/insert/12.png",
-  "bruno_crystal": "images/insert/13.png",
-  "bruno_clue": "images/insert/14.png",
-  "shustik_stuck": "images/insert/15.png",
-  "shustik_magic": "images/insert/16.png",
-  "shustik_oil": "images/insert/17.png",
-  "shustik_lever": "images/insert/18.png",
-  "shustik_gift": "images/insert/19.png",
-  "selesta_greet": "images/insert/20.png",
-  "selesta_vial": "images/insert/21.png",
-  "door_riddle": "images/insert/22.png",
-  "door_water": "images/insert/23.png",
-  "door_open": "images/insert/24.png",
-  "cat_sleep": "images/insert/25.png",
-  "cat_key": "images/insert/26.png",
-  "secret_entry": "images/insert/27.png",
-  "cornelius_panic": "images/insert/28.png",
-  "august_sleep": "images/insert/29.png",
-  "august_wake_eye": "images/insert/30.png",
-  "schema_show": "images/insert/31.png",
-  "mechanism_inspect": "images/insert/32.png",
-  "plan_music": "images/insert/33.png",
-  "plan_nectar": "images/insert/34.png",
-  "plan_mechanics": "images/insert/35.png",
-  "plan_unity": "images/insert/36.png",
-  "august_fly": "images/insert/37.png",
-  "ending_melody": "images/insert/38.png",
-  "ending_abundance": "images/insert/39.png",
+  "letter_seal":        "images/insert/1.png",   // 8.png — рука ломает печать
+  "mira_arrive":        "images/insert/2.png",   // временно
+  "mira_joke":          "images/insert/3.png",   // временно
+  "olven_scheme":       "images/insert/4.png",   // временно
+  "city_holiday":       "images/insert/5.png",   // временно
+  "sunrise_lighthouse": "images/insert/6.png",   // временно
+  "bruno_block":        "images/insert/7.png",
+  "bruno_awake":        "images/insert/8.png",
+  "bruno_riddle":       "images/insert/9.png",
+  "bruno_wind":         "images/insert/10.png",
+  "bruno_feather":      "images/insert/11.png",
+  "bruno_apple":        "images/insert/12.png",
+  "bruno_crystal":      "images/insert/13.png",
+  "bruno_clue":         "images/insert/14.png",
+  "shustik_stuck":      "images/insert/15.png",
+  "shustik_magic":      "images/insert/16.png",
+  "shustik_oil":        "images/insert/17.png",
+  "shustik_lever":      "images/insert/18.png",
+  "shustik_gift":       "images/insert/19.png",
+  "selesta_greet":      "images/insert/20.png",
+  "selesta_vial":       "images/insert/21.png",
+  "door_riddle":        "images/insert/22.png",
+  "door_water":         "images/insert/23.png",
+  "door_open":          "images/insert/24.png",
+  "cat_sleep":          "images/insert/25.png",
+  "cat_key":            "images/insert/26.png",
+  "secret_entry":       "images/insert/27.png",
+  "cornelius_panic":    "images/insert/28.png",
+  "august_sleep":       "images/insert/29.png",
+  "august_wake_eye":    "images/insert/30.png",
+  "schema_show":        "images/insert/31.png",
+  "mechanism_inspect":  "images/insert/32.png",
+  "plan_music":         "images/insert/33.png",
+  "plan_nectar":        "images/insert/34.png",
+  "plan_mechanics":     "images/insert/35.png",
+  "plan_unity":         "images/insert/36.png",
+  "august_fly":         "images/insert/37.png",
+  "ending_melody":      "images/insert/38.png",
+  "ending_abundance":   "images/insert/39.png",
   "ending_engineering": "images/insert/40.png",
-  "ending_unity": "images/insert/41.png",
+  "ending_unity":       "images/insert/41.png",
 };
 
 const ITEMS = {
@@ -1027,18 +1038,18 @@ const ACHIEVEMENTS = {
 };
 
 const CUTSCENES = {
-  "ending_melody": { frames: [{ img: INSERT_IMG["plan_music"], duration: 3200 }, { img: INSERT_IMG["ending_melody"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-  "ending_abundance": { frames: [{ img: INSERT_IMG["plan_nectar"], duration: 3200 }, { img: INSERT_IMG["ending_abundance"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-  "ending_engineering": { frames: [{ img: INSERT_IMG["plan_mechanics"], duration: 3200 }, { img: INSERT_IMG["ending_engineering"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-  "ending_unity": { frames: [{ img: INSERT_IMG["plan_unity"], duration: 3200 }, { img: INSERT_IMG["ending_unity"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_melody":      { frames: [{ img: INSERT_IMG["plan_music"], duration: 3200 },      { img: INSERT_IMG["ending_melody"], duration: 3200 },      { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_abundance":   { frames: [{ img: INSERT_IMG["plan_nectar"], duration: 3200 },     { img: INSERT_IMG["ending_abundance"], duration: 3200 },   { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_engineering": { frames: [{ img: INSERT_IMG["plan_mechanics"], duration: 3200 },  { img: INSERT_IMG["ending_engineering"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_unity":       { frames: [{ img: INSERT_IMG["plan_unity"], duration: 3200 },      { img: INSERT_IMG["ending_unity"], duration: 3200 },       { img: INSERT_IMG["august_fly"], duration: 3200 }] },
 };
 
 const PASSAGES = {
   "title": { isTitle: true },
-  "Start1": { location: "start", insert: INSERT_IMG["city_holiday"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой — а по утрам солнце поднимается из-за маяка и заливает золотом черепичные крыши.", next: "Start2" },
-  "Start2": { location: "start", insert: INSERT_IMG["sunrise_lighthouse"], insertDuration: 2000, speaker: "Рассказчик", boxClass: "narrator", text: "Сегодня — особенный день. Праздник Осенней Звезды. Город украшен гирляндами из яблок, трактиры пекут пироги, а ремесленники развешивают флаги. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков.", next: "Start3" },
+  "Start1": { location: "start", speaker: "Рассказчик", boxClass: "narrator", text: "Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой — а по утрам солнце поднимается из-за маяка и заливает золотом черепичные крыши.", next: "Start2" },
+  "Start2": { location: "street", speaker: "Рассказчик", boxClass: "narrator", text: "Сегодня — особенный день. Праздник Осенней Звезды. Город украшен гирляндами из яблок, трактиры пекут пироги, а ремесленники развешивают флаги. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков.", next: "Start3" },
   "Start3": { location: "player_outside", speaker: "Рассказчик", boxClass: "narrator", text: "Вы — молодой травник, ученик мастера Олвена. Ваш дом стоит на краю города, среди яблоневых садов. Этим утром вы проснулись от тишины: обычно в это время над озером уже гудели пчёлы и сновали лодки. Сегодня — тихо.", next: "Start4" },
-  "Start4": { location: "player_outside", speaker: "Рассказчик", boxClass: "narrator", text: "На столе в доме лежало письмо: плотный пергамент, запечатанный золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.", next: "Start5" },
+  "Start4": { location: "letter_close", speaker: "Рассказчик", boxClass: "narrator", text: "На столе в доме лежало письмо: плотный пергамент, запечатанный золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.", next: "Start5" },
   "Start5": { location: "player_inside", speaker: "Рассказчик", boxClass: "narrator", text: "Вы вернулись в дом. За окном — знакомый вид на потухший маяк. На столе — письмо и чашка остывшего травяного чая. И тут скрипнула калитка, послышались лёгкие шаги.", next: "Start6" },
   "Start6": { location: "player_table", insert: INSERT_IMG["mira_arrive"], insertDuration: 2200, speaker: "Мира", boxClass: "mira", text: "— Подъём, Хранитель трав и ветров! Мастер Олвен передал: в маяке не просто перегорела свеча — там заклинило рунный резонатор. Я взяла отмычки, разводной ключ на двенадцать и банку лучшей графитовой смазки. А у тебя что в письме?", choices: [{ text: "Вскрыть письмо мастера Олвена прямо сейчас", to: "ОткрытьПисьмо" }, { text: "Спрятать письмо и сразу обсудить маршрут", to: "ВыборПути" }, { text: "Пошутить над Мирой и её чехлом с инструментами", to: "РазговорСМирой1" }] },
   "ОткрытьПисьмо": { location: "letter_close", insert: INSERT_IMG["letter_seal"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Вы ломаете восковую печать. Внутри — не просто записка, а тщательно вычерченная схема линз с личными пометками мастера, сделанными серебряными чернилами.", next: "ПисьмоОлвена" },
