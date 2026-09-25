@@ -335,6 +335,15 @@ html, body {
 }
 .choice-box a:hover::before { color: #FFD700; transform: translateY(-50%) translateX(4px); text-shadow: 0 0 16px rgba(255,215,0,1); }
 .choice-box a:active { transform: translateX(6px) scale(0.995); }
+.choice-box a.disabled {
+  opacity: 0.45; cursor: not-allowed; filter: grayscale(0.4);
+}
+.choice-box a.disabled:hover {
+  transform: none;
+  background: linear-gradient(180deg, rgba(28,22,14,0.94) 0%, rgba(14,10,6,0.97) 100%);
+  border-color: rgba(244,197,66,0.5);
+}
+.choice-box a.disabled::before { content: '🔒'; color: #888; text-shadow: none; }
 
 .history-controls {
   position: fixed; top: 18px; left: 18px;
@@ -421,6 +430,54 @@ html, body {
 .notification b {
   color: #FFE9A8; display: block; margin-bottom: 5px;
   font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+}
+.notification.warn {
+  background: linear-gradient(180deg, rgba(180,60,30,0.97) 0%, rgba(120,30,10,0.97) 100%);
+  border-left-color: #F87171;
+  border-color: rgba(248,113,113,0.9);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.7), 0 0 30px rgba(248,113,113,0.4), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.notification.warn b { color: #FECACA; }
+
+/* === ВСПЛЫВАЮЩАЯ КАРТОЧКА ПРЕДМЕТА === */
+.item-popup {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.85);
+  z-index: 450;
+  background: linear-gradient(180deg, rgba(28,22,14,0.97) 0%, rgba(14,10,6,0.99) 100%);
+  border: 2px solid rgba(244,197,66,0.95);
+  border-radius: 10px;
+  padding: 26px 40px;
+  text-align: center;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.85),
+    0 0 60px rgba(255,200,80,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.item-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.item-popup .popup-icon {
+  font-size: 52px; margin-bottom: 10px;
+  filter: drop-shadow(0 0 20px rgba(255,200,80,0.9));
+}
+.item-popup .popup-label {
+  color: #FBBF24; font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.item-popup .popup-name {
+  color: #FFF8E7; font-size: 20px; font-weight: bold;
+  letter-spacing: 1px; text-shadow: 0 0 14px rgba(255,220,100,0.7);
+}
+.item-popup .popup-hint {
+  color: #d8c9a8; font-size: 13px; font-style: italic;
+  margin-top: 10px; max-width: 320px;
 }
 
 .title-screen {
@@ -765,6 +822,9 @@ body.cutscene-active .particles-layer {
   .notification { top: 76px; right: 14px; font-size: 12px; padding: 12px 18px 12px 22px; max-width: 280px; }
   .modal { padding: 22px; }
   .cs-btn { padding: 9px 16px; font-size: 12px; }
+  .item-popup { padding: 20px 28px; }
+  .item-popup .popup-icon { font-size: 40px; }
+  .item-popup .popup-name { font-size: 17px; }
 }
 @media (max-width: 480px) {
   .dialogue-box { width: 96vw; max-height: 48vh; bottom: 1.5vh; border-radius: 3px; }
@@ -819,6 +879,12 @@ body.cutscene-active .particles-layer {
 <div id="gameArea"></div>
 
 <div class="notification" id="notification"></div>
+<div class="item-popup" id="itemPopup">
+  <div class="popup-icon" id="popupIcon">✨</div>
+  <div class="popup-label">Получен предмет</div>
+  <div class="popup-name" id="popupName"></div>
+  <div class="popup-hint" id="popupHint"></div>
+</div>
 
 <div class="modal-overlay hidden" id="modalOverlay">
   <div class="modal" id="modalContent"></div>
@@ -826,8 +892,8 @@ body.cutscene-active .particles-layer {
 
 <script>
 /* ============================================================
-   ПЕСНЬ АВГУСТА — движок v13.8
-   Галерея сцен убрана. 2 концовки. Линия Шустика убрана.
+   ПЕСНЬ АВГУСТА — движок v14.0
+   2 концовки. Проверка предметов. Экран «Что дальше?».
    ============================================================ */
 
 /* ===== ФОНЫ ===== */
@@ -896,6 +962,16 @@ const ACHIEVEMENTS = {
   key:        { icon: '🔑', title: 'Латунный ключ',        desc: 'Взять ключ у Тик-Така' },
   scheme:     { icon: '📜', title: 'Схема Олвена',         desc: 'Изучить чертёж мастера Олвена' },
   allEndings: { icon: '👑', title: 'Обе концовки',         desc: 'Открыть оба финала' }
+};
+
+/* ===== ПРЕДМЕТЫ (для всплывающих карточек и журнала) ===== */
+const ITEM_DATA = {
+  has_feather:      { icon: '🪶', name: 'Перо Лазурной Сойки',   hint: 'Очищает звуковые трубки от пыли веков' },
+  has_crystal:      { icon: '💎', name: 'Кристалл Горного Кварца', hint: 'Фокусирует оптику маяка' },
+  has_selesta_vial: { icon: '🧪', name: 'Флакон Селесты',        hint: 'Пробуждает Августа лакомством' },
+  has_key:          { icon: '🔑', name: 'Латунный ключ',         hint: 'Калибровка призм главного механизма' },
+  has_scheme:       { icon: '📜', name: 'Схема Олвена',          hint: 'Угол 45° к центральной линзе' },
+  has_clue:         { icon: '🔍', name: 'Зацепка от Бруно',      hint: 'Сквозняк сбил настройку колоколов ночью' }
 };
 
 const CUTSCENES = {
@@ -1389,7 +1465,7 @@ const PASSAGES = {
     insert: INSERT_IMG.august_fly,
     insertDuration: 2500,
     speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Колокола оживают, шестерни крутятся в такт, а целебный нектар придаёт сил! Август встаёт во весь рост, заливая зал мягким светом!`,
+    text: `Вы разворачиваете схему Олвена. Мира выставляет колокола под углом сорок пять градусов. Корнелиус дрожащими руками подаёт вам флакон Селесты — золотистые капли лунного зверобоя падают на сахарную пластину.<br><br>Перо Лазурной Сойки взмахивает над серебряными лепестками — пыль веков слетает, и колокола оживают чистым хрустальным звоном. Август приоткрывает фиолетовый глаз... и встаёт во весь рост!`,
     next: 'КонецГармония'
   },
   ФиналМастерство: {
@@ -1397,7 +1473,7 @@ const PASSAGES = {
     insert: INSERT_IMG.august_fly,
     insertDuration: 2500,
     speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Точный расчёт, крепкая дружба и инженерная смекалка Миры — и Август взмывает в центр конструкции!`,
+    text: `Мира берёт дело в свои руки. Ключ на двенадцать от Тик-Така, кристалл кварца Бруно — в оправу оптической оси. Все шестерёнки встают на места с идеальным кликом: <i>тик-так, тик-так</i>.<br><br>Механическая карусель оживает без единого скрипа. Зеркала выстраиваются в идеальную спираль — и Август, очарованный безупречной гармонией движения, взмывает в центр конструкции!`,
     next: 'КонецМастерство'
   },
 
@@ -1406,14 +1482,14 @@ const PASSAGES = {
     cutscene: 'ending_harmony',
     speaker: 'Финал', boxClass: 'final-box', ending: 'harmony',
     text: `<b>КОНЕЦ: Финал Гармонии</b><br><br><i>Вы доказали, что природа, наука и тепло сердец вместе способны оживить даже самое хрупкое волшебство.</i>`,
-    next: 'title'
+    endingScreen: 'harmony'
   },
   КонецМастерство: {
     location: 'epilogue',
     cutscene: 'ending_mastery',
     speaker: 'Финал', boxClass: 'final-box', ending: 'mastery',
     text: `<b>КОНЕЦ: Финал Мастерства</b><br><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>`,
-    next: 'title'
+    endingScreen: 'mastery'
   }
 };
 
@@ -1485,7 +1561,7 @@ function getCompletionPercent() {
 function saveGame() {
   try {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
-      version: 13, timestamp: Date.now(),
+      version: 14, timestamp: Date.now(),
       currentPassage: gameState.currentPassage,
       history: gameState.history, historyIndex: gameState.historyIndex,
       variables: gameState.variables,
@@ -1559,6 +1635,29 @@ function resetPassagesOnly() {
 }
 
 /* ============================================================
+   ПРОВЕРКА ПРЕДМЕТОВ ДЛЯ ФИНАЛОВ
+   ============================================================ */
+function canDoHarmony() {
+  return !!(gameState.variables.has_selesta_vial && gameState.variables.has_scheme);
+}
+function canDoMastery() {
+  return !!(gameState.variables.has_key || gameState.variables.has_crystal);
+}
+function getMissingForHarmony() {
+  const missing = [];
+  if (!gameState.variables.has_selesta_vial) missing.push('🧪 Флакон Селесты');
+  if (!gameState.variables.has_scheme) missing.push('📜 Схема Олвена');
+  return missing;
+}
+function getMissingForMastery() {
+  const missing = [];
+  if (!gameState.variables.has_key && !gameState.variables.has_crystal) {
+    missing.push('🔑 Латунный ключ или 💎 Кристалл Кварца');
+  }
+  return missing;
+}
+
+/* ============================================================
    АУДИО
    ============================================================ */
 const bgMusic = document.getElementById('bgMusic');
@@ -1602,13 +1701,30 @@ function setMusicVolume(v) {
 }
 
 let notifyTimer = null;
-function showNotification(title, text) {
+function showNotification(title, text, type) {
   const el = document.getElementById('notification');
   if (!el) return;
   el.innerHTML = `<b>${title}</b>${text}`;
+  el.classList.remove('warn');
+  if (type === 'warn') el.classList.add('warn');
   el.classList.add('show');
   if (notifyTimer) clearTimeout(notifyTimer);
   notifyTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+/* ===== ВСПЛЫВАЮЩАЯ КАРТОЧКА ПРЕДМЕТА ===== */
+let popupTimer = null;
+function showItemPopup(itemKey) {
+  const data = ITEM_DATA[itemKey];
+  if (!data) return;
+  const popup = document.getElementById('itemPopup');
+  document.getElementById('popupIcon').textContent = data.icon;
+  document.getElementById('popupName').textContent = data.name;
+  document.getElementById('popupHint').textContent = data.hint;
+  popup.classList.add('show');
+  playSfx('achievement');
+  if (popupTimer) clearTimeout(popupTimer);
+  popupTimer = setTimeout(() => popup.classList.remove('show'), 2800);
 }
 
 /* ============================================================
@@ -1898,8 +2014,17 @@ function renderPassage(id, addToHistory = true) {
 
   clearTitleElements();
 
+  // === УСТАНОВКА ФЛАГОВ + ВСПЛЫВАЮЩИЕ КАРТОЧКИ ПРЕДМЕТОВ ===
   if (passage.set) {
+    const itemFlags = ['has_feather', 'has_crystal', 'has_selesta_vial', 'has_key', 'has_scheme'];
+    const newItems = [];
+    for (const key of itemFlags) {
+      if (passage.set[key] && !gameState.variables[key]) {
+        newItems.push(key);
+      }
+    }
     Object.assign(gameState.variables, passage.set);
+
     const itemAch = {
       has_feather: 'feather', has_crystal: 'crystal',
       has_selesta_vial: 'vial', has_key: 'key',
@@ -1908,7 +2033,13 @@ function renderPassage(id, addToHistory = true) {
     for (const [k, a] of Object.entries(itemAch)) {
       if (passage.set[k]) unlockAchievement(a);
     }
+
+    // Показываем карточки предметов с задержкой
+    newItems.forEach((key, i) => {
+      setTimeout(() => showItemPopup(key), 600 + i * 1200);
+    });
   }
+
   if (passage.ending) {
     gameState.endings[passage.ending] = true;
     saveEndingsToStorage();
@@ -1977,8 +2108,59 @@ function renderPassageInner(id, passage) {
 
   const currentPassageId = id;
 
+  // === ОСОБАЯ ЛОГИКА ДЛЯ ГЛАВНОЙ ПОЧИНКИ ===
+  if (id === 'ГлавнаяПочинка') {
+    const choiceBox = gameArea.querySelector('.choice-box');
+    if (choiceBox) {
+      const links = choiceBox.querySelectorAll('a');
+      const linkHarmony = links[0];
+      const linkMastery = links[1];
+
+      if (linkHarmony && !canDoHarmony()) {
+        linkHarmony.classList.add('disabled');
+        linkHarmony.dataset.disabled = 'true';
+        const missing = getMissingForHarmony();
+        linkHarmony.innerHTML = `<span>План 1: Полная синхронизация <em style="color:#e07b39;font-style:normal;font-size:0.85em;">(нужно: ${missing.join(', ')})</em></span>`;
+      }
+      if (linkMastery && !canDoMastery()) {
+        linkMastery.classList.add('disabled');
+        linkMastery.dataset.disabled = 'true';
+        const missing = getMissingForMastery();
+        linkMastery.innerHTML = `<span>План 2: Инженерный расчёт <em style="color:#e07b39;font-style:normal;font-size:0.85em;">(нужно: ${missing.join(', ')})</em></span>`;
+      }
+
+      // Перехватываем клики по заблокированным кнопкам
+      choiceBox.querySelectorAll('a[data-disabled="true"]').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const missing = el === linkHarmony ? getMissingForHarmony() : getMissingForMastery();
+          showNotification('⚠ Не хватает предметов', `Соберите: ${missing.join(', ')}`, 'warn');
+          playSfx('click');
+        }, true);
+      });
+    }
+
+    // Визуальная подсказка над диалогом
+    const box = gameArea.querySelector('.dialogue-box');
+    if (box) {
+      const hint = document.createElement('div');
+      hint.style.cssText = `
+        position:absolute; top:-52px; right:24px;
+        background:rgba(0,0,0,0.85); border:1px solid rgba(244,197,66,0.6);
+        border-radius:6px; padding:8px 16px; font-size:12px; color:#FBBF24;
+        letter-spacing:1px; text-transform:uppercase;
+        box-shadow:0 8px 24px rgba(0,0,0,0.6);
+        backdrop-filter:blur(8px); pointer-events:none;
+      `;
+      hint.textContent = '📖 Откройте журнал для подсказки';
+      box.appendChild(hint);
+    }
+  }
+
   gameArea.querySelectorAll('[data-to]').forEach(btn => {
     btn.addEventListener('click', (e) => {
+      if (btn.dataset.disabled === 'true') return;
       e.stopPropagation();
       playSfx('choice');
       const to = btn.dataset.to;
@@ -2013,7 +2195,7 @@ function renderPassageInner(id, passage) {
       showNotification('💾 Сохранено', 'Игра успешно сохранена');
       setTimeout(() => { saveBtn.textContent = '💾'; }, 1000);
     } else {
-      showNotification('⚠ Ошибка', 'Не удалось сохранить игру');
+      showNotification('⚠ Ошибка', 'Не удалось сохранить игру', 'warn');
     }
   });
 
@@ -2052,6 +2234,73 @@ function renderPassageInner(id, passage) {
       clickLayer.classList.add('enabled');
     }
   }
+
+  // === ЭКРАН ПОСЛЕ КОНЦОВКИ ===
+  if (passage.endingScreen) {
+    setTimeout(() => {
+      showEndingScreen(passage.endingScreen);
+    }, 4000);
+  }
+}
+
+/* ============================================================
+   ЭКРАН ПОСЛЕ КОНЦОВКИ
+   ============================================================ */
+function showEndingScreen(endingKey) {
+  clearDialogueElements();
+  clearTitleElements();
+
+  const clickLayer = document.getElementById('clickLayer');
+  if (clickLayer) clickLayer.classList.remove('enabled');
+
+  const isHarmony = endingKey === 'harmony';
+  const title = isHarmony ? '✨ Финал Гармонии' : '⚙ Финал Мастерства';
+  const subtitle = isHarmony
+    ? 'Природа, наука и тепло сердец — вместе'
+    : 'Точный расчёт и крепкая дружба';
+  const color = isHarmony ? '#FBBF24' : '#4ADE80';
+  const accent = isHarmony ? 'rgba(251,191,36,' : 'rgba(74,222,128,';
+
+  const gameArea = document.getElementById('gameArea');
+  gameArea.style.opacity = '1';
+  gameArea.innerHTML = `
+    <div class="title-screen" style="background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.9) 100%);">
+      <div class="title-logo">
+        <h1 class="title-main" style="color:${color};text-shadow:0 0 40px ${accent}1),0 0 80px ${accent}0.7),6px 6px 30px rgba(0,0,0,0.9);">${title}</h1>
+        <p class="title-sub" style="color:${color};">${subtitle}</p>
+      </div>
+      <div class="title-menu">
+        <button id="btnPlayAgain">🔄 Пройти заново</button>
+        <button id="btnOtherEnding">🎭 Другая концовка</button>
+        <button id="btnToMenu">🏠 В главное меню</button>
+      </div>
+      <p class="title-footer">Верхний Шепот · Праздник Осенней Звезды</p>
+    </div>
+  `;
+
+  document.getElementById('btnPlayAgain').addEventListener('click', () => {
+    gameState.history = [];
+    gameState.historyIndex = -1;
+    gameState.variables = {};
+    clearTitleElements();
+    renderPassage('Start1');
+  });
+
+  document.getElementById('btnOtherEnding').addEventListener('click', () => {
+    gameState.history = [];
+    gameState.historyIndex = -1;
+    clearTitleElements();
+    // Оставляем предметы, но возвращаемся к башне для другого финала
+    renderPassage('БашняСнаружи');
+  });
+
+  document.getElementById('btnToMenu').addEventListener('click', () => {
+    gameState.history = [];
+    gameState.historyIndex = -1;
+    renderPassage('title', false);
+  });
+
+  updateHistoryButtons();
 }
 
 function renderTitleScreen() {
@@ -2098,7 +2347,7 @@ function renderTitleScreen() {
       clearTitleElements();
       renderPassage(gameState.currentPassage, false);
     } else {
-      showNotification('⚠ Ошибка', 'Сохранение не найдено');
+      showNotification('⚠ Ошибка', 'Сохранение не найдено', 'warn');
     }
   });
   document.getElementById('btnProgress').addEventListener('click', openProgress);
@@ -2207,30 +2456,66 @@ function openJournal() {
   const overlay = document.getElementById('modalOverlay');
   const content = document.getElementById('modalContent');
   let html = '<h2>📖 Журнал</h2>';
+
+  // === ПРЕДМЕТЫ ===
   const items = [
-    { key: 'has_feather', icon: '🪶', name: 'Перо Лазурной Сойки' },
-    { key: 'has_crystal', icon: '💎', name: 'Кристалл Горного Кварца' },
-    { key: 'has_selesta_vial', icon: '🧪', name: 'Флакон Селесты' },
-    { key: 'has_key', icon: '🔑', name: 'Латунный ключ' }
+    { key: 'has_feather',       icon: '🪶', name: 'Перо Лазурной Сойки',    hint: 'Очищает звуковые трубки' },
+    { key: 'has_crystal',       icon: '💎', name: 'Кристалл Горного Кварца', hint: 'Фокусирует оптику маяка' },
+    { key: 'has_selesta_vial',  icon: '🧪', name: 'Флакон Селесты',         hint: 'Пробуждает Августа лакомством' },
+    { key: 'has_key',           icon: '🔑', name: 'Латунный ключ',          hint: 'Калибровка призм' },
   ];
   const owned = items.filter(i => gameState.variables[i.key]);
+
   html += '<div style="margin-bottom:16px;"><div style="color:#FBBF24;font-size:12px;letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">Предметы</div>';
-  if (owned.length === 0) html += '<div style="color:#888;font-style:italic;">Пока ничего не найдено</div>';
-  else owned.forEach(i => { html += `<div style="padding:6px 0;color:#eee;">${i.icon} ${i.name}</div>`; });
+  if (owned.length === 0) {
+    html += '<div style="color:#888;font-style:italic;">Пока ничего не найдено</div>';
+  } else {
+    owned.forEach(i => {
+      html += `<div style="padding:8px 0;color:#eee;border-bottom:1px solid rgba(244,197,66,0.1);">
+        <div>${i.icon} <b>${i.name}</b></div>
+        <div style="color:#999;font-size:12px;font-style:italic;margin-top:2px;">${i.hint}</div>
+      </div>`;
+    });
+  }
   html += '</div>';
 
+  // === СОБЫТИЯ ===
   const flags = [
-    { key: 'has_clue', name: 'Зацепка от Бруно' },
-    { key: 'has_scheme', name: 'Схема Олвена изучена' },
-    { key: 'has_met_august', name: 'Знакомство с Августом' },
-    { key: 'inspected_mechanism', name: 'Механизм башни осмотрен' },
-    { key: 'door_opened', name: 'Парадная дверь башни открыта' }
+    { key: 'has_clue',          name: 'Зацепка от Бруно',      hint: 'Сквозняк сбил колокола ночью' },
+    { key: 'has_scheme',        name: 'Схема Олвена изучена',  hint: 'Угол 45° к центральной линзе' },
+    { key: 'has_met_august',    name: 'Знакомство с Августом', hint: 'Он ждёт праздника' },
+    { key: 'inspected_mechanism', name: 'Механизм осмотрен',   hint: 'Три узла поломки' },
+    { key: 'door_opened',       name: 'Дверь башни открыта',   hint: 'Солнце + Ветер' },
   ];
   const activeFlags = flags.filter(f => gameState.variables[f.key]);
-  html += '<div><div style="color:#FBBF24;font-size:12px;letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">События</div>';
-  if (activeFlags.length === 0) html += '<div style="color:#888;font-style:italic;">Пока ничего не произошло</div>';
-  else activeFlags.forEach(f => { html += `<div style="padding:6px 0;color:#eee;">• ${f.name}</div>`; });
+
+  html += '<div style="margin-bottom:16px;"><div style="color:#FBBF24;font-size:12px;letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">События</div>';
+  if (activeFlags.length === 0) {
+    html += '<div style="color:#888;font-style:italic;">Пока ничего не произошло</div>';
+  } else {
+    activeFlags.forEach(f => {
+      html += `<div style="padding:8px 0;color:#eee;border-bottom:1px solid rgba(244,197,66,0.1);">
+        <div>• <b>${f.name}</b></div>
+        <div style="color:#999;font-size:12px;font-style:italic;margin-top:2px;">${f.hint}</div>
+      </div>`;
+    });
+  }
   html += '</div>';
+
+  // === ПОДСКАЗКА ПО ФИНАЛАМ ===
+  const harmonyReady = canDoHarmony();
+  const masteryReady = canDoMastery();
+  html += `<div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:8px;padding:14px 18px;margin-bottom:16px;">
+    <div style="color:#FBBF24;font-size:12px;letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">Доступные финалы</div>
+    <div style="padding:6px 0;color:${harmonyReady ? '#4ADE80' : '#888'};">
+      ${harmonyReady ? '✅' : '🔒'} Финал Гармонии
+      ${harmonyReady ? '' : `<div style="color:#e07b39;font-size:12px;margin-top:2px;">Нужно: ${getMissingForHarmony().join(', ')}</div>`}
+    </div>
+    <div style="padding:6px 0;color:${masteryReady ? '#4ADE80' : '#888'};">
+      ${masteryReady ? '✅' : '🔒'} Финал Мастерства
+      ${masteryReady ? '' : `<div style="color:#e07b39;font-size:12px;margin-top:2px;">Нужно: ${getMissingForMastery().join(', ')}</div>`}
+    </div>
+  </div>`;
 
   html += '<div class="buttons"><button id="journalClose">Закрыть</button></div>';
   content.innerHTML = html;
