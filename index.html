@@ -903,32 +903,7 @@ html, body {
 </div>
 
 <script>
-  /* Нумерация images/bg/ (1..15):
-   1  = title              — титульник
-   2  = start              — панорама города
-   3  = street             — переулок с гирляндами
-   4  = player_outside     — дом снаружи
-   5  = player_inside      — комната внутри
-   6  = letter_close       — письмо крупным планом
-   7  = player_table       — Мира входит
-   8  = letter_seal_bg     — руки вскрывают печать
-   9  = player_table2      — оба за столом
-   10 = player_hide_letter — герой убирает письмо
-   11 = most_bridge        — мост: приходим
-   12 = most_sleep         — мост: Бруно спит
-   13 = most_awake         — мост: Бруно проснулся
-   14 = most_empty         — мост: свободен
-   15 = parchment          — чертёж линз
-   16 = grib_tropa         — лесная тропа
-   17 = grib_action        — Шустик с тележкой
-   18 = lavka              — домик Селесты
-   19 = tower              — башня снаружи
-   20 = tower_secret       — тайная дверца
-   21 = observatory        — обсерватория
-   22 = tower_inside       — главный зал
-   23 = final              — Август просыпается
-*/
-const LOCATION_BG = {
+  const LOCATION_BG = {
   "title": "images/bg/1.png",
   "start": "images/bg/2.png",
   "street": "images/bg/3.png",
@@ -937,64 +912,63 @@ const LOCATION_BG = {
   "letter_close": "images/bg/6.png",
   "player_table": "images/bg/7.png",
   "letter_seal_bg": "images/bg/8.png",
-  "player_table2": "images/bg/9.png",
-  "player_hide_letter": "images/bg/10.png",
-  "most_bridge": "images/bg/11.png",
-  "most_sleep": "images/bg/12.png",
-  "most_awake": "images/bg/13.png",
-  "most_empty": "images/bg/14.png",
-  "parchment": "images/bg/15.png",
-  "grib_tropa": "images/bg/16.png",
-  "grib_action": "images/bg/17.png",
-  "lavka": "images/bg/18.png",
-  "tower": "images/bg/19.png",
-  "tower_secret": "images/bg/20.png",
-  "observatory": "images/bg/21.png",
-  "tower_inside": "images/bg/22.png",
-  "final": "images/bg/23.png",
+  "parchment": "images/bg/9.png",
+  "player_table2": "images/bg/10.png",
+  "player_hide_letter": "images/bg/11.png",
+  "most_bridge": "images/bg/12.png",
+  "most_sleep": "images/bg/13.png",
+  "most_awake": "images/bg/14.png",
+  "most_empty": "images/bg/15.png",
+  "lavka": "images/bg/16.png",
+  "grib_tropa": "images/bg/18.png",
+  "grib_action": "images/bg/19.png",
+  "tower": "images/bg/2.png",
+  "tower_secret": "images/bg/8.png",
+  "observatory": "images/bg/5.png",
+  "tower_inside": "images/bg/5.png",
+  "final": "images/bg/14.png",
 };
 
-/* Нумерация images/insert/ (1..40) — без letter_seal и olven_scheme */
 const INSERT_IMG = {
-  "city_holiday": "images/insert/1.png",
-  "sunrise_lighthouse": "images/insert/2.png",
-  "mira_arrive": "images/insert/3.png",
-  "mira_joke": "images/insert/4.png",
-  "bruno_block": "images/insert/5.png",
-  "bruno_awake": "images/insert/6.png",
-  "bruno_riddle": "images/insert/7.png",
-  "bruno_wind": "images/insert/8.png",
-  "bruno_feather": "images/insert/9.png",
-  "bruno_apple": "images/insert/10.png",
-  "bruno_crystal": "images/insert/11.png",
-  "bruno_clue": "images/insert/12.png",
-  "shustik_stuck": "images/insert/13.png",
-  "shustik_magic": "images/insert/14.png",
-  "shustik_oil": "images/insert/15.png",
-  "shustik_lever": "images/insert/16.png",
-  "shustik_gift": "images/insert/17.png",
-  "selesta_greet": "images/insert/18.png",
-  "selesta_vial": "images/insert/19.png",
-  "door_riddle": "images/insert/20.png",
-  "door_water": "images/insert/21.png",
-  "door_open": "images/insert/22.png",
-  "cat_sleep": "images/insert/23.png",
-  "cat_key": "images/insert/24.png",
-  "secret_entry": "images/insert/25.png",
-  "cornelius_panic": "images/insert/26.png",
-  "august_sleep": "images/insert/27.png",
-  "august_wake_eye": "images/insert/28.png",
-  "schema_show": "images/insert/29.png",
-  "mechanism_inspect": "images/insert/30.png",
-  "plan_music": "images/insert/31.png",
-  "plan_nectar": "images/insert/32.png",
-  "plan_mechanics": "images/insert/33.png",
-  "plan_unity": "images/insert/34.png",
-  "august_fly": "images/insert/35.png",
-  "ending_melody": "images/insert/36.png",
-  "ending_abundance": "images/insert/37.png",
-  "ending_engineering": "images/insert/38.png",
-  "ending_unity": "images/insert/39.png",
+  "city_holiday": "images/bg/3.png",
+  "sunrise_lighthouse": "images/bg/1.png",
+  "mira_arrive": "images/bg/7.png",
+  "mira_joke": "images/bg/7.png",
+  "bruno_block": "images/bg/13.png",
+  "bruno_awake": "images/bg/14.png",
+  "bruno_riddle": "images/bg/14.png",
+  "bruno_wind": "images/bg/14.png",
+  "bruno_feather": "images/bg/14.png",
+  "bruno_apple": "images/bg/14.png",
+  "bruno_crystal": "images/bg/14.png",
+  "bruno_clue": "images/bg/14.png",
+  "shustik_stuck": "images/bg/19.png",
+  "shustik_magic": "images/bg/20.png",
+  "shustik_oil": "images/bg/21.png",
+  "shustik_lever": "images/bg/22.png",
+  "shustik_gift": "images/bg/23.png",
+  "selesta_greet": "images/bg/17.png",
+  "selesta_vial": "images/bg/17.png",
+  "door_riddle": "images/bg/8.png",
+  "door_water": "images/bg/8.png",
+  "door_open": "images/bg/8.png",
+  "cat_sleep": "images/bg/5.png",
+  "cat_key": "images/bg/5.png",
+  "secret_entry": "images/bg/8.png",
+  "cornelius_panic": "images/bg/5.png",
+  "august_sleep": "images/bg/5.png",
+  "august_wake_eye": "images/bg/5.png",
+  "schema_show": "images/bg/9.png",
+  "mechanism_inspect": "images/bg/5.png",
+  "plan_music": "images/bg/14.png",
+  "plan_nectar": "images/bg/14.png",
+  "plan_mechanics": "images/bg/14.png",
+  "plan_unity": "images/bg/14.png",
+  "august_fly": "images/bg/14.png",
+  "ending_melody": "images/bg/15.png",
+  "ending_abundance": "images/bg/15.png",
+  "ending_engineering": "images/bg/15.png",
+  "ending_unity": "images/bg/15.png",
 };
 
 const ITEMS = {
@@ -1067,7 +1041,7 @@ const PASSAGES = {
   "ГрибыНаграда": { location: "grib_action", insert: INSERT_IMG["shustik_gift"], insertDuration: 2200, speaker: "Шустик", boxClass: "shustik", text: "— Спасены! Спасибо, добрые путники! Держите мешочек искристой пыльцы — она пригодится, если нужно разжечь погасший фитиль! А тропка выведет прямо к вратам башни.", set: { "has_pollen": true }, next: "БашняСнаружи" },
   "ЛавкаСелесты": { location: "lavka", insert: INSERT_IMG["selesta_greet"], insertDuration: 2200, speaker: "Бабушка Селеста", boxClass: "selesta", text: "— Батюшки, юные мастера! Беда с маяком, весь посёлок гудит! Чуяло моё сердце: Август вчера слишком грустно пел. Вы на маяк?", next: "ЛавкаСелесты2" },
   "ЛавкаСелесты2": { location: "lavka", speaker: "Мира", boxClass: "mira", text: "— Да, бабушка Селеста. Нам нужно оживить резонатор.", next: "ЛавкаСелесты3" },
-  "ЛавкаСелесты3": { location: "lavka", insert: INSERT_IMG["selesta_vial"], insertDuration: 2200, speaker: "Бабушка Селеста", boxClass: "selesta", text: "— Возьмите-ка вот это. Капли лунного зверобоя и сладкой мелиссы. Если Август закапризничает — пара капель на сахарную пластину вернут ему бодрость духа.", set: { "has_selesta_vial": true }, choices: [{ text: "Отправиться к Старому мосту", to: "СтарыйМост" }, { text: "Пойти короткой Грибной тропой", to: "ГрибнаяТропа" }] },
+  "ЛавкаСелесты3": { location: "lavka", speaker: "Бабушка Селеста", boxClass: "selesta", text: "— Возьмите-ка вот это. Капли лунного зверобоя и сладкой мелиссы. Если Август закапризничает — пара капель на сахарную пластину вернут ему бодрость духа.", set: { "has_selesta_vial": true }, choices: [{ text: "Отправиться к Старому мосту", to: "СтарыйМост" }, { text: "Пойти короткой Грибной тропой", to: "ГрибнаяТропа" }] },
   "БашняСнаружи": { location: "tower", speaker: "Рассказчик", boxClass: "narrator", text: "Перед вами вздымалась Башня Светлячков. Массивные дубовые двери были заперты. На бронзовой накладке замка — циферблат с четырьмя стихийными знаками: Солнце, Ветер, Вода и Росток.", next: "БашняСнаружи2" },
   "БашняСнаружи2": { location: "tower", insert: INSERT_IMG["door_riddle"], insertDuration: 2200, speaker: "Мира", boxClass: "mira", text: "— Загадка гильдии архитекторов! «Лишь союз тепла и движения пробудит спящий свет». Что выбираем?", choices: [{ text: "Выставить комбинацию: «Солнце и Ветер»", to: "ДверьОткрыта" }, { text: "Выставить комбинацию: «Вода и Росток»", to: "ДверьОшибка" }, { text: "Осмотреть окрестности: вдруг есть другой проход?", to: "ОсмотрСтен" }] },
   "ДверьОшибка": { location: "tower", insert: INSERT_IMG["door_water"], insertDuration: 2000, speaker: "Мира", boxClass: "mira", text: "Замок издаёт мелодичный перелив — и из сопла брызгает освежающая струя мятной воды прямо в лицо! — Освежает! Но подсказка гласила: «Тепло и движение»! Попробуем ещё раз?", next: "ДверьОткрыта" },
