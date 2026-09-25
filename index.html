@@ -524,7 +524,6 @@ html, body {
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* ===== Экран концовки ===== */
 .ending-screen {
   position: fixed; inset: 0;
   z-index: 250;
@@ -722,13 +721,6 @@ html, body {
   padding-bottom: 14px;
 }
 .modal h3 { color: #FBBF24; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin: 20px 0 10px; }
-.modal .row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(244,197,66,0.12); gap: 12px; flex-wrap: wrap; }
-.modal .row:last-of-type { border-bottom: none; }
-.modal label { color: #ddd; letter-spacing: 0.5px; }
-.modal select, .modal input[type=range] {
-  background: #1c1813; color: #eee; border: 1px solid #4a3f2f;
-  padding: 8px 12px; border-radius: 4px; font-family: inherit; font-size: 14px; cursor: pointer;
-}
 .modal .buttons { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; flex-wrap: wrap; }
 .modal button {
   background: linear-gradient(180deg, rgba(60,100,180,0.95) 0%, rgba(35,65,135,0.95) 100%);
@@ -759,13 +751,11 @@ html, body {
 .modal .ach .info { display: flex; flex-direction: column; gap: 3px; }
 .modal .ach .title { color: #FBBF24; font-weight: bold; font-size: 14px; }
 .modal .ach .desc { color: #999; font-size: 12px; }
-
 .modal .item-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(244,197,66,0.1); }
 .modal .item-row:last-child { border-bottom: none; }
 .modal .item-icon { font-size: 26px; line-height: 1; flex-shrink: 0; }
 .modal .item-name { color: #eee; font-weight: bold; }
 .modal .item-hint { color: #999; font-size: 12px; font-style: italic; margin-top: 3px; }
-
 .modal .ending-status { padding: 12px 16px; border-radius: 6px; margin-bottom: 8px; font-size: 13px; }
 .modal .ending-status.ready { background: rgba(139,171,122,0.12); border: 1px solid rgba(139,171,122,0.4); color: #a8d49a; }
 .modal .ending-status.locked { background: rgba(224,138,76,0.08); border: 1px solid rgba(224,138,76,0.3); color: #c9c0a6; }
@@ -843,38 +833,21 @@ html, body {
 
 .hidden { display: none !important; }
 
-
 .dialogue-box.shustik { border-color: rgba(120,160,90,0.85); }
 .dialogue-box.shustik .speaker-name { background: linear-gradient(180deg, rgba(110,150,80,1) 0%, rgba(70,100,45,1) 100%); }
 .dialogue-box.shustik .speaker-name::after { border-top-color: rgba(70,100,45,1); }
 .dialogue-box.shustik .dialogue-text { font-style: italic; }
 
-.dialogue-box.final-melody {
-  border-color: rgba(255,200,90,1);
-  box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 80px rgba(255,180,60,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
-}
+.dialogue-box.final-melody { border-color: rgba(255,200,90,1); box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 80px rgba(255,180,60,0.5), inset 0 1px 0 rgba(255,255,255,0.15); }
 .dialogue-box.final-melody .speaker-name { background: linear-gradient(180deg, rgba(255,190,60,1) 0%, rgba(200,130,20,1) 100%); color: #2A1500; }
 .dialogue-box.final-melody .speaker-name::after { border-top-color: rgba(200,130,20,1); }
-
-.dialogue-box.final-abundance {
-  border-color: rgba(139,171,122,1);
-  box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 80px rgba(139,171,122,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
-}
+.dialogue-box.final-abundance { border-color: rgba(139,171,122,1); box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 80px rgba(139,171,122,0.5), inset 0 1px 0 rgba(255,255,255,0.15); }
 .dialogue-box.final-abundance .speaker-name { background: linear-gradient(180deg, rgba(139,171,122,1) 0%, rgba(90,120,80,1) 100%); color: #1a2410; }
 .dialogue-box.final-abundance .speaker-name::after { border-top-color: rgba(90,120,80,1); }
-
-.dialogue-box.final-engineering {
-  border-color: rgba(90,160,220,1);
-  box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 80px rgba(90,160,220,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
-}
+.dialogue-box.final-engineering { border-color: rgba(90,160,220,1); box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 80px rgba(90,160,220,0.5), inset 0 1px 0 rgba(255,255,255,0.15); }
 .dialogue-box.final-engineering .speaker-name { background: linear-gradient(180deg, rgba(80,150,215,1) 0%, rgba(35,90,150,1) 100%); color: #06121f; }
 .dialogue-box.final-engineering .speaker-name::after { border-top-color: rgba(35,90,150,1); }
-
-.dialogue-box.final-unity {
-  border-color: rgba(255,215,0,1);
-  box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 100px rgba(255,150,220,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
-  background: linear-gradient(180deg, rgba(40,22,30,0.92) 0%, rgba(18,10,16,0.97) 100%);
-}
+.dialogue-box.final-unity { border-color: rgba(255,215,0,1); box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 100px rgba(255,150,220,0.5), inset 0 1px 0 rgba(255,255,255,0.2); background: linear-gradient(180deg, rgba(40,22,30,0.92) 0%, rgba(18,10,16,0.97) 100%); }
 .dialogue-box.final-unity .speaker-name { background: linear-gradient(90deg, #FFD700, #FF8FD6, #7CD8FF, #FFD700); background-size: 300% 100%; animation: unityGradient 4s linear infinite; color: #2A0022; }
 .dialogue-box.final-unity .speaker-name::after { border-top-color: rgba(200,150,20,1); }
 @keyframes unityGradient { 0% { background-position: 0% 0; } 100% { background-position: 300% 0; } }
@@ -882,7 +855,6 @@ html, body {
 .bg-layer.placeholder, .insert-layer.placeholder {
   background: radial-gradient(ellipse at center, #241a2e 0%, #0a0a14 100%);
 }
-
 </style>
 </head>
 <body>
@@ -927,90 +899,99 @@ html, body {
 </div>
 
 <script>
-/* ============================================================
-   ПЕСНЬ АВГУСТА — полная версия
-   ============================================================
-   РАСПОРЯДОК КАРТИНОК В НАЧАЛЕ:
-   1.png  — титульник (Мира и герой на поляне)
-   2.png  — панорама города (Start1)
-   3.png  — осенний переулок (Start2) ← новая локация "street"
-   4.png  — дом травника снаружи (Start3, Start4)
-   5.png  — комната травника изнутри (Start5)
-   6.png  — стол с письмом (Start4 + ОткрытьПисьмо)
-   7.png  — Мира входит (Start6)
-   8.png  — вставка: рука ломает печать (ОткрытьПисьмо)
-   9.png  — Мира и герой за столом (ПисьмоОлвена2)
-
-   Остальные (10–21) — заглушки, заменишь когда сгенерируешь.
+  /* ============================================================
+   ПЕСНЬ АВГУСТА — полная версия (4 концовки, 3 маршрута помощников)
+   
+   Нумерация images/bg/:
+   1  = title            — титульник
+   2  = start            — панорама города
+   3  = street           — переулок с гирляндами
+   4  = player_outside   — дом травника снаружи
+   5  = player_inside    — комната травника
+   6  = letter_close     — письмо крупным планом
+   7  = player_table     — Мира входит
+   8  = player_table2    — оба за столом
+   9  = player_hide_letter — герой убирает письмо
+   10 = most_bridge      — мост: приходим
+   11 = most_sleep       — мост: Бруно спит
+   12 = most_awake       — мост: Бруно проснулся
+   13 = most_empty       — мост: свободен
+   14 = grib_tropa       — лесная тропа
+   15 = grib_action      — Шустик с тележкой
+   16 = lavka            — домик Селесты
+   17 = tower            — башня снаружи
+   18 = tower_secret     — тайная дверца
+   19 = observatory      — обсерватория
+   20 = tower_inside     — главный зал
+   21 = final            — Август просыпается
    ============================================================ */
-
 const LOCATION_BG = {
-  "title":          "images/bg/1.png",
-  "start":          "images/bg/2.png",
-  "street":         "images/bg/3.png",
+  "title": "images/bg/1.png",
+  "start": "images/bg/2.png",
+  "street": "images/bg/3.png",
   "player_outside": "images/bg/4.png",
-  "player_inside":  "images/bg/5.png",
-  "letter_close":   "images/bg/6.png",
-  "player_table":   "images/bg/7.png",
-  "player_table2":  "images/bg/9.png",
-  "parchment":      "images/bg/6.png",   // временно — потом заменишь на отдельную схему линз
-  "epilogue":       "images/bg/9.png",   // временно — потом заменишь
-  "most_bridge":    "images/bg/10.png",
-  "most_sleep":     "images/bg/11.png",
-  "most_awake":     "images/bg/12.png",
-  "most_empty":     "images/bg/13.png",
-  "grib_tropa":     "images/bg/14.png",
-  "grib_action":    "images/bg/15.png",
-  "lavka":          "images/bg/16.png",
-  "tower":          "images/bg/17.png",
-  "tower_secret":   "images/bg/18.png",
-  "observatory":    "images/bg/19.png",
-  "tower_inside":   "images/bg/20.png",
-  "final":          "images/bg/21.png",
+  "player_inside": "images/bg/5.png",
+  "letter_close": "images/bg/6.png",
+  "player_table": "images/bg/7.png",
+  "player_table2": "images/bg/8.png",
+  "player_hide_letter": "images/bg/9.png",
+  "most_bridge": "images/bg/10.png",
+  "most_sleep": "images/bg/11.png",
+  "most_awake": "images/bg/12.png",
+  "most_empty": "images/bg/13.png",
+  "grib_tropa": "images/bg/14.png",
+  "grib_action": "images/bg/15.png",
+  "lavka": "images/bg/16.png",
+  "tower": "images/bg/17.png",
+  "tower_secret": "images/bg/18.png",
+  "observatory": "images/bg/19.png",
+  "tower_inside": "images/bg/20.png",
+  "final": "images/bg/21.png",
 };
 
+/* Нумерация images/insert/ (41 файл) */
 const INSERT_IMG = {
-  "letter_seal":        "images/insert/1.png",   // 8.png — рука ломает печать
-  "mira_arrive":        "images/insert/2.png",   // временно
-  "mira_joke":          "images/insert/3.png",   // временно
-  "olven_scheme":       "images/insert/4.png",   // временно
-  "city_holiday":       "images/insert/5.png",   // временно
-  "sunrise_lighthouse": "images/insert/6.png",   // временно
-  "bruno_block":        "images/insert/7.png",
-  "bruno_awake":        "images/insert/8.png",
-  "bruno_riddle":       "images/insert/9.png",
-  "bruno_wind":         "images/insert/10.png",
-  "bruno_feather":      "images/insert/11.png",
-  "bruno_apple":        "images/insert/12.png",
-  "bruno_crystal":      "images/insert/13.png",
-  "bruno_clue":         "images/insert/14.png",
-  "shustik_stuck":      "images/insert/15.png",
-  "shustik_magic":      "images/insert/16.png",
-  "shustik_oil":        "images/insert/17.png",
-  "shustik_lever":      "images/insert/18.png",
-  "shustik_gift":       "images/insert/19.png",
-  "selesta_greet":      "images/insert/20.png",
-  "selesta_vial":       "images/insert/21.png",
-  "door_riddle":        "images/insert/22.png",
-  "door_water":         "images/insert/23.png",
-  "door_open":          "images/insert/24.png",
-  "cat_sleep":          "images/insert/25.png",
-  "cat_key":            "images/insert/26.png",
-  "secret_entry":       "images/insert/27.png",
-  "cornelius_panic":    "images/insert/28.png",
-  "august_sleep":       "images/insert/29.png",
-  "august_wake_eye":    "images/insert/30.png",
-  "schema_show":        "images/insert/31.png",
-  "mechanism_inspect":  "images/insert/32.png",
-  "plan_music":         "images/insert/33.png",
-  "plan_nectar":        "images/insert/34.png",
-  "plan_mechanics":     "images/insert/35.png",
-  "plan_unity":         "images/insert/36.png",
-  "august_fly":         "images/insert/37.png",
-  "ending_melody":      "images/insert/38.png",
-  "ending_abundance":   "images/insert/39.png",
+  "city_holiday": "images/insert/1.png",
+  "sunrise_lighthouse": "images/insert/2.png",
+  "letter_seal": "images/insert/3.png",
+  "mira_arrive": "images/insert/4.png",
+  "mira_joke": "images/insert/5.png",
+  "olven_scheme": "images/insert/6.png",
+  "bruno_block": "images/insert/7.png",
+  "bruno_awake": "images/insert/8.png",
+  "bruno_riddle": "images/insert/9.png",
+  "bruno_wind": "images/insert/10.png",
+  "bruno_feather": "images/insert/11.png",
+  "bruno_apple": "images/insert/12.png",
+  "bruno_crystal": "images/insert/13.png",
+  "bruno_clue": "images/insert/14.png",
+  "shustik_stuck": "images/insert/15.png",
+  "shustik_magic": "images/insert/16.png",
+  "shustik_oil": "images/insert/17.png",
+  "shustik_lever": "images/insert/18.png",
+  "shustik_gift": "images/insert/19.png",
+  "selesta_greet": "images/insert/20.png",
+  "selesta_vial": "images/insert/21.png",
+  "door_riddle": "images/insert/22.png",
+  "door_water": "images/insert/23.png",
+  "door_open": "images/insert/24.png",
+  "cat_sleep": "images/insert/25.png",
+  "cat_key": "images/insert/26.png",
+  "secret_entry": "images/insert/27.png",
+  "cornelius_panic": "images/insert/28.png",
+  "august_sleep": "images/insert/29.png",
+  "august_wake_eye": "images/insert/30.png",
+  "schema_show": "images/insert/31.png",
+  "mechanism_inspect": "images/insert/32.png",
+  "plan_music": "images/insert/33.png",
+  "plan_nectar": "images/insert/34.png",
+  "plan_mechanics": "images/insert/35.png",
+  "plan_unity": "images/insert/36.png",
+  "august_fly": "images/insert/37.png",
+  "ending_melody": "images/insert/38.png",
+  "ending_abundance": "images/insert/39.png",
   "ending_engineering": "images/insert/40.png",
-  "ending_unity":       "images/insert/41.png",
+  "ending_unity": "images/insert/41.png",
 };
 
 const ITEMS = {
@@ -1038,33 +1019,36 @@ const ACHIEVEMENTS = {
 };
 
 const CUTSCENES = {
-  "ending_melody":      { frames: [{ img: INSERT_IMG["plan_music"], duration: 3200 },      { img: INSERT_IMG["ending_melody"], duration: 3200 },      { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-  "ending_abundance":   { frames: [{ img: INSERT_IMG["plan_nectar"], duration: 3200 },     { img: INSERT_IMG["ending_abundance"], duration: 3200 },   { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-  "ending_engineering": { frames: [{ img: INSERT_IMG["plan_mechanics"], duration: 3200 },  { img: INSERT_IMG["ending_engineering"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-  "ending_unity":       { frames: [{ img: INSERT_IMG["plan_unity"], duration: 3200 },      { img: INSERT_IMG["ending_unity"], duration: 3200 },       { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_melody": { frames: [{ img: INSERT_IMG["plan_music"], duration: 3200 }, { img: INSERT_IMG["ending_melody"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_abundance": { frames: [{ img: INSERT_IMG["plan_nectar"], duration: 3200 }, { img: INSERT_IMG["ending_abundance"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_engineering": { frames: [{ img: INSERT_IMG["plan_mechanics"], duration: 3200 }, { img: INSERT_IMG["ending_engineering"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_unity": { frames: [{ img: INSERT_IMG["plan_unity"], duration: 3200 }, { img: INSERT_IMG["ending_unity"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
 };
 
 const PASSAGES = {
   "title": { isTitle: true },
-  "Start1": { location: "start", speaker: "Рассказчик", boxClass: "narrator", text: "Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой — а по утрам солнце поднимается из-за маяка и заливает золотом черепичные крыши.", next: "Start2" },
-  "Start2": { location: "street", speaker: "Рассказчик", boxClass: "narrator", text: "Сегодня — особенный день. Праздник Осенней Звезды. Город украшен гирляндами из яблок, трактиры пекут пироги, а ремесленники развешивают флаги. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков.", next: "Start3" },
+  "Start1": { location: "start", insert: INSERT_IMG["city_holiday"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой — а по утрам солнце поднимается из-за маяка и заливает золотом черепичные крыши.", next: "Start2" },
+  "Start2": { location: "street", insert: INSERT_IMG["sunrise_lighthouse"], insertDuration: 2000, speaker: "Рассказчик", boxClass: "narrator", text: "Сегодня — особенный день. Праздник Осенней Звезды. Город украшен гирляндами из яблок, трактиры пекут пироги, а ремесленники развешивают флаги. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков.", next: "Start3" },
   "Start3": { location: "player_outside", speaker: "Рассказчик", boxClass: "narrator", text: "Вы — молодой травник, ученик мастера Олвена. Ваш дом стоит на краю города, среди яблоневых садов. Этим утром вы проснулись от тишины: обычно в это время над озером уже гудели пчёлы и сновали лодки. Сегодня — тихо.", next: "Start4" },
-  "Start4": { location: "letter_close", speaker: "Рассказчик", boxClass: "narrator", text: "На столе в доме лежало письмо: плотный пергамент, запечатанный золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.", next: "Start5" },
+  "Start4": { location: "player_outside", speaker: "Рассказчик", boxClass: "narrator", text: "На столе в доме лежало письмо: плотный пергамент, запечатанный золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.", next: "Start5" },
   "Start5": { location: "player_inside", speaker: "Рассказчик", boxClass: "narrator", text: "Вы вернулись в дом. За окном — знакомый вид на потухший маяк. На столе — письмо и чашка остывшего травяного чая. И тут скрипнула калитка, послышались лёгкие шаги.", next: "Start6" },
   "Start6": { location: "player_table", insert: INSERT_IMG["mira_arrive"], insertDuration: 2200, speaker: "Мира", boxClass: "mira", text: "— Подъём, Хранитель трав и ветров! Мастер Олвен передал: в маяке не просто перегорела свеча — там заклинило рунный резонатор. Я взяла отмычки, разводной ключ на двенадцать и банку лучшей графитовой смазки. А у тебя что в письме?", choices: [{ text: "Вскрыть письмо мастера Олвена прямо сейчас", to: "ОткрытьПисьмо" }, { text: "Спрятать письмо и сразу обсудить маршрут", to: "ВыборПути" }, { text: "Пошутить над Мирой и её чехлом с инструментами", to: "РазговорСМирой1" }] },
   "ОткрытьПисьмо": { location: "letter_close", insert: INSERT_IMG["letter_seal"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Вы ломаете восковую печать. Внутри — не просто записка, а тщательно вычерченная схема линз с личными пометками мастера, сделанными серебряными чернилами.", next: "ПисьмоОлвена" },
-  "ПисьмоОлвена": { location: "parchment", insert: INSERT_IMG["olven_scheme"], insertDuration: 2400, speaker: "Мастер Олвен", boxClass: "olven", text: "«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы и фальшивых нот. Если механизм замер, ищите причину не в поломке металла, а в нарушении гармонии. Возьмите с собой частицу стихии и помните: свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».", set: { "has_scheme": true }, next: "ПисьмоОлвена2" },
+  "ПисьмоОлвена": { location: "letter_close", insert: INSERT_IMG["olven_scheme"], insertDuration: 2400, speaker: "Мастер Олвен", boxClass: "olven", text: "«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы и фальшивых нот. Если механизм замер, ищите причину не в поломке металла, а в нарушении гармонии. Возьмите с собой частицу стихии и помните: свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».", set: { "has_scheme": true }, next: "ПисьмоОлвена2" },
   "ПисьмоОлвена2": { location: "player_table2", speaker: "Мира", boxClass: "mira", text: "— «Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?", choices: [{ text: "Пойти через Старый каменный мост", to: "СтарыйМост" }, { text: "Срезать через тенистую Грибную тропу", to: "ГрибнаяТропа" }, { text: "Сначала заглянуть в лавку травницы Селесты", to: "ЛавкаСелесты" }] },
-  "ВыборПути": { location: "player_table2", speaker: "Рассказчик", boxClass: "narrator", text: "Вы прячете письмо во внутренний карман.", next: "ВыборПути2" },
+  "ВыборПути": { location: "player_hide_letter", speaker: "Рассказчик", boxClass: "narrator", text: "Вы прячете письмо во внутренний карман.", next: "ВыборПути2" },
   "ВыборПути2": { location: "player_table2", speaker: "Вы", boxClass: "player", text: "— Разберёмся по дороге. Сначала — к маяку.", next: "ВыборПути3" },
   "ВыборПути3": { location: "player_table2", insert: INSERT_IMG["mira_joke"], insertDuration: 1800, speaker: "Мира", boxClass: "mira", text: "— Тогда решай, как пойдём. Через Старый мост — надёжнее. Грибной тропой — короче, но там свои сюрпризы. Или заглянем к бабушке Селесте — она всегда что-то подскажет.", choices: [{ text: "Пойти через Старый каменный мост", to: "СтарыйМост" }, { text: "Срезать через Грибную тропу", to: "ГрибнаяТропа" }, { text: "Заглянуть в лавку травницы Селесты", to: "ЛавкаСелесты" }] },
   "РазговорСМирой1": { location: "player_table2", speaker: "Рассказчик", boxClass: "narrator", text: "Вы с улыбкой оглядываете её внушительный багаж.", next: "РазговорСМирой2" },
   "РазговорСМирой2": { location: "player_table2", speaker: "Вы", boxClass: "player", text: "— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?", next: "РазговорСМирой3" },
   "РазговорСМирой3": { location: "player_table2", insert: INSERT_IMG["mira_joke"], insertDuration: 1800, speaker: "Мира", boxClass: "mira", text: "— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?", next: "ОткрытьПисьмо" },
-  "СтарыйМост": { location: "most_sleep", insert: INSERT_IMG["bruno_block"], insertDuration: 2400, speaker: "Рассказчик", boxClass: "narrator", text: "Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал каменный гаргуль Бруно. Его хвост с кисточкой мирно покачивался в воздухе.", next: "СтарыйМост2" },
-  "СтарыйМост2": { location: "most_awake", insert: INSERT_IMG["bruno_awake"], insertDuration: 2000, speaker: "Бруно", boxClass: "bruno", text: "— Ба, знакомые лица! Куда путь держите в такой важный день? Уж не к маяку ли?", next: "СтарыйМост3" },
-  "СтарыйМост3": { location: "most_awake", speaker: "Мира", boxClass: "mira", text: "— Именно туда, Бруно. Время не ждёт, солнце перевалило за полдень. Пропустишь нас без долгих церемоний?", next: "СтарыйМост4" },
-  "СтарыйМост4": { location: "most_awake", insert: INSERT_IMG["bruno_riddle"], insertDuration: 2400, speaker: "Бруно", boxClass: "bruno", text: "— Церемонии — основа порядка в долине! Но ради праздника я не стану мучить вас тремя испытаниями. Одной загадки довольно. Слушайте: «Не имеет крыльев, а летает; не имеет голоса, а воет; в стужу жалит, в зной ласкает, а сожмёшь в кулак — исчезнет без следа».", choices: [{ text: "Ответить с уверенностью: «Это горный ветер!»", to: "МостВетер" }, { text: "Попробовать поэтический ответ: «Это лесное эхо»", to: "МостЭхо" }, { text: "Достать из сумки медовое сушёное яблоко и угостить Бруно", to: "МостУгощение" }, { text: "Расспросить Бруно: не видел ли он, что стряслось с башней ночью?", to: "МостРасспросы" }] },
+
+  /* ===== МОСТ (10-13.png) ===== */
+  "СтарыйМост": { location: "most_bridge", speaker: "Рассказчик", boxClass: "narrator", text: "Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. По бокам стояли фонари, а вдали виднелся маяк.", next: "СтарыйМост2" },
+  "СтарыйМост2": { location: "most_sleep", insert: INSERT_IMG["bruno_block"], insertDuration: 2400, speaker: "Рассказчик", boxClass: "narrator", text: "Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал каменный гаргуль Бруно. Его хвост с кисточкой мирно покачивался в воздухе. Путь был перекрыт.", next: "СтарыйМост3" },
+  "СтарыйМост3": { location: "most_awake", insert: INSERT_IMG["bruno_awake"], insertDuration: 2000, speaker: "Бруно", boxClass: "bruno", text: "— М-м-м... Кто это тут у нас? Ба, знакомые лица! Куда путь держите в такой важный день? Уж не к маяку ли?", next: "СтарыйМост4" },
+  "СтарыйМост4": { location: "most_awake", speaker: "Мира", boxClass: "mira", text: "— Именно туда, Бруно. Время не ждёт, солнце перевалило за полдень. Пропустишь нас без долгих церемоний?", next: "СтарыйМост5" },
+  "СтарыйМост5": { location: "most_awake", insert: INSERT_IMG["bruno_riddle"], insertDuration: 2400, speaker: "Бруно", boxClass: "bruno", text: "— Церемонии — основа порядка в долине! Но ради праздника я не стану мучить вас тремя испытаниями. Одной загадки довольно. Слушайте: «Не имеет крыльев, а летает; не имеет голоса, а воет; в стужу жалит, в зной ласкает, а сожмёшь в кулак — исчезнет без следа».", choices: [{ text: "Ответить с уверенностью: «Это горный ветер!»", to: "МостВетер" }, { text: "Попробовать поэтический ответ: «Это лесное эхо»", to: "МостЭхо" }, { text: "Достать из сумки медовое сушёное яблоко и угостить Бруно", to: "МостУгощение" }, { text: "Расспросить Бруно: не видел ли он, что стряслось с башней ночью?", to: "МостРасспросы" }] },
   "МостВетер": { location: "most_awake", insert: INSERT_IMG["bruno_wind"], insertDuration: 2000, speaker: "Бруно", boxClass: "bruno", text: "Бруно хлопнул каменными крыльями, подняв облачко безвредной пыли: — В самую точку! Кому как не ученику Хранителя ветров знать повадки воздуха. Ты заслужил свободный проход!", next: "МостВетер2" },
   "МостВетер2": { location: "most_awake", insert: INSERT_IMG["bruno_feather"], insertDuration: 2200, speaker: "Бруно", boxClass: "bruno", text: "— Вот, держи. Это Перо Лазурной Сойки-Вестницы. Оно зачаровано на лёгкое дыхание. Если в механизмах башни застрянет пыль веков — взмахни им, и сквозняк сделает всю работу чисто и без поломок!", set: { "has_feather": true }, next: "МостСвободен" },
   "МостЭхо": { location: "most_awake", speaker: "Бруно", boxClass: "bruno", text: "Бруно басовито захохотал, сотрясая каменные перила: — Ох, молодёжь! Поэзии в тебе хоть отбавляй, а вот физика хромает! Разве эхо может ласкать в зной или жалить в стужу? Это ветер! Но за дерзость и красивый слог я не стану вас задерживать. И вот — держи подарок: Перо Лазурной Сойки. В башне оно разгонит пыль веков!", set: { "has_feather": true }, next: "МостСвободен" },
@@ -1073,6 +1057,8 @@ const PASSAGES = {
   "МостРасспросы": { location: "most_awake", insert: INSERT_IMG["bruno_clue"], insertDuration: 2200, speaker: "Бруно", boxClass: "bruno", text: "— Хм-м... Около полуночи с вершины башни сорвался лёгкий серебристый всполох. А потом: динь-дон-хрясь! Будто музыкальная шкатулка поперхнулась желудем. Ветер тогда дул с Заброшенной Обсерватории.", set: { "has_clue": true }, next: "МостРасспросы2" },
   "МостРасспросы2": { location: "most_awake", speaker: "Мира", boxClass: "mira", text: "— Сквозняк мог сбить настройку балансира! Спасибо, дядюшка Бруно, это важная зацепка. Ну а загадку отгадывать будете?", choices: [{ text: "Ответить: «Это горный ветер!»", to: "МостВетер" }, { text: "Угостить Бруно медовым лакомством", to: "МостУгощение" }] },
   "МостСвободен": { location: "most_empty", speaker: "Мира", boxClass: "mira", text: "— Дорога свободна — идём к маяку!", next: "БашняСнаружи" },
+
+  /* ===== ГРИБНАЯ ТРОПА ===== */
   "ГрибнаяТропа": { location: "grib_tropa", speaker: "Рассказчик", boxClass: "narrator", text: "Грибная тропа встретила вас мягким сумраком древних дубов и прохладой. Под ногами ковром стелился изумрудный мох, а вдоль стволов мерцали фосфорные шляпки опят-фонариков.", next: "ГрибнаяТропа2" },
   "ГрибнаяТропа2": { location: "grib_action", insert: INSERT_IMG["shustik_stuck"], insertDuration: 2400, speaker: "Шустик", boxClass: "shustik", text: "— Ой-ой-ой! Беда-кручина! Скоро вечер, фестиваль без праздничных огней останется! Дерево уснуло и колесо зажало!", choices: [{ text: "Осторожно смазать корни травяным маслом", to: "ГрибыМасло" }, { text: "Предложить Мире использовать рычаг", to: "ГрибыМеханика" }, { text: "Заговорить с деревом на языке ветров и шёпотов", to: "ГрибыМагия" }] },
   "ГрибыМагия": { location: "grib_action", insert: INSERT_IMG["shustik_magic"], insertDuration: 2400, speaker: "Рассказчик", boxClass: "narrator", text: "Вы прикладываете ладонь к тёплой коре и тихо напеваете древний распев Верхнего Шепота. Корни мягко шевельнулись, потягиваясь, и тележка Шустика плавно высвободилась сама собой.", next: "ГрибыМагия2" },
@@ -1080,9 +1066,13 @@ const PASSAGES = {
   "ГрибыМасло": { location: "grib_action", insert: INSERT_IMG["shustik_oil"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Вы капаете на корень вытяжкой дикого миндаля. Корень размягчается, и Мира легко вытягивает тележку на ровную тропу.", next: "ГрибыНаграда" },
   "ГрибыМеханика": { location: "grib_action", insert: INSERT_IMG["shustik_lever"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Мира подкладывает под монтировку дубовый брусок и наваливается всем весом: — Раз, два — взяли! Рычаг первого рода — лучшее колдовство на свете! Корень подаётся, колесо свободно.", next: "ГрибыНаграда" },
   "ГрибыНаграда": { location: "grib_action", insert: INSERT_IMG["shustik_gift"], insertDuration: 2200, speaker: "Шустик", boxClass: "shustik", text: "— Спасены! Спасибо, добрые путники! Держите мешочек искристой пыльцы — она пригодится, если нужно разжечь погасший фитиль! А тропка выведет прямо к вратам башни.", set: { "has_pollen": true }, next: "БашняСнаружи" },
+
+  /* ===== ЛАВКА СЕЛЕСТЫ ===== */
   "ЛавкаСелесты": { location: "lavka", insert: INSERT_IMG["selesta_greet"], insertDuration: 2200, speaker: "Бабушка Селеста", boxClass: "selesta", text: "— Батюшки, юные мастера! Беда с маяком, весь посёлок гудит! Чуяло моё сердце: Август вчера слишком грустно пел. Вы на маяк?", next: "ЛавкаСелесты2" },
   "ЛавкаСелесты2": { location: "lavka", speaker: "Мира", boxClass: "mira", text: "— Да, бабушка Селеста. Нам нужно оживить резонатор.", next: "ЛавкаСелесты3" },
   "ЛавкаСелесты3": { location: "lavka", insert: INSERT_IMG["selesta_vial"], insertDuration: 2200, speaker: "Бабушка Селеста", boxClass: "selesta", text: "— Возьмите-ка вот это. Капли лунного зверобоя и сладкой мелиссы. Если Август закапризничает — пара капель на сахарную пластину вернут ему бодрость духа.", set: { "has_selesta_vial": true }, choices: [{ text: "Отправиться к Старому мосту", to: "СтарыйМост" }, { text: "Пойти короткой Грибной тропой", to: "ГрибнаяТропа" }] },
+
+  /* ===== БАШНЯ ===== */
   "БашняСнаружи": { location: "tower", speaker: "Рассказчик", boxClass: "narrator", text: "Перед вами вздымалась Башня Светлячков. Массивные дубовые двери были заперты. На бронзовой накладке замка — циферблат с четырьмя стихийными знаками: Солнце, Ветер, Вода и Росток.", next: "БашняСнаружи2" },
   "БашняСнаружи2": { location: "tower", insert: INSERT_IMG["door_riddle"], insertDuration: 2200, speaker: "Мира", boxClass: "mira", text: "— Загадка гильдии архитекторов! «Лишь союз тепла и движения пробудит спящий свет». Что выбираем?", choices: [{ text: "Выставить комбинацию: «Солнце и Ветер»", to: "ДверьОткрыта" }, { text: "Выставить комбинацию: «Вода и Росток»", to: "ДверьОшибка" }, { text: "Осмотреть окрестности: вдруг есть другой проход?", to: "ОсмотрСтен" }] },
   "ДверьОшибка": { location: "tower", insert: INSERT_IMG["door_water"], insertDuration: 2000, speaker: "Мира", boxClass: "mira", text: "Замок издаёт мелодичный перелив — и из сопла брызгает освежающая струя мятной воды прямо в лицо! — Освежает! Но подсказка гласила: «Тепло и движение»! Попробуем ещё раз?", next: "ДверьОткрыта" },
@@ -1109,8 +1099,7 @@ const PASSAGES = {
   "КонецМеханика": { location: "epilogue", insert: INSERT_IMG["ending_engineering"], insertDuration: 2600, speaker: "Финал", boxClass: "final-engineering", text: "<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт, крепкая дружба и ключ на двенадцать творят чудеса почище древних заклятий. Лучи маяка начертили в небе гигантскую светящуюся звезду.</i>", cutscene: "ending_engineering", ending: "engineering", endingScreen: "engineering" },
   "КонецЕдинство": { location: "epilogue", insert: INSERT_IMG["ending_unity"], insertDuration: 2600, speaker: "Финал", boxClass: "final-unity", text: "<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку. Радужный луч маяка озарил всю долину.</i>", cutscene: "ending_unity", ending: "unity", endingScreen: "unity" }
 };
-
-/* ============================================================
+  /* ============================================================
    СОХРАНЕНИЕ
    ============================================================ */
 const SAVE_KEY = 'pesn_augusta_full_v1';
@@ -1165,10 +1154,9 @@ function resetAll() {
 }
 
 /* ============================================================
-   ПРЕДМЕТЫ И УСЛОВИЯ ФИНАЛОВ (4 концовки)
+   ПРЕДМЕТЫ И УСЛОВИЯ ФИНАЛОВ
    ============================================================ */
 function has(k) { return !!gameState.variables[k]; }
-
 function canDoMusic() { return has('has_feather'); }
 function canDoNectar() { return has('has_selesta_vial') || has('has_pollen'); }
 function canDoMechanics() { return has('has_crystal') || has('has_key'); }
@@ -1203,7 +1191,7 @@ function startMusic() {
 }
 
 /* ============================================================
-   УВЕДОМЛЕНИЯ / ПОПАПЫ ПРЕДМЕТОВ
+   УВЕДОМЛЕНИЯ / ПОПАПЫ
    ============================================================ */
 let notifyTimer = null;
 function showNotification(title, text, type) {
