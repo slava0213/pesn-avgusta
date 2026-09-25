@@ -524,6 +524,171 @@ html, body {
   -webkit-backdrop-filter: blur(8px);
 }
 
+/* ===== Экран концовки ===== */
+.ending-screen {
+  position: fixed; inset: 0;
+  z-index: 250;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: endingFadeIn 0.9s ease-out;
+  overflow-y: auto;
+}
+@keyframes endingFadeIn {
+  from { opacity: 0; transform: scale(1.05); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.ending-frame {
+  position: relative;
+  max-width: 640px; width: 100%;
+  padding: 42px 48px 36px;
+  background: linear-gradient(180deg, rgba(20,14,8,0.93) 0%, rgba(10,6,4,0.97) 100%);
+  border: 2px solid rgba(244,197,66,0.9);
+  border-radius: 6px;
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.95),
+    0 0 80px rgba(255,200,80,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 0 100px rgba(255,180,50,0.06);
+  text-align: center;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.ending-frame::before, .ending-frame::after {
+  content: ''; position: absolute;
+  width: 40px; height: 40px;
+  border: 3px solid rgba(244,197,66,0.95);
+  pointer-events: none;
+}
+.ending-frame::before {
+  top: -3px; left: -3px;
+  border-right: none; border-bottom: none;
+  border-radius: 6px 0 0 0;
+  box-shadow: -3px -3px 20px rgba(255,200,80,0.5);
+}
+.ending-frame::after {
+  bottom: -3px; right: -3px;
+  border-left: none; border-top: none;
+  border-radius: 0 0 6px 0;
+  box-shadow: 3px 3px 20px rgba(255,200,80,0.5);
+}
+.ending-frame .ending-corner {
+  position: absolute;
+  width: 40px; height: 40px;
+  border: 3px solid rgba(244,197,66,0.95);
+  pointer-events: none;
+}
+.ending-frame .ending-corner.tr {
+  top: -3px; right: -3px;
+  border-left: none; border-bottom: none;
+  border-radius: 0 6px 0 0;
+  box-shadow: 3px -3px 20px rgba(255,200,80,0.5);
+}
+.ending-frame .ending-corner.bl {
+  bottom: -3px; left: -3px;
+  border-right: none; border-top: none;
+  border-radius: 0 0 0 6px;
+  box-shadow: -3px 3px 20px rgba(255,200,80,0.5);
+}
+.ending-label {
+  color: #FBBF24;
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  text-shadow: 0 0 16px rgba(251,191,36,0.8);
+}
+.ending-title {
+  font-size: clamp(24px, 3.4vw, 40px);
+  font-weight: bold;
+  letter-spacing: 3px;
+  line-height: 1.2;
+  margin: 0 0 10px;
+  text-shadow: 0 0 30px currentColor, 0 4px 12px rgba(0,0,0,0.9);
+}
+.ending-subtitle {
+  font-size: clamp(13px, 1.3vw, 17px);
+  font-style: italic;
+  color: #FFF3C4;
+  letter-spacing: 2px;
+  margin: 0 0 24px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.95);
+}
+.ending-divider {
+  width: 60%; height: 1px;
+  margin: 0 auto 22px;
+  background: linear-gradient(90deg, transparent, rgba(255,220,120,0.9), transparent);
+  box-shadow: 0 0 16px rgba(255,200,80,0.6);
+}
+.ending-desc {
+  color: #e8dcc0;
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1.75;
+  margin: 0 0 26px;
+  font-style: italic;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+}
+.ending-progress {
+  display: inline-block;
+  padding: 10px 28px;
+  border: 1px solid rgba(255,215,0,0.85);
+  border-radius: 999px;
+  color: #FFD700;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+  background: rgba(0,0,0,0.5);
+  text-shadow: 0 0 10px rgba(255,215,0,0.8);
+  box-shadow: 0 0 24px rgba(255,215,0,0.25);
+}
+.ending-progress b { color: #FFF8E7; font-size: 1.15em; }
+.ending-buttons {
+  display: flex; flex-direction: column; gap: 10px;
+  width: min(320px, 100%); margin: 0 auto;
+}
+.ending-buttons button {
+  padding: 13px 22px;
+  background: linear-gradient(180deg, rgba(28,22,14,0.95) 0%, rgba(14,10,6,0.98) 100%);
+  color: #FFE9A8;
+  border: 1px solid rgba(244,197,66,0.7);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08);
+  -webkit-tap-highlight-color: transparent;
+}
+.ending-buttons button:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(244,197,66,0.22) 0%, rgba(180,120,20,0.15) 100%);
+  color: #FFF8E7;
+  transform: translateY(-2px);
+  border-color: rgba(244,197,66,1);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.7), 0 0 30px rgba(255,200,80,0.5);
+}
+.ending-buttons button.primary {
+  background: linear-gradient(180deg, rgba(217,119,6,0.95) 0%, rgba(160,75,10,0.95) 100%);
+  color: #FFF8E7;
+  border-color: rgba(244,197,66,1);
+  box-shadow: 0 8px 26px rgba(0,0,0,0.6), 0 0 30px rgba(255,180,50,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.ending-buttons button.primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(244,140,20,1) 0%, rgba(190,95,15,1) 100%);
+  transform: translateY(-2px) scale(1.02);
+}
+.ending-buttons button:disabled {
+  opacity: 0.4; cursor: not-allowed; filter: grayscale(0.7);
+}
+
+@media (max-width: 600px) {
+  .ending-frame { padding: 30px 22px 26px; }
+  .ending-title { letter-spacing: 1.5px; }
+  .ending-buttons button { padding: 11px 16px; font-size: 12px; letter-spacing: 1.5px; }
+}
+
 .modal-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.85);
@@ -773,71 +938,71 @@ html, body {
    для Kandinsky/GigaChat под каждый файл).
    ============================================================ */
 const LOCATION_BG = {
-  "title": "images/bg/title.png",  // Панорама города Верхний Шепот на рассвете, маяк на холме вдали, тёплый золотой свет, без персонажей, широкий формат, стиль полуреалистичного аниме-арта, детализированный фон
-  "start": "images/bg/start_city.png",  // Улочки города Верхний Шепот, украшенные гирляндами из яблок к празднику Осенней Звезды, раннее утро, безлюдно, без персонажей
-  "player_outside": "images/bg/player_house_outside.png",  // Дом травника на краю яблоневого сада, деревянное крыльцо, утренний туман, без персонажей
-  "player_inside": "images/bg/player_house_inside.png",  // Уютная комната травника, окно с видом на маяк, сушёные травы под потолком, стол с письмом, без персонажей
-  "letter_close": "images/bg/letter_closeup.png",  // Крупный план: письмо на плотном пергаменте с красной восковой печатью в форме кленового листа, лежит на деревянном столе
-  "player_table": "images/bg/room_mira_enter.png",  // Комната травника, в дверях появляется рыжая девушка-механик Мира с кожаным чехлом инструментов, персонаж в кадре
-  "parchment": "images/bg/parchment_text.png",  // Развёрнутый пергамент с рукописной схемой линз и заметками серебряными чернилами, без персонажей
-  "player_table2": "images/bg/room_dialogue.png",  // Комната травника, Мира и главный герой обсуждают письмо за столом, персонажи в кадре
-  "epilogue": "images/bg/epilogue_valley.png",  // Долина Верхний Шепот вечером во время праздника, гирлянды огней, светлячки в воздухе, без персонажей на переднем плане
-  "most_bridge": "images/bg/bridge_wide.png",  // Старый каменный мост над горным ручьём, поросший мхом, осенние деревья по бокам, без персонажей
-  "most_sleep": "images/bg/bridge_bruno_sleep.png",  // Тот же каменный мост, на плитах моста дремлет пушистый каменный гаргуль с крыльями и хвостом-кисточкой, перекрывая проход
-  "most_awake": "images/bg/bridge_bruno_awake.png",  // Каменный мост, гаргуль Бруно проснулся, сидит и разговаривает с путниками, персонажи в кадре
-  "most_empty": "images/bg/bridge_empty.png",  // Тот же каменный мост, путь свободен, гаргуль отошёл в сторону, светит солнце, без персонажей на переднем плане
-  "grib_tropa": "images/bg/forest_path.png",  // Тенистая лесная тропа среди старых дубов, изумрудный мох, светящиеся грибы-фонарики, без персонажей
-  "grib_action": "images/bg/forest_shustik.png",  // Та же лесная тропа, маленький лесной дух в виде еловой шишки в зелёном колпачке возится с застрявшей тележкой между корней, персонаж в кадре
-  "lavka": "images/bg/selesta_shop.png",  // Круглый домик травницы, пучки вереска и лаванды над дверью, синий дымок из трубы, пожилая женщина у окна с колокольчиками, персонаж в кадре
-  "tower": "images/bg/tower_outside.png",  // Величественная башня маяка из белого резного известняка, увита цветущим плющом, массивные дубовые двери с бронзовым замком-циферблатом, без персонажей
-  "tower_secret": "images/bg/tower_secret_door.png",  // Скрытая дверца в скале у подножия башни, замаскированная диким виноградом, без персонажей
-  "observatory": "images/bg/observatory.png",  // Круглая комната обсерватории с медными звёздными картами, телескопом и глобусами созвездий, на столе спит заводной кот, без персонажей на переднем плане
-  "tower_inside": "images/bg/tower_hall.png",  // Главный зал башни маяка, спиральная лестница, в центре постамент с крылатым спящим светляком, суетливый пожилой смотритель рядом, персонажи в кадре
-  "final": "images/bg/tower_final.png",  // Главный зал башни, светляк Август просыпается и озаряет зал тёплым сиянием, персонажи в кадре
+  "title": "images/bg/title.png",
+  "start": "images/bg/start_city.png",
+  "player_outside": "images/bg/player_house_outside.png",
+  "player_inside": "images/bg/player_house_inside.png",
+  "letter_close": "images/bg/letter_closeup.png",
+  "player_table": "images/bg/room_mira_enter.png",
+  "parchment": "images/bg/parchment_text.png",
+  "player_table2": "images/bg/room_dialogue.png",
+  "epilogue": "images/bg/epilogue_valley.png",
+  "most_bridge": "images/bg/bridge_wide.png",
+  "most_sleep": "images/bg/bridge_bruno_sleep.png",
+  "most_awake": "images/bg/bridge_bruno_awake.png",
+  "most_empty": "images/bg/bridge_empty.png",
+  "grib_tropa": "images/bg/forest_path.png",
+  "grib_action": "images/bg/forest_shustik.png",
+  "lavka": "images/bg/selesta_shop.png",
+  "tower": "images/bg/tower_outside.png",
+  "tower_secret": "images/bg/tower_secret_door.png",
+  "observatory": "images/bg/observatory.png",
+  "tower_inside": "images/bg/tower_hall.png",
+  "final": "images/bg/tower_final.png",
 };
 
 const INSERT_IMG = {
-  "city_holiday": "images/insert/city_holiday.png",  // Панорама праздничного города с гирляндами из яблок, ремесленники развешивают флаги, атмосфера праздника
-  "sunrise_lighthouse": "images/insert/sunrise_lighthouse.png",  // Маяк на рассвете, тёплый золотой свет заливает черепичные крыши города
-  "letter_seal": "images/insert/letter_seal.png",  // Крупный план руки, вскрывающей восковую печать с оттиском кленового листа на письме
-  "mira_arrive": "images/insert/mira_arrive.png",  // Рыжеволосая девушка-механик Мира с медным ключом и чехлом инструментов, бодро приветствует героя у крыльца
-  "mira_joke": "images/insert/mira_joke.png",  // Мира театрально стучит медным ключом по ладони, озорная улыбка
-  "olven_scheme": "images/insert/olven_scheme.png",  // Крупный план чертежа со схемой линз и рукописными заметками серебряными чернилами
-  "bruno_block": "images/insert/bruno_block.png",  // Каменный гаргуль с крыльями летучей мыши и хвостом-кисточкой развалился поперёк моста, дремлет на солнце
-  "bruno_awake": "images/insert/bruno_awake.png",  // Гаргуль приоткрывает янтарный глаз и широко зевает, обнажая каменные зубы
-  "bruno_riddle": "images/insert/bruno_riddle.png",  // Гаргуль торжественно поднимает лапу, произнося загадку, вокруг лёгкое сияние
-  "bruno_wind": "images/insert/bruno_wind.png",  // Гаргуль хлопает каменными крыльями, поднимая облачко пыли, довольная улыбка
-  "bruno_feather": "images/insert/bruno_feather.png",  // Гаргуль протягивает путникам сияющее лазурное перо огромной птицы
-  "bruno_apple": "images/insert/bruno_apple.png",  // Гаргуль с блаженством жуёт вяленое яблоко в меду, глаза зажмурены от удовольствия
-  "bruno_crystal": "images/insert/bruno_crystal.png",  // Гаргуль протягивает лапой прозрачный сияющий кристалл кварца
-  "bruno_clue": "images/insert/bruno_clue.png",  // Гаргуль задумчиво чешет каменное ухо когтем, вспоминая ночное происшествие
-  "shustik_stuck": "images/insert/shustik_stuck.png",  // Маленький лесной дух в виде еловой шишки в зелёном колпачке отчаянно тянет тележку, застрявшую между корней
-  "shustik_magic": "images/insert/shustik_magic.png",  // Герой кладёт ладонь на кору древнего дерева, вокруг мягкое сияние, корни расступаются
-  "shustik_oil": "images/insert/shustik_oil.png",  // Герой капает маслом из флакона на древесный корень, тот становится податливым
-  "shustik_lever": "images/insert/shustik_lever.png",  // Мира налегает на латунную монтировку, используя рычаг, чтобы освободить корень
-  "shustik_gift": "images/insert/shustik_gift.png",  // Лесной дух с поклоном протягивает путникам мешочек с сияющей пыльцой
-  "selesta_greet": "images/insert/selesta_greet.png",  // Пожилая травница в дверях своего домика всплёскивает руками, удивлённая появлением гостей
-  "selesta_vial": "images/insert/selesta_vial.png",  // Травница протягивает маленький глиняный пузырёк с золотистым настоем
-  "door_riddle": "images/insert/door_riddle.png",  // Крупный план бронзового замка на дубовых дверях башни с четырьмя дисками стихийных знаков: солнце, ветер, вода, росток
-  "door_water": "images/insert/door_water.png",  // Из механизма двери бьёт освежающая струя воды, девушка со смехом уклоняется
-  "door_open": "images/insert/door_open.png",  // Дубовые двери башни медленно распахиваются, изнутри льётся тёплый свет, шестерни в замке вращаются
-  "cat_sleep": "images/insert/cat_sleep.png",  // Маленький заводной кот с янтарными стеклянными глазами мирно спит на столе среди звёздных карт, на ошейнике латунный ключ
-  "cat_key": "images/insert/cat_key.png",  // Заводной кот доверчиво протягивает лапу, герой аккуратно снимает латунный ключ с ошейника
-  "secret_entry": "images/insert/secret_entry.png",  // Маленькая дубовая дверца в скале, увитая виноградом, приоткрывается, ведя на винтовую лестницу
-  "cornelius_panic": "images/insert/cornelius_panic.png",  // Пожилой смотритель маяка в круглых очках с несколькими линзами мечется по залу с масленкой в руках, борода завязана узлом
-  "august_sleep": "images/insert/august_sleep.png",  // Крупный план спящего звёздного светляка размером с большую собаку, полупрозрачные крылья с серебряными прожилками, у носа сонные пузыри
-  "august_wake_eye": "images/insert/august_wake_eye.png",  // Светляк приоткрывает один огромный фиолетовый глаз, лёгкая грусть во взгляде
-  "schema_show": "images/insert/schema_show.png",  // Смотритель маяка в изумлении рассматривает развёрнутую схему линз, поднеся её к свету
-  "mechanism_inspect": "images/insert/mechanism_inspect.png",  // Мира и герой склонились над сложным механизмом из трёх серебряных колоколов и хрустальных линз, изучая устройство
-  "plan_music": "images/insert/plan_music.png",  // Герой ударяет молоточком по бронзовому камертону, чистая нота повисает в воздухе, рядом лазурное перо смахивает пыль с колоколов
-  "plan_nectar": "images/insert/plan_nectar.png",  // Золотистый сироп льётся в хрустальную чашу резонатора, поднимается ароматный пар
-  "plan_mechanics": "images/insert/plan_mechanics.png",  // Мира ключом на двенадцать закручивает шарнир, в оправу линзы вставляется сияющий кристалл кварца
-  "plan_unity": "images/insert/plan_unity.png",  // Мира, Корнелиус и герой одновременно работают: настройка колоколов, заливка нектара и подгонка шестерён
-  "august_fly": "images/insert/august_fly.png",  // Звёздный светляк расправляет крылья и взмывает вверх, заливая зал ослепительным тёплым светом
-  "ending_melody": "images/insert/ending_melody.png",  // Янтарный луч света от маяка разливается над долиной, внизу вспыхивают праздничные гирлянды города
-  "ending_abundance": "images/insert/ending_abundance.png",  // Изумрудно-бирюзовое северное сияние над долиной, светляк парит в центре мягкого свечения
-  "ending_engineering": "images/insert/ending_engineering.png",  // Идеально выстроенные зеркала маяка чертят в ночном небе гигантскую светящуюся звезду
-  "ending_unity": "images/insert/ending_unity.png",  // Радужный многоцветный луч маяка над долиной, вокруг башни кружат сотни лесных светлячков
+  "city_holiday": "images/insert/city_holiday.png",
+  "sunrise_lighthouse": "images/insert/sunrise_lighthouse.png",
+  "letter_seal": "images/insert/letter_seal.png",
+  "mira_arrive": "images/insert/mira_arrive.png",
+  "mira_joke": "images/insert/mira_joke.png",
+  "olven_scheme": "images/insert/olven_scheme.png",
+  "bruno_block": "images/insert/bruno_block.png",
+  "bruno_awake": "images/insert/bruno_awake.png",
+  "bruno_riddle": "images/insert/bruno_riddle.png",
+  "bruno_wind": "images/insert/bruno_wind.png",
+  "bruno_feather": "images/insert/bruno_feather.png",
+  "bruno_apple": "images/insert/bruno_apple.png",
+  "bruno_crystal": "images/insert/bruno_crystal.png",
+  "bruno_clue": "images/insert/bruno_clue.png",
+  "shustik_stuck": "images/insert/shustik_stuck.png",
+  "shustik_magic": "images/insert/shustik_magic.png",
+  "shustik_oil": "images/insert/shustik_oil.png",
+  "shustik_lever": "images/insert/shustik_lever.png",
+  "shustik_gift": "images/insert/shustik_gift.png",
+  "selesta_greet": "images/insert/selesta_greet.png",
+  "selesta_vial": "images/insert/selesta_vial.png",
+  "door_riddle": "images/insert/door_riddle.png",
+  "door_water": "images/insert/door_water.png",
+  "door_open": "images/insert/door_open.png",
+  "cat_sleep": "images/insert/cat_sleep.png",
+  "cat_key": "images/insert/cat_key.png",
+  "secret_entry": "images/insert/secret_entry.png",
+  "cornelius_panic": "images/insert/cornelius_panic.png",
+  "august_sleep": "images/insert/august_sleep.png",
+  "august_wake_eye": "images/insert/august_wake_eye.png",
+  "schema_show": "images/insert/schema_show.png",
+  "mechanism_inspect": "images/insert/mechanism_inspect.png",
+  "plan_music": "images/insert/plan_music.png",
+  "plan_nectar": "images/insert/plan_nectar.png",
+  "plan_mechanics": "images/insert/plan_mechanics.png",
+  "plan_unity": "images/insert/plan_unity.png",
+  "august_fly": "images/insert/august_fly.png",
+  "ending_melody": "images/insert/ending_melody.png",
+  "ending_abundance": "images/insert/ending_abundance.png",
+  "ending_engineering": "images/insert/ending_engineering.png",
+  "ending_unity": "images/insert/ending_unity.png",
 };
 
 const ITEMS = {
@@ -996,13 +1161,9 @@ function resetAll() {
    ============================================================ */
 function has(k) { return !!gameState.variables[k]; }
 
-/* 🎵 Мелодия — нужно перо Бруно */
 function canDoMusic() { return has('has_feather'); }
-/* 🌿 Изобилие — флакон Селесты ИЛИ пыльца Шустика */
 function canDoNectar() { return has('has_selesta_vial') || has('has_pollen'); }
-/* ⚙ Инженерия — кристалл ИЛИ ключ */
 function canDoMechanics() { return has('has_crystal') || has('has_key'); }
-/* 👑 Единство — все три направления сразу */
 function canDoUnity() { return canDoMusic() && canDoNectar() && canDoMechanics(); }
 
 function missingMusic() { return has('has_feather') ? [] : ['🪶 Перо Лазурной Сойки (Бруно)']; }
@@ -1078,8 +1239,7 @@ function unlockAchievement(key) {
 }
 
 /* ============================================================
-   ФОН И ВСТАВКИ (два слоя: локация "без активного действия"
-   и insert — крупный кадр конкретного действия из реплики)
+   ФОН И ВСТАВКИ
    ============================================================ */
 let bgSwapTimer = null;
 function setBackground(locationKey) {
@@ -1091,9 +1251,8 @@ function setBackground(locationKey) {
   bg.style.opacity = '0';
   bgSwapTimer = setTimeout(() => {
     bg.style.backgroundImage = url ? `url("${url}")` : 'none';
-    // Перезапускаем kenBurns-анимацию
     bg.style.animation = 'none';
-    void bg.offsetWidth; // reflow
+    void bg.offsetWidth;
     bg.style.animation = '';
     bg.style.opacity = '1';
     bgSwapTimer = null;
@@ -1247,7 +1406,7 @@ function advance() {
   }
 }
 
-function clearTitleElements() { document.querySelectorAll('.title-screen, .title-endings').forEach(el => el.remove()); }
+function clearTitleElements() { document.querySelectorAll('.title-screen, .title-endings, .ending-screen').forEach(el => el.remove()); }
 function clearDialogueElements() { document.querySelectorAll('.dialogue-box, .choice-box, .game-menu').forEach(el => el.remove()); }
 
 const ITEM_ACH = { has_feather: 'feather', has_crystal: 'crystal', has_selesta_vial: 'vial', has_key: 'key', has_scheme: 'scheme', has_pollen: 'pollen' };
@@ -1306,7 +1465,6 @@ function renderPassageInner(id, passage) {
 
   // 🛡 СТРАХОВКА: перед показом ГлавнаяПочинка убеждаемся,
   // что у игрока есть хотя бы один доступный финал.
-  // Если нет — выдаём недостающий предмет через сюжетный ход.
   if (id === 'ГлавнаяПочинка' && !canDoMusic() && !canDoNectar() && !canDoMechanics()) {
     grantEmergencyItem();
   }
@@ -1363,7 +1521,6 @@ function renderPassageInner(id, passage) {
         showNotification('⚠ Не хватает предметов', `Соберите: ${missFn().join(', ')}`, 'warn');
         return;
       }
-      // Сбрасываем печатающийся текст перед переходом
       if (gameState.typewriterTimer) {
         clearTimeout(gameState.typewriterTimer);
         gameState.typewriterTimer = null;
@@ -1376,7 +1533,6 @@ function renderPassageInner(id, passage) {
         gameState.historyIndex = -1;
         renderPassage('title', false);
       } else {
-        // ← КЛЮЧЕВОЕ: обрезаем историю до текущей позиции перед новой веткой
         gameState.history = gameState.history.slice(0, gameState.historyIndex + 1);
         renderPassage(to);
       }
@@ -1428,10 +1584,8 @@ function renderPassageInner(id, passage) {
   }
 }
 
-/* 🛡 Экстренная выдача предмета — сюжетная реплика Миры.
-   Вызывается только если у игрока нет ни одного предмета для финалов. */
+/* 🛡 Экстренная выдача предмета — сюжетная реплика Миры. */
 function grantEmergencyItem() {
-  // Приоритет: сначала то, что ближе по сюжету
   if (!has('has_selesta_vial') && !has('has_pollen')) {
     gameState.variables['has_selesta_vial'] = true;
     unlockAchievement('vial');
@@ -1459,7 +1613,7 @@ function grantEmergencyItem() {
 }
 
 /* ============================================================
-   ЭКРАН ПОСЛЕ КОНЦОВКИ
+   ЭКРАН КОНЦОВКИ — с фоном, рамкой и счётчиком открытых финалов
    ============================================================ */
 function showEndingScreen(endingKey) {
   clearDialogueElements();
@@ -1468,45 +1622,89 @@ function showEndingScreen(endingKey) {
   if (clickLayer) clickLayer.classList.remove('enabled');
 
   const data = {
-    melody:      { title: '🎵 Финал Мелодии и Добра',      subtitle: 'Чуткость и верный тон',            color: '#FFC960' },
-    abundance:   { title: '🌿 Финал Заботы и Изобилия',    subtitle: 'Сытый дух — счастливая долина',    color: '#a8d49a' },
-    engineering: { title: '⚙ Финал Инженерного Чуда',      subtitle: 'Точный расчёт и крепкая дружба',   color: '#7cc0ff' },
-    unity:       { title: '👑 Финал Истинной Гармонии',    subtitle: 'Природа, наука и тепло сердец',    color: '#FFD700' },
-  }[endingKey] || { title: 'Финал', subtitle: '', color: '#FBBF24' };
+    melody:      { title: 'Финал Мелодии и Добра',       subtitle: 'Чуткость и верный тон',          color: '#FFC960', bg: INSERT_IMG['ending_melody'] },
+    abundance:   { title: 'Финал Заботы и Изобилия',     subtitle: 'Сытый дух — счастливая долина',  color: '#a8d49a', bg: INSERT_IMG['ending_abundance'] },
+    engineering: { title: 'Финал Инженерного Чуда',       subtitle: 'Точный расчёт и крепкая дружба', color: '#7cc0ff', bg: INSERT_IMG['ending_engineering'] },
+    unity:       { title: 'Финал Истинной Гармонии',     subtitle: 'Природа, наука и тепло сердец',  color: '#FFD700', bg: INSERT_IMG['ending_unity'] },
+  }[endingKey] || { title: 'Финал', subtitle: '', color: '#FBBF24', bg: null };
+
+  // Меняем фон на картинку концовки
+  if (data.bg) {
+    const bg = document.getElementById('bgLayer');
+    bg.style.opacity = '0';
+    setTimeout(() => {
+      bg.style.backgroundImage = `url("${data.bg}")`;
+      bg.style.animation = 'none';
+      void bg.offsetWidth;
+      bg.style.animation = '';
+      bg.style.opacity = '1';
+    }, 400);
+  }
+
+  const count = ['melody','abundance','engineering','unity'].filter(k => gameState.endings[k]).length;
+  const allFour = count === 4;
 
   const gameArea = document.getElementById('gameArea');
   gameArea.style.opacity = '1';
-  gameArea.innerHTML = `
-    <div class="title-screen">
-      <div class="title-logo">
-        <h1 class="title-main" style="color:${data.color};">${data.title}</h1>
-        <p class="title-sub" style="color:${data.color};">${data.subtitle}</p>
+  gameArea.innerHTML = '';
+
+  const screen = document.createElement('div');
+  screen.className = 'ending-screen';
+  screen.innerHTML = `
+    <div class="ending-frame">
+      <div class="ending-corner tr"></div>
+      <div class="ending-corner bl"></div>
+      <div class="ending-label">✦ История завершена ✦</div>
+      <h1 class="ending-title" style="color:${data.color};">${data.title}</h1>
+      <p class="ending-subtitle">${data.subtitle}</p>
+      <div class="ending-divider"></div>
+      <p class="ending-desc">${
+        endingKey === 'melody' ? 'Свет маяка снова озарил долину тёплым янтарным потоком.' :
+        endingKey === 'abundance' ? 'Сытый дух — счастливая долина. Небо вспыхнуло изумрудом.' :
+        endingKey === 'engineering' ? 'Лучи маяка начертили в небе гигантскую светящуюся звезду.' :
+        endingKey === 'unity' ? 'Радужный луч озарил долину, вокруг башни кружат светлячки.' :
+        'Праздник Осенней Звезды спасён.'
+      }</p>
+      <div class="ending-progress">🏆 Открыто концовок: <b>${count} / 4</b></div>
+      <div class="ending-buttons">
+        <button id="btnTryAgain" class="primary">🔄 Попробовать снова</button>
+        <button id="btnOtherEnding2" ${allFour ? 'disabled' : ''}>🎭 Открыть другую концовку</button>
+        <button id="btnToMenu2">🏠 В главное меню</button>
       </div>
-      <div class="title-menu">
-        <button id="btnPlayAgain">🔄 Пройти заново</button>
-        <button id="btnOtherEnding">🎭 Другая концовка</button>
-        <button id="btnToMenu">🏠 В главное меню</button>
-      </div>
-      <p class="title-footer">Верхний Шепот · Праздник Осенней Звезды</p>
     </div>
   `;
+  gameArea.appendChild(screen);
 
-  document.getElementById('btnPlayAgain').addEventListener('click', () => { resetAll(); renderPassage('Start1'); });
-  document.getElementById('btnOtherEnding').addEventListener('click', () => {
+  // 🔑 «Попробовать снова» — НЕ сбрасывает прогресс,
+  // возвращает к развилке маршрутов, чтобы собрать оставшиеся предметы.
+  document.getElementById('btnTryAgain').addEventListener('click', () => {
+    // Прогресс (endings, achievements, variables) сохраняется.
+    // Сбрасываем только историю — чтобы можно было пойти по новой ветке.
+    gameState.history = [];
+    gameState.historyIndex = -1;
+    // Возвращаемся к развилке маршрутов
+    renderPassage('ВыборПути3');
+    showNotification('🔄 Новое прохождение',
+      'Прогресс сохранён. Пройдите другой маршрут, чтобы открыть остальные финалы.');
+  });
+
+  document.getElementById('btnOtherEnding2').addEventListener('click', () => {
+    if (allFour) return;
     gameState.history = [];
     gameState.historyIndex = -1;
     renderPassage('ВнутриБашни');
-    // Если не хватает предметов для всех финалов — подскажем
     const ready = [canDoMusic(), canDoNectar(), canDoMechanics(), canDoUnity()].filter(Boolean).length;
     if (ready < 4) {
       setTimeout(() => showNotification('💡 Подсказка',
         `Открыто финалов: ${ready}/4. Пройдите другие маршруты (мост / тропа / лавка), чтобы собрать предметы.`), 800);
     }
   });
-  document.getElementById('btnToMenu').addEventListener('click', () => {
+
+  document.getElementById('btnToMenu2').addEventListener('click', () => {
     gameState.history = []; gameState.historyIndex = -1;
     renderPassage('title', false);
   });
+
   updateHistoryButtons();
 }
 
