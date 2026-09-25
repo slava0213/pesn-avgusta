@@ -249,27 +249,6 @@ html, body {
 .dialogue-box.player { border-color: rgba(100,200,255,0.85); }
 .dialogue-box.player .speaker-name { background: linear-gradient(180deg, rgba(60,140,200,1) 0%, rgba(35,90,150,1) 100%); color: #F0F8FF; }
 .dialogue-box.player .speaker-name::after { border-top-color: rgba(35,90,150,1); }
-.dialogue-box.final-box {
-  border-color: rgba(255,215,0,1);
-  box-shadow:
-    0 -40px 80px rgba(0,0,0,0.7),
-    0 24px 70px rgba(0,0,0,0.8),
-    0 0 80px rgba(255,215,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.15);
-}
-.dialogue-box.final-box .speaker-name { background: linear-gradient(180deg, rgba(255,215,0,1) 0%, rgba(200,150,20,1) 100%); color: #2A1500; }
-.dialogue-box.final-box .speaker-name::after { border-top-color: rgba(200,150,20,1); }
-/* 🎭 3-я концовка — зелёный стиль */
-.dialogue-box.final-nature {
-  border-color: rgba(139,171,122,1);
-  box-shadow:
-    0 -40px 80px rgba(0,0,0,0.7),
-    0 24px 70px rgba(0,0,0,0.8),
-    0 0 80px rgba(139,171,122,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.15);
-}
-.dialogue-box.final-nature .speaker-name { background: linear-gradient(180deg, rgba(139,171,122,1) 0%, rgba(90,120,80,1) 100%); color: #1a2410; }
-.dialogue-box.final-nature .speaker-name::after { border-top-color: rgba(90,120,80,1); }
 
 .choice-box {
   position: fixed; left: 50%; bottom: 40vh;
@@ -449,22 +428,10 @@ html, body {
   -webkit-backdrop-filter: blur(10px);
 }
 .item-popup.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-.item-popup .popup-icon {
-  font-size: 52px; margin-bottom: 10px;
-  filter: drop-shadow(0 0 20px rgba(255,200,80,0.9));
-}
-.item-popup .popup-label {
-  color: #FBBF24; font-size: 11px; letter-spacing: 3px;
-  text-transform: uppercase; margin-bottom: 8px;
-}
-.item-popup .popup-name {
-  color: #FFF8E7; font-size: 20px; font-weight: bold;
-  letter-spacing: 1px; text-shadow: 0 0 14px rgba(255,220,100,0.7);
-}
-.item-popup .popup-hint {
-  color: #d8c9a8; font-size: 13px; font-style: italic;
-  margin-top: 10px; max-width: 320px;
-}
+.item-popup .popup-icon { font-size: 52px; margin-bottom: 10px; filter: drop-shadow(0 0 20px rgba(255,200,80,0.9)); }
+.item-popup .popup-label { color: #FBBF24; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+.item-popup .popup-name { color: #FFF8E7; font-size: 20px; font-weight: bold; letter-spacing: 1px; text-shadow: 0 0 14px rgba(255,220,100,0.7); }
+.item-popup .popup-hint { color: #d8c9a8; font-size: 13px; font-style: italic; margin-top: 10px; max-width: 320px; }
 
 .title-screen {
   position: fixed; inset: 0;
@@ -474,10 +441,7 @@ html, body {
   background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0.85) 100%);
 }
 .title-logo { text-align: center; animation: titleFadeIn 1.3s ease-out; }
-@keyframes titleFadeIn {
-  from { opacity: 0; transform: translateY(-30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+@keyframes titleFadeIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 .title-main {
   font-size: clamp(38px, 6vw, 76px);
   color: #FFF8E7;
@@ -491,22 +455,8 @@ html, body {
   animation: titleGlow 3.6s ease-in-out infinite;
 }
 @keyframes titleGlow {
-  0%,100% {
-    text-shadow:
-      -3px -3px 0 #8B4513, 3px -3px 0 #8B4513,
-      -3px 3px 0 #8B4513, 3px 3px 0 #8B4513,
-      0 0 40px rgba(255,220,100,1),
-      0 0 80px rgba(255,180,50,0.7),
-      6px 6px 30px rgba(0,0,0,0.9);
-  }
-  50% {
-    text-shadow:
-      -3px -3px 0 #8B4513, 3px -3px 0 #8B4513,
-      -3px 3px 0 #8B4513, 3px 3px 0 #8B4513,
-      0 0 65px rgba(255,240,150,1),
-      0 0 120px rgba(255,200,80,0.9),
-      6px 6px 30px rgba(0,0,0,0.9);
-  }
+  0%,100% { text-shadow: -3px -3px 0 #8B4513, 3px -3px 0 #8B4513, -3px 3px 0 #8B4513, 3px 3px 0 #8B4513, 0 0 40px rgba(255,220,100,1), 0 0 80px rgba(255,180,50,0.7), 6px 6px 30px rgba(0,0,0,0.9); }
+  50% { text-shadow: -3px -3px 0 #8B4513, 3px -3px 0 #8B4513, -3px 3px 0 #8B4513, 3px 3px 0 #8B4513, 0 0 65px rgba(255,240,150,1), 0 0 120px rgba(255,200,80,0.9), 6px 6px 30px rgba(0,0,0,0.9); }
 }
 .title-sub {
   font-size: clamp(14px, 1.2vw, 19px);
@@ -515,11 +465,7 @@ html, body {
   font-style: italic; margin-top: 14px; letter-spacing: 6px;
   text-transform: uppercase;
 }
-.title-menu {
-  display: flex; flex-direction: column; gap: 14px;
-  width: min(340px, 80vw);
-  animation: titleFadeIn 1s ease-out 0.4s backwards;
-}
+.title-menu { display: flex; flex-direction: column; gap: 14px; width: min(340px, 80vw); animation: titleFadeIn 1s ease-out 0.4s backwards; }
 .title-menu button {
   display: block;
   background: linear-gradient(180deg, rgba(28,22,14,0.9) 0%, rgba(14,10,6,0.95) 100%);
@@ -539,18 +485,14 @@ html, body {
   position: relative; overflow: hidden;
 }
 .title-menu button::after {
-  content: ''; position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255,200,80,0.2), transparent);
-  transition: left 0.6s ease;
-  pointer-events: none;
+  transition: left 0.6s ease; pointer-events: none;
 }
 .title-menu button:hover:not(:disabled)::after { left: 100%; }
 .title-menu button:hover:not(:disabled) {
   background: linear-gradient(180deg, rgba(244,197,66,0.2) 0%, rgba(180,120,20,0.15) 100%);
-  color: #FFF8E7;
-  transform: translateY(-3px) scale(1.02);
+  color: #FFF8E7; transform: translateY(-3px) scale(1.02);
   box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 30px rgba(255,200,80,0.5);
   border-color: rgba(244,197,66,1);
 }
@@ -606,10 +548,7 @@ html, body {
     inset 0 1px 0 rgba(255,255,255,0.06);
   animation: modalIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
-@keyframes modalIn {
-  from { opacity: 0; transform: scale(0.95) translateY(20px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
+@keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 .modal h2 {
   margin: 0 0 22px; color: #FBBF24;
   text-transform: uppercase; font-size: 18px; letter-spacing: 3px;
@@ -617,23 +556,13 @@ html, body {
   border-bottom: 1px solid rgba(244,197,66,0.25);
   padding-bottom: 14px;
 }
-.modal h3 {
-  color: #FBBF24; font-size: 12px; letter-spacing: 2px;
-  text-transform: uppercase; margin: 20px 0 10px;
-}
-.modal .row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 0; border-bottom: 1px solid rgba(244,197,66,0.12);
-  gap: 12px; flex-wrap: wrap;
-}
+.modal h3 { color: #FBBF24; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin: 20px 0 10px; }
+.modal .row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(244,197,66,0.12); gap: 12px; flex-wrap: wrap; }
 .modal .row:last-of-type { border-bottom: none; }
 .modal label { color: #ddd; letter-spacing: 0.5px; }
 .modal select, .modal input[type=range] {
-  background: #1c1813; color: #eee;
-  border: 1px solid #4a3f2f;
-  padding: 8px 12px; border-radius: 4px;
-  font-family: inherit; font-size: 14px;
-  cursor: pointer;
+  background: #1c1813; color: #eee; border: 1px solid #4a3f2f;
+  padding: 8px 12px; border-radius: 4px; font-family: inherit; font-size: 14px; cursor: pointer;
 }
 .modal .buttons { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; flex-wrap: wrap; }
 .modal button {
@@ -659,106 +588,63 @@ html, body {
   border: 1px solid rgba(244,197,66,0.15);
   transition: all 0.3s ease;
 }
-.modal .ach:not(.locked):hover {
-  background: rgba(251,191,36,0.1);
-  border-color: rgba(251,191,36,0.45);
-  transform: translateX(6px);
-}
+.modal .ach:not(.locked):hover { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.45); transform: translateX(6px); }
 .modal .ach.locked { opacity: 0.35; filter: grayscale(1); }
 .modal .ach .icon { font-size: 26px; }
 .modal .ach .info { display: flex; flex-direction: column; gap: 3px; }
 .modal .ach .title { color: #FBBF24; font-weight: bold; font-size: 14px; }
 .modal .ach .desc { color: #999; font-size: 12px; }
 
-.modal .item-row {
-  display: flex; gap: 12px; align-items: flex-start;
-  padding: 10px 0; border-bottom: 1px solid rgba(244,197,66,0.1);
-}
+.modal .item-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(244,197,66,0.1); }
 .modal .item-row:last-child { border-bottom: none; }
 .modal .item-icon { font-size: 26px; line-height: 1; flex-shrink: 0; }
 .modal .item-name { color: #eee; font-weight: bold; }
 .modal .item-hint { color: #999; font-size: 12px; font-style: italic; margin-top: 3px; }
 
-.modal .ending-status {
-  padding: 12px 16px; border-radius: 6px; margin-bottom: 8px;
-  font-size: 13px;
-}
-.modal .ending-status.ready {
-  background: rgba(139,171,122,0.12);
-  border: 1px solid rgba(139,171,122,0.4);
-  color: #a8d49a;
-}
-.modal .ending-status.locked {
-  background: rgba(224,138,76,0.08);
-  border: 1px solid rgba(224,138,76,0.3);
-  color: #c9c0a6;
-}
-.modal .ending-status .status-need {
-  font-size: 12px; color: #e07b39; margin-top: 4px;
-  font-style: italic;
-}
+.modal .ending-status { padding: 12px 16px; border-radius: 6px; margin-bottom: 8px; font-size: 13px; }
+.modal .ending-status.ready { background: rgba(139,171,122,0.12); border: 1px solid rgba(139,171,122,0.4); color: #a8d49a; }
+.modal .ending-status.locked { background: rgba(224,138,76,0.08); border: 1px solid rgba(224,138,76,0.3); color: #c9c0a6; }
+.modal .ending-status .status-need { font-size: 12px; color: #e07b39; margin-top: 4px; font-style: italic; }
 
 .cutscene-layer {
-  position: fixed; inset: 0;
-  z-index: 95;
-  background: #000;
-  opacity: 0;
-  visibility: hidden;
+  position: fixed; inset: 0; z-index: 95; background: #000;
+  opacity: 0; visibility: hidden;
   transition: opacity 0.7s ease, visibility 0.7s ease;
-  overflow: hidden;
-  cursor: pointer;
+  overflow: hidden; cursor: pointer;
 }
 .cutscene-layer.active { opacity: 1; visibility: visible; }
 .cutscene-frame {
   position: absolute; inset: 0;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-color: #000;
-  opacity: 0;
-  transform: scale(1);
+  background-size: contain; background-position: center; background-repeat: no-repeat;
+  background-color: #000; opacity: 0; transform: scale(1);
   transition: opacity 0.9s ease, transform 9s ease-out;
   will-change: opacity, transform;
 }
 .cutscene-frame.current { opacity: 1; z-index: 1; }
-.cutscene-frame.next    { opacity: 0; z-index: 2; }
+.cutscene-frame.next { opacity: 0; z-index: 2; }
 .cutscene-frame.visible { opacity: 1; }
 .cutscene-progress {
-  position: absolute;
-  left: 0; bottom: 0;
-  height: 4px; width: 0%;
+  position: absolute; left: 0; bottom: 0; height: 4px; width: 0%;
   background: linear-gradient(90deg, #FBBF24, #F59E0B, #FBBF24);
   background-size: 200% 100%;
   box-shadow: 0 0 16px rgba(255,200,100,0.9);
-  z-index: 4;
-  transition: width 0.2s linear;
+  z-index: 4; transition: width 0.2s linear;
 }
 .cutscene-caption {
-  position: absolute;
-  left: 50%; bottom: 10vh;
-  transform: translateX(-50%);
-  max-width: 80vw;
-  padding: 16px 32px;
+  position: absolute; left: 50%; bottom: 10vh; transform: translateX(-50%);
+  max-width: 80vw; padding: 16px 32px;
   background: rgba(0,0,0,0.8);
   border: 1px solid rgba(244,197,66,0.85);
-  border-radius: 4px;
-  color: #FFF8E7;
-  font-size: clamp(15px, 1.25vw, 19px);
-  line-height: 1.65;
-  text-align: center;
+  border-radius: 4px; color: #FFF8E7;
+  font-size: clamp(15px, 1.25vw, 19px); line-height: 1.65; text-align: center;
   text-shadow: 1px 1px 5px rgba(0,0,0,0.95);
   z-index: 4;
   box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 40px rgba(255,200,80,0.2);
 }
 
 .dialogue-text::-webkit-scrollbar, .modal::-webkit-scrollbar { width: 6px; }
-.dialogue-text::-webkit-scrollbar-track, .modal::-webkit-scrollbar-track {
-  background: rgba(255,243,196,0.1); border-radius: 3px;
-}
-.dialogue-text::-webkit-scrollbar-thumb, .modal::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #FBBF24, #F59E0B);
-  border-radius: 3px;
-}
+.dialogue-text::-webkit-scrollbar-track, .modal::-webkit-scrollbar-track { background: rgba(255,243,196,0.1); border-radius: 3px; }
+.dialogue-text::-webkit-scrollbar-thumb, .modal::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #FBBF24, #F59E0B); border-radius: 3px; }
 
 @media (max-width: 768px) {
   .dialogue-box { width: 94vw; max-height: 42vh; bottom: 2vh; }
@@ -791,6 +677,48 @@ html, body {
 }
 
 .hidden { display: none !important; }
+
+
+.dialogue-box.shustik { border-color: rgba(120,160,90,0.85); }
+.dialogue-box.shustik .speaker-name { background: linear-gradient(180deg, rgba(110,150,80,1) 0%, rgba(70,100,45,1) 100%); }
+.dialogue-box.shustik .speaker-name::after { border-top-color: rgba(70,100,45,1); }
+.dialogue-box.shustik .dialogue-text { font-style: italic; }
+
+.dialogue-box.final-melody {
+  border-color: rgba(255,200,90,1);
+  box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 80px rgba(255,180,60,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.dialogue-box.final-melody .speaker-name { background: linear-gradient(180deg, rgba(255,190,60,1) 0%, rgba(200,130,20,1) 100%); color: #2A1500; }
+.dialogue-box.final-melody .speaker-name::after { border-top-color: rgba(200,130,20,1); }
+
+.dialogue-box.final-abundance {
+  border-color: rgba(139,171,122,1);
+  box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 80px rgba(139,171,122,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.dialogue-box.final-abundance .speaker-name { background: linear-gradient(180deg, rgba(139,171,122,1) 0%, rgba(90,120,80,1) 100%); color: #1a2410; }
+.dialogue-box.final-abundance .speaker-name::after { border-top-color: rgba(90,120,80,1); }
+
+.dialogue-box.final-engineering {
+  border-color: rgba(90,160,220,1);
+  box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 80px rgba(90,160,220,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.dialogue-box.final-engineering .speaker-name { background: linear-gradient(180deg, rgba(80,150,215,1) 0%, rgba(35,90,150,1) 100%); color: #06121f; }
+.dialogue-box.final-engineering .speaker-name::after { border-top-color: rgba(35,90,150,1); }
+
+.dialogue-box.final-unity {
+  border-color: rgba(255,215,0,1);
+  box-shadow: 0 -40px 80px rgba(0,0,0,0.7), 0 24px 70px rgba(0,0,0,0.8), 0 0 100px rgba(255,150,220,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+  background: linear-gradient(180deg, rgba(40,22,30,0.92) 0%, rgba(18,10,16,0.97) 100%);
+}
+.dialogue-box.final-unity .speaker-name { background: linear-gradient(90deg, #FFD700, #FF8FD6, #7CD8FF, #FFD700); background-size: 300% 100%; animation: unityGradient 4s linear infinite; color: #2A0022; }
+.dialogue-box.final-unity .speaker-name::after { border-top-color: rgba(200,150,20,1); }
+@keyframes unityGradient { 0% { background-position: 0% 0; } 100% { background-position: 300% 0; } }
+
+/* placeholder art (пока картинки не сгенерированы пользователем) */
+.bg-layer.placeholder, .insert-layer.placeholder {
+  background: radial-gradient(ellipse at center, #241a2e 0%, #0a0a14 100%);
+}
+
 </style>
 </head>
 <body>
@@ -836,611 +764,182 @@ html, body {
 
 <script>
 /* ============================================================
-   ПЕСНЬ АВГУСТА — 3 концовки
+   ПЕСНЬ АВГУСТА — полная версия (4 концовки, 3 маршрута помощников)
+   Изображения: LOCATION_BG — фон локации (сцена, иногда с персонажами
+   в статичной позе); INSERT_IMG — вставка конкретного действия,
+   показывается на несколько секунд поверх фона в момент реплики.
+   Пути к файлам — из папок images/bg/ и images/insert/ в вашем
+   репозитории (см. ПРОМПТЫ_ДЛЯ_КАРТИНОК.md — там точные промпты
+   для Kandinsky/GigaChat под каждый файл).
    ============================================================ */
-
-/* ===== ФОНЫ ===== */
 const LOCATION_BG = {
-  title:              'images/bg_01.png',
-  start:              'images/bg_02.png',
-  player_outside:     'images/bg_03.png',
-  player_inside:      'images/bg_04.png',
-  letter_close:       'images/bg_05.png',
-  player_table:       'images/bg_06.png',
-  letter_hand:        'images/bg_07.png',
-  parchment:          'images/bg_08.png',
-  player_table2:      'images/bg_09.png',
-  epilogue:           'images/bg_09.png',
-  most_bridge:        'images/1.png',
-  most:               'images/2.png',
-  most_awake:         'images/3.png',
-  most_empty:         'images/4.png',
-  lavka:              'images/sprite/bg_03.png',
-  tower:              'images/sprite/bg_03.png',
-  tower_inside:       'images/sprite/bg_04.png',
-  observatory:        'images/sprite/bg_04.png',
-  final:              'images/sprite/bg_01.png'
+  "title": "images/bg/title.png",  // Панорама города Верхний Шепот на рассвете, маяк на холме вдали, тёплый золотой свет, без персонажей, широкий формат, стиль полуреалистичного аниме-арта, детализированный фон
+  "start": "images/bg/start_city.png",  // Улочки города Верхний Шепот, украшенные гирляндами из яблок к празднику Осенней Звезды, раннее утро, безлюдно, без персонажей
+  "player_outside": "images/bg/player_house_outside.png",  // Дом травника на краю яблоневого сада, деревянное крыльцо, утренний туман, без персонажей
+  "player_inside": "images/bg/player_house_inside.png",  // Уютная комната травника, окно с видом на маяк, сушёные травы под потолком, стол с письмом, без персонажей
+  "letter_close": "images/bg/letter_closeup.png",  // Крупный план: письмо на плотном пергаменте с красной восковой печатью в форме кленового листа, лежит на деревянном столе
+  "player_table": "images/bg/room_mira_enter.png",  // Комната травника, в дверях появляется рыжая девушка-механик Мира с кожаным чехлом инструментов, персонаж в кадре
+  "parchment": "images/bg/parchment_text.png",  // Развёрнутый пергамент с рукописной схемой линз и заметками серебряными чернилами, без персонажей
+  "player_table2": "images/bg/room_dialogue.png",  // Комната травника, Мира и главный герой обсуждают письмо за столом, персонажи в кадре
+  "epilogue": "images/bg/epilogue_valley.png",  // Долина Верхний Шепот вечером во время праздника, гирлянды огней, светлячки в воздухе, без персонажей на переднем плане
+  "most_bridge": "images/bg/bridge_wide.png",  // Старый каменный мост над горным ручьём, поросший мхом, осенние деревья по бокам, без персонажей
+  "most_sleep": "images/bg/bridge_bruno_sleep.png",  // Тот же каменный мост, на плитах моста дремлет пушистый каменный гаргуль с крыльями и хвостом-кисточкой, перекрывая проход
+  "most_awake": "images/bg/bridge_bruno_awake.png",  // Каменный мост, гаргуль Бруно проснулся, сидит и разговаривает с путниками, персонажи в кадре
+  "most_empty": "images/bg/bridge_empty.png",  // Тот же каменный мост, путь свободен, гаргуль отошёл в сторону, светит солнце, без персонажей на переднем плане
+  "grib_tropa": "images/bg/forest_path.png",  // Тенистая лесная тропа среди старых дубов, изумрудный мох, светящиеся грибы-фонарики, без персонажей
+  "grib_action": "images/bg/forest_shustik.png",  // Та же лесная тропа, маленький лесной дух в виде еловой шишки в зелёном колпачке возится с застрявшей тележкой между корней, персонаж в кадре
+  "lavka": "images/bg/selesta_shop.png",  // Круглый домик травницы, пучки вереска и лаванды над дверью, синий дымок из трубы, пожилая женщина у окна с колокольчиками, персонаж в кадре
+  "tower": "images/bg/tower_outside.png",  // Величественная башня маяка из белого резного известняка, увита цветущим плющом, массивные дубовые двери с бронзовым замком-циферблатом, без персонажей
+  "tower_secret": "images/bg/tower_secret_door.png",  // Скрытая дверца в скале у подножия башни, замаскированная диким виноградом, без персонажей
+  "observatory": "images/bg/observatory.png",  // Круглая комната обсерватории с медными звёздными картами, телескопом и глобусами созвездий, на столе спит заводной кот, без персонажей на переднем плане
+  "tower_inside": "images/bg/tower_hall.png",  // Главный зал башни маяка, спиральная лестница, в центре постамент с крылатым спящим светляком, суетливый пожилой смотритель рядом, персонажи в кадре
+  "final": "images/bg/tower_final.png",  // Главный зал башни, светляк Август просыпается и озаряет зал тёплым сиянием, персонажи в кадре
 };
 
-/* ===== ВСТАВКИ ===== */
 const INSERT_IMG = {
-  city:        'images/sprite/bg_02.png',
-  sunset:      'images/sprite/bg_01.png',
-  letter_open: 'images/sprite/bg_07.png',
-  epilogue:    'images/sprite/bg_09.png',
-  bruno_block: 'images/2.png',
-  bruno_awake: 'images/3.png',
-  most_free:   'images/4.png',
-  selesta:     'images/sprite/bg_03.png',
-  tower:       'images/sprite/bg_03.png',
-  observatory: 'images/sprite/bg_04.png',
-  august_sleep:'images/sprite/bg_04.png',
-  august_fly:  'images/sprite/bg_01.png'
+  "city_holiday": "images/insert/city_holiday.png",  // Панорама праздничного города с гирляндами из яблок, ремесленники развешивают флаги, атмосфера праздника
+  "sunrise_lighthouse": "images/insert/sunrise_lighthouse.png",  // Маяк на рассвете, тёплый золотой свет заливает черепичные крыши города
+  "letter_seal": "images/insert/letter_seal.png",  // Крупный план руки, вскрывающей восковую печать с оттиском кленового листа на письме
+  "mira_arrive": "images/insert/mira_arrive.png",  // Рыжеволосая девушка-механик Мира с медным ключом и чехлом инструментов, бодро приветствует героя у крыльца
+  "mira_joke": "images/insert/mira_joke.png",  // Мира театрально стучит медным ключом по ладони, озорная улыбка
+  "olven_scheme": "images/insert/olven_scheme.png",  // Крупный план чертежа со схемой линз и рукописными заметками серебряными чернилами
+  "bruno_block": "images/insert/bruno_block.png",  // Каменный гаргуль с крыльями летучей мыши и хвостом-кисточкой развалился поперёк моста, дремлет на солнце
+  "bruno_awake": "images/insert/bruno_awake.png",  // Гаргуль приоткрывает янтарный глаз и широко зевает, обнажая каменные зубы
+  "bruno_riddle": "images/insert/bruno_riddle.png",  // Гаргуль торжественно поднимает лапу, произнося загадку, вокруг лёгкое сияние
+  "bruno_wind": "images/insert/bruno_wind.png",  // Гаргуль хлопает каменными крыльями, поднимая облачко пыли, довольная улыбка
+  "bruno_feather": "images/insert/bruno_feather.png",  // Гаргуль протягивает путникам сияющее лазурное перо огромной птицы
+  "bruno_apple": "images/insert/bruno_apple.png",  // Гаргуль с блаженством жуёт вяленое яблоко в меду, глаза зажмурены от удовольствия
+  "bruno_crystal": "images/insert/bruno_crystal.png",  // Гаргуль протягивает лапой прозрачный сияющий кристалл кварца
+  "bruno_clue": "images/insert/bruno_clue.png",  // Гаргуль задумчиво чешет каменное ухо когтем, вспоминая ночное происшествие
+  "shustik_stuck": "images/insert/shustik_stuck.png",  // Маленький лесной дух в виде еловой шишки в зелёном колпачке отчаянно тянет тележку, застрявшую между корней
+  "shustik_magic": "images/insert/shustik_magic.png",  // Герой кладёт ладонь на кору древнего дерева, вокруг мягкое сияние, корни расступаются
+  "shustik_oil": "images/insert/shustik_oil.png",  // Герой капает маслом из флакона на древесный корень, тот становится податливым
+  "shustik_lever": "images/insert/shustik_lever.png",  // Мира налегает на латунную монтировку, используя рычаг, чтобы освободить корень
+  "shustik_gift": "images/insert/shustik_gift.png",  // Лесной дух с поклоном протягивает путникам мешочек с сияющей пыльцой
+  "selesta_greet": "images/insert/selesta_greet.png",  // Пожилая травница в дверях своего домика всплёскивает руками, удивлённая появлением гостей
+  "selesta_vial": "images/insert/selesta_vial.png",  // Травница протягивает маленький глиняный пузырёк с золотистым настоем
+  "door_riddle": "images/insert/door_riddle.png",  // Крупный план бронзового замка на дубовых дверях башни с четырьмя дисками стихийных знаков: солнце, ветер, вода, росток
+  "door_water": "images/insert/door_water.png",  // Из механизма двери бьёт освежающая струя воды, девушка со смехом уклоняется
+  "door_open": "images/insert/door_open.png",  // Дубовые двери башни медленно распахиваются, изнутри льётся тёплый свет, шестерни в замке вращаются
+  "cat_sleep": "images/insert/cat_sleep.png",  // Маленький заводной кот с янтарными стеклянными глазами мирно спит на столе среди звёздных карт, на ошейнике латунный ключ
+  "cat_key": "images/insert/cat_key.png",  // Заводной кот доверчиво протягивает лапу, герой аккуратно снимает латунный ключ с ошейника
+  "secret_entry": "images/insert/secret_entry.png",  // Маленькая дубовая дверца в скале, увитая виноградом, приоткрывается, ведя на винтовую лестницу
+  "cornelius_panic": "images/insert/cornelius_panic.png",  // Пожилой смотритель маяка в круглых очках с несколькими линзами мечется по залу с масленкой в руках, борода завязана узлом
+  "august_sleep": "images/insert/august_sleep.png",  // Крупный план спящего звёздного светляка размером с большую собаку, полупрозрачные крылья с серебряными прожилками, у носа сонные пузыри
+  "august_wake_eye": "images/insert/august_wake_eye.png",  // Светляк приоткрывает один огромный фиолетовый глаз, лёгкая грусть во взгляде
+  "schema_show": "images/insert/schema_show.png",  // Смотритель маяка в изумлении рассматривает развёрнутую схему линз, поднеся её к свету
+  "mechanism_inspect": "images/insert/mechanism_inspect.png",  // Мира и герой склонились над сложным механизмом из трёх серебряных колоколов и хрустальных линз, изучая устройство
+  "plan_music": "images/insert/plan_music.png",  // Герой ударяет молоточком по бронзовому камертону, чистая нота повисает в воздухе, рядом лазурное перо смахивает пыль с колоколов
+  "plan_nectar": "images/insert/plan_nectar.png",  // Золотистый сироп льётся в хрустальную чашу резонатора, поднимается ароматный пар
+  "plan_mechanics": "images/insert/plan_mechanics.png",  // Мира ключом на двенадцать закручивает шарнир, в оправу линзы вставляется сияющий кристалл кварца
+  "plan_unity": "images/insert/plan_unity.png",  // Мира, Корнелиус и герой одновременно работают: настройка колоколов, заливка нектара и подгонка шестерён
+  "august_fly": "images/insert/august_fly.png",  // Звёздный светляк расправляет крылья и взмывает вверх, заливая зал ослепительным тёплым светом
+  "ending_melody": "images/insert/ending_melody.png",  // Янтарный луч света от маяка разливается над долиной, внизу вспыхивают праздничные гирлянды города
+  "ending_abundance": "images/insert/ending_abundance.png",  // Изумрудно-бирюзовое северное сияние над долиной, светляк парит в центре мягкого свечения
+  "ending_engineering": "images/insert/ending_engineering.png",  // Идеально выстроенные зеркала маяка чертят в ночном небе гигантскую светящуюся звезду
+  "ending_unity": "images/insert/ending_unity.png",  // Радужный многоцветный луч маяка над долиной, вокруг башни кружат сотни лесных светлячков
 };
 
-/* ===== ПРЕДМЕТЫ ===== */
 const ITEMS = {
-  has_feather:      { icon: '🪶', name: 'Перо Лазурной Сойки',   hint: 'Очищает звуковые трубки от пыли веков' },
-  has_crystal:      { icon: '💎', name: 'Кристалл Горного Кварца', hint: 'Фокусирует оптику маяка' },
-  has_selesta_vial: { icon: '🧪', name: 'Флакон Селесты',        hint: 'Пробуждает Августа лакомством' },
-  has_key:          { icon: '🔑', name: 'Латунный ключ',         hint: 'Калибровка призм главного механизма' },
-  has_scheme:       { icon: '📜', name: 'Схема Олвена',          hint: 'Угол 45° к центральной линзе' },
-  has_clue:         { icon: '🔍', name: 'Зацепка от Бруно',      hint: 'Сквозняк сбил настройку колоколов ночью' }
+  "has_feather": { icon: "🪶", name: "Перо Лазурной Сойки", hint: "Очищает звуковые трубки от пыли веков — ключ к Финалу Мелодии" },
+  "has_crystal": { icon: "💎", name: "Кристалл Горного Кварца", hint: "Фокусирует оптику маяка — ключ к Финалу Инженерного Чуда" },
+  "has_selesta_vial": { icon: "🧪", name: "Флакон Селесты", hint: "Пробуждает Августа лакомством — ключ к Финалу Изобилия" },
+  "has_key": { icon: "🔑", name: "Латунный ключ", hint: "Калибровка призм главного механизма — ключ к Финалу Инженерного Чуда" },
+  "has_scheme": { icon: "📜", name: "Схема Олвена", hint: "Настройка гармонического строя третьей октавы" },
+  "has_clue": { icon: "🔍", name: "Зацепка от Бруно", hint: "Сквозняк сбил настройку колоколов ночью" },
+  "has_pollen": { icon: "✨", name: "Пыльца Звёздных Светляков", hint: "Пробуждает сердце светляка — ключ к Финалу Изобилия" }
 };
 
-/* ===== ДОСТИЖЕНИЯ (добавлено nature) ===== */
 const ACHIEVEMENTS = {
-  feather:    { icon: '🪶', title: 'Перо Лазурной Сойки', desc: 'Получить перо у Бруно' },
-  crystal:    { icon: '💎', title: 'Кристалл Кварца',      desc: 'Получить кристалл у Бруно' },
-  vial:       { icon: '🧪', title: 'Флакон Селесты',       desc: 'Получить флакон от Селесты' },
-  key:        { icon: '🔑', title: 'Латунный ключ',        desc: 'Взять ключ у Тик-Така' },
-  scheme:     { icon: '📜', title: 'Схема Олвена',         desc: 'Изучить чертёж мастера Олвена' },
-  harmony:    { icon: '✨', title: 'Финал Гармонии',       desc: 'Пройти путь единства' },
-  mastery:    { icon: '⚙', title: 'Финал Мастерства',      desc: 'Пройти путь инженерии' },
-  nature:     { icon: '🌿', title: 'Финал Изобилия',       desc: 'Пройти путь заботы' },   /* 🎭 3-я КОНЦОВКА */
-  allEndings: { icon: '👑', title: 'Все три концовки',     desc: 'Открыть все три финала' }
+  "feather": { icon: "🪶", title: "Перо Лазурной Сойки", desc: "Получить перо у Бруно" },
+  "crystal": { icon: "💎", title: "Кристалл Кварца", desc: "Получить кристалл у Бруно" },
+  "vial": { icon: "🧪", title: "Флакон Селесты", desc: "Получить флакон от Селесты" },
+  "key": { icon: "🔑", title: "Латунный ключ", desc: "Взять ключ у Тик-Така" },
+  "scheme": { icon: "📜", title: "Схема Олвена", desc: "Изучить чертёж мастера Олвена" },
+  "pollen": { icon: "✨", title: "Дар Шустика", desc: "Получить пыльцу светлячков" },
+  "melody": { icon: "🎵", title: "Финал Мелодии и Добра", desc: "Пройти путь музыки" },
+  "abundance": { icon: "🌿", title: "Финал Заботы и Изобилия", desc: "Пройти путь нектара" },
+  "engineering": { icon: "⚙", title: "Финал Инженерного Чуда", desc: "Пройти путь механики" },
+  "unity": { icon: "👑", title: "Финал Истинной Гармонии", desc: "Пройти путь единства" },
+  "allEndings": { icon: "🏆", title: "Все четыре концовки", desc: "Открыть все финалы истории" }
 };
 
-/* ===== КАТСЦЕНЫ (добавлена ending_nature) ===== */
 const CUTSCENES = {
-  ending_harmony: { frames: [
-    { img: 'images/sprite/bg_01.png', duration: 3500 },
-    { img: 'images/sprite/bg_09.png', duration: 3500 },
-    { img: 'images/sprite/bg_01.png', duration: 3500 },
-    { img: 'images/sprite/bg_09.png', duration: 4500 }
-  ]},
-  ending_mastery: { frames: [
-    { img: 'images/sprite/bg_01.png', duration: 3500 },
-    { img: 'images/sprite/bg_09.png', duration: 4500 }
-  ]},
-  /* 🎭 3-я КОНЦОВКА */
-  ending_nature: { frames: [
-    { img: 'images/sprite/bg_01.png', duration: 3500 },
-    { img: 'images/sprite/bg_09.png', duration: 3500 },
-    { img: 'images/sprite/bg_01.png', duration: 4500 }
-  ]}
+  "ending_melody": { frames: [{ img: INSERT_IMG["plan_music"], duration: 3200 }, { img: INSERT_IMG["ending_melody"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_abundance": { frames: [{ img: INSERT_IMG["plan_nectar"], duration: 3200 }, { img: INSERT_IMG["ending_abundance"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_engineering": { frames: [{ img: INSERT_IMG["plan_mechanics"], duration: 3200 }, { img: INSERT_IMG["ending_engineering"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_unity": { frames: [{ img: INSERT_IMG["plan_unity"], duration: 3200 }, { img: INSERT_IMG["ending_unity"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
 };
 
-/* ============================================================
-   ПАССАЖИ
-   ============================================================ */
 const PASSAGES = {
-  title: { isTitle: true },
-
-  Start1: {
-    location: 'start',
-    insert: INSERT_IMG.city,
-    insertDuration: 1800,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой — а по утрам солнце поднимается из-за маяка и заливает золотом черепичные крыши.`,
-    next: 'Start2'
-  },
-  Start2: {
-    location: 'start',
-    insert: INSERT_IMG.sunset,
-    insertDuration: 1800,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Сегодня — особенный день. Праздник Осенней Звезды. Город украшен гирляндами из яблок, трактиры пекут пироги, а ремесленники развешивают флаги. Но что-то пошло не так.`,
-    next: 'Start3'
-  },
-  Start3: {
-    location: 'player_outside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы — молодой травник, ученик мастера Олвена. Ваш дом стоит на краю города, среди яблоневых садов. Этим утром вы проснулись от тишины: обычно в это время над озером уже гудели пчёлы и сновали лодки. Сегодня — тихо.`,
-    next: 'Start4'
-  },
-  Start4: {
-    location: 'player_outside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `На столе в доме лежало письмо: плотный пергамент, запечатанный красным воском с оттиском кленового листа — личный знак мастера Олвена.`,
-    next: 'Start5'
-  },
-  Start5: {
-    location: 'player_inside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы вернулись в дом. За окном — знакомый вид на маяк. На столе — письмо и чашка остывшего травяного чая. И тут за спиной послышались лёгкие шаги.`,
-    next: 'Start6'
-  },
-  Start6: {
-    location: 'player_table',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Подъём, Хранитель трав и ветров! Мастер Олвен передал, что в маяке заклинило рунный резонатор. Я взяла отмычки, разводной ключ и банку лучшей графитовой смазки. А у тебя что в письме?`,
-    choices: [
-      { text: 'Вскрыть письмо мастера Олвена прямо сейчас', to: 'ОткрытьПисьмо' },
-      { text: 'Сначала обсудить маршрут к маяку', to: 'ВыборПути' },
-      { text: 'Пошутить над Мирой и её чехлом с инструментами', to: 'РазговорСМирой1' }
-    ]
-  },
-  ОткрытьПисьмо: {
-    location: 'letter_close',
-    insert: INSERT_IMG.letter_open,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы берёте письмо. Красный воск тёплый на ощупь, оттиск кленового листа чёткий, будто только что сделан. За окном — солнце, тишина и далёкий маяк.`,
-    next: 'ПисьмоОлвена'
-  },
-  ПисьмоОлвена: {
-    location: 'parchment',
-    speaker: 'Мастер Олвен', boxClass: 'olven',
-    text: `«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы и фальшивых нот. Если механизм замер, ищите причину не в поломке металла, а в нарушении гармонии. Возьмите с собой частицу стихии и помните: свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».`,
-    next: 'ПисьмоОлвена2'
-  },
-  ПисьмоОлвена2: {
-    location: 'player_table2',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— «Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?`,
-    choices: [
-      { text: 'Пойти через Старый каменный мост', to: 'СтарыйМост' },
-      { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
-    ]
-  },
-
-  ВыборПути: {
-    location: 'player_table2',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы прячете письмо во внутренний карман.`,
-    next: 'ВыборПути2'
-  },
-  ВыборПути2: {
-    location: 'player_table2',
-    speaker: 'Вы', boxClass: 'player',
-    text: `— Разберёмся по дороге. Сначала — к маяку.`,
-    next: 'ВыборПути3'
-  },
-  ВыборПути3: {
-    location: 'player_table2',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Мира кивает и закидывает чехол на плечо.`,
-    next: 'ВыборПути4'
-  },
-  ВыборПути4: {
-    location: 'player_table2',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Тогда решай, как пойдём. Через Старый мост — дольше, но спокойнее. Или заглянем к бабушке Селесте — она всегда что-то подскажет.`,
-    choices: [
-      { text: 'Пойти через Старый каменный мост', to: 'СтарыйМост' },
-      { text: 'Сначала заглянуть в Чайную беседку травницы Селесты', to: 'ЛавкаСелесты' }
-    ]
-  },
-
-  РазговорСМирой1: {
-    location: 'player_table2',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы с улыбкой оглядываете её внушительный багаж.`,
-    next: 'РазговорСМирой2'
-  },
-  РазговорСМирой2: {
-    location: 'player_table2',
-    speaker: 'Вы', boxClass: 'player',
-    text: `— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?`,
-    next: 'РазговорСМирой3'
-  },
-  РазговорСМирой3: {
-    location: 'player_table2',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Мира театрально постучала медным ключом по ладони.`,
-    next: 'РазговорСМирой4'
-  },
-  РазговорСМирой4: {
-    location: 'player_table2',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Или у Корнелиуса снова заржавел механизм для колки орехов? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?`,
-    next: 'ОткрытьПисьмо'
-  },
-
-  /* === СТАРЫЙ МОСТ === */
-  СтарыйМост: {
-    location: 'most_bridge',
-    insert: INSERT_IMG.bruno_block,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. По обе стороны — фонари и осенние деревья. Но что это? Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал пушистый каменный гаргуль Бруно.`,
-    next: 'СтарыйМост2'
-  },
-  СтарыйМост2: {
-    location: 'most',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Его каменные крылья были увиты мхом, хвост с кисточкой мирно покачивался в воздухе, а из приоткрытой пасти вырывался лёгкий храп. Он перегородил весь проход.`,
-    next: 'СтарыйМост3'
-  },
-  СтарыйМост3: {
-    location: 'most',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Эй, дядюшка Бруно! Просыпайся, соня!`,
-    next: 'СтарыйМост4'
-  },
-  СтарыйМост4: {
-    location: 'most_awake',
-    insert: INSERT_IMG.bruno_awake,
-    insertDuration: 2200,
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Ба, знакомые лица! Куда путь держите в такой важный день? Уж не к маяку ли?`,
-    next: 'СтарыйМост5'
-  },
-  СтарыйМост5: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Церемонии — основа порядка в долине! Но ради праздника я не стану мучить вас тремя испытаниями. Одной загадки довольно. Слушайте: «Не имеет крыльев, а летает; не имеет голоса, а воет; в стужу жалит, в зной ласкает, а сожмёшь в кулак — исчезнет без следа».`,
-    choices: [
-      { text: 'Ответить с уверенностью: «Это горный ветер!»', to: 'МостВетер' },
-      { text: 'Попробовать поэтический ответ: «Это лесное эхо»', to: 'МостЭхо' },
-      { text: 'Достать из сумки медовое сушеное яблоко и угостить Бруно', to: 'МостУгощение' },
-      { text: 'Расспросить Бруно: не видел ли он, что стряслось с башней ночью?', to: 'МостРасспросы' }
-    ]
-  },
-  МостВетер: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Бруно хлопнул кожистыми крыльями, подняв облачко безвредной каменной пыли.`,
-    next: 'МостВетер2'
-  },
-  МостВетер2: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— В самую точку! Кому как не ученику Хранителя ветров знать повадки воздуха. Ты заслужил свободный проход!`,
-    next: 'МостВетер3'
-  },
-  МостВетер3: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Он полез лапой под мостовую плиту и выкатил вам под ноги диковинку.`,
-    next: 'МостВетер4'
-  },
-  МостВетер4: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Вот, держи. Это Перо Лазурной Сойки-Вестницы. Оно зачаровано на лёгкое дыхание. Если в механизмах башни застрянет пыль веков — взмахни им, и сквозняк сделает всю работу чисто и без поломок!`,
-    set: { has_feather: true },
-    next: 'МостВетер5'
-  },
-  МостВетер5: {
-    location: 'most_empty',
-    insert: INSERT_IMG.most_free,
-    insertDuration: 2200,
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Прекрасный подарок! Спасибо, Бруно! Дорога свободна — идём к маяку!`,
-    next: 'БашняСнаружи'
-  },
-  МостЭхо: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Бруно басовито захохотал, сотрясая каменные перила.`,
-    next: 'МостЭхо2'
-  },
-  МостЭхо2: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Ох, молодёжь! Поэзии в тебе хоть отбавляй, а вот физика хромает! Разве эхо может ласкать в зной или жалить в стужу? Это ветер! Но за дерзость и красивый слог я не стану вас задерживать. Идите с миром, да смотрите под ноги на крутом подъёме.`,
-    next: 'МостЭхо3'
-  },
-  МостЭхо3: {
-    location: 'most_empty',
-    insert: INSERT_IMG.most_free,
-    insertDuration: 2000,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Мира помахала гаргулю рукой, и вы поспешили дальше по вымощенной плитами дорожке.`,
-    next: 'БашняСнаружи'
-  },
-  МостУгощение: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы достаёте из мешочка крупный янтарный ломтик вяленого яблока, пропитанный густым липовым мёдом. Аромат пряностей мгновенно окутывает мост.`,
-    next: 'МостУгощение2'
-  },
-  МостУгощение2: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— О великие горы... Это то самое? С пасеки мастера Олвена?!`,
-    next: 'МостУгощение3'
-  },
-  МостУгощение3: {
-    location: 'most_awake',
-    speaker: 'Вы', boxClass: 'player',
-    text: `— Специально для хранителя покоя долины.`,
-    next: 'МостУгощение4'
-  },
-  МостУгощение4: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Бруно бережно подхватил ломтик, сунул в пасть и зажмурился от блаженства.`,
-    next: 'МостУгощение5'
-  },
-  МостУгощение5: {
-    location: 'most_empty',
-    insert: INSERT_IMG.most_free,
-    insertDuration: 2200,
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Боги гранита, какая сладость! Забирайте мост, забирайте реку, проходите скорее! И погодите... вот, возьмите! На днях с карниза маяка упал чистейший Кристалл Горного Кварца. Я подобрал, чтобы не растоптали. В оптике маяка ему самое место!`,
-    set: { has_crystal: true },
-    next: 'БашняСнаружи'
-  },
-  МостРасспросы: {
-    location: 'most_awake',
-    speaker: 'Вы', boxClass: 'player',
-    text: `— Бруно, ты ведь сидишь здесь круглые сутки. Скажи, ночью над башней ничего странного не происходило?`,
-    next: 'МостРасспросы2'
-  },
-  МостРасспросы2: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Гаргуль задумался, почесывая каменное ухо когтем.`,
-    next: 'МостРасспросы3'
-  },
-  МостРасспросы3: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Хм-м... Знаете, около полуночи с вершины башни сорвался лёгкий серебристый всполох. А потом послышался такой звук: динь-дон-хрясь! Ветер тогда дул с Заброшенной Обсерватории.`,
-    set: { has_clue: true },
-    next: 'МостРасспросы4'
-  },
-  МостРасспросы4: {
-    location: 'most_awake',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Мира нахмурилась.`,
-    next: 'МостРасспросы5'
-  },
-  МостРасспросы5: {
-    location: 'most_awake',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Сквозняк мог сбить настройку балансира! Спасибо, дядюшка Бруно, это важная зацепка.`,
-    next: 'МостРасспросы6'
-  },
-  МостРасспросы6: {
-    location: 'most_awake',
-    speaker: 'Бруно', boxClass: 'bruno',
-    text: `— Ну а загадку отгадывать будете, сыщики?`,
-    choices: [
-      { text: 'Ответить: «Это горный ветер!»', to: 'МостВетер' },
-      { text: 'Угостить Бруно медовым лакомством', to: 'МостУгощение' }
-    ]
-  },
-
-  /* === ЛАВКА СЕЛЕСТЫ === */
-  ЛавкаСелесты: {
-    location: 'lavka',
-    insert: INSERT_IMG.selesta,
-    insertDuration: 2000,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы сворачиваете на улочку Травников к круглому домику бабушки Селесты.`,
-    next: 'ЛавкаСелесты2'
-  },
-  ЛавкаСелесты2: {
-    location: 'lavka',
-    speaker: 'Бабушка Селеста', boxClass: 'selesta',
-    text: `— Батюшки, юные мастера! Беда с маяком, весь посёлок гудит! Вы на маяк?`,
-    next: 'ЛавкаСелесты3'
-  },
-  ЛавкаСелесты3: {
-    location: 'lavka',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Да, бабушка Селеста. Нам нужно оживить резонатор.`,
-    next: 'ЛавкаСелесты4'
-  },
-  ЛавкаСелесты4: {
-    location: 'lavka',
-    speaker: 'Бабушка Селеста', boxClass: 'selesta',
-    text: `— Возьмите-ка вот это. Это капли лунного зверобоя и сладкой мелиссы. Если Август закапризничает — пара капель вернут ему бодрость духа.`,
-    set: { has_selesta_vial: true },
-    next: 'БашняСнаружи'
-  },
-
-  /* === БАШНЯ === */
-  БашняСнаружи: {
-    location: 'tower',
-    insert: INSERT_IMG.tower,
-    insertDuration: 2200,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Перед вами вздымалась Башня Светлячков. Массивные дубовые двери были заперты. На бронзовой накладке замка — циферблат с четырьмя стихийными знаками.`,
-    next: 'БашняСнаружи2'
-  },
-  БашняСнаружи2: {
-    location: 'tower',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Загадка гильдии архитекторов! «Лишь союз тепла и движения пробудит спящий свет». Что крутить будем?`,
-    next: 'БашняСнаружи3'
-  },
-  БашняСнаружи3: {
-    location: 'tower',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Что выбираем?`,
-    choices: [
-      { text: 'Выставить комбинацию: «Солнце и Ветер»', to: 'ДверьОткрыта' },
-      { text: 'Выставить комбинацию: «Вода и Росток»', to: 'ДверьОшибкаДобро' },
-      { text: 'Осмотреть окрестности: вдруг есть другой проход?', to: 'ОсмотрСтенБашни' }
-    ]
-  },
-  ДверьОткрыта: {
-    location: 'tower_inside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Щёлк-щёлк-клац! Медные шестерни весело зажужжали. Двери распахнулись.`,
-    set: { door_opened: true },
-    next: 'ВнутриБашни'
-  },
-  ДверьОшибкаДобро: {
-    location: 'tower',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Освежает! Но подсказка гласила: «Тепло и движение»! Попробуем ещё раз?`,
-    next: 'ДверьОткрыта'
-  },
-  ОсмотрСтенБашни: {
-    location: 'tower',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Окно приоткрыто. Можем подняться в Обсерваторию или открыть парадную дверь.`,
-    choices: [
-      { text: 'Открыть парадную дверь', to: 'ДверьОткрыта' },
-      { text: 'Залезть в окно Обсерватории', to: 'Обсерватория' }
-    ]
-  },
-  Обсерватория: {
-    location: 'observatory',
-    insert: INSERT_IMG.observatory,
-    insertDuration: 2200,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы оказались в комнате с медными звёздными картами и огромным телескопом, направленным на залив. На столе спал заводной кот Тик-Так с латунным ключом на ошейнике.`,
-    next: 'Обсерватория2'
-  },
-  Обсерватория2: {
-    location: 'observatory',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Кот доверчиво протянул лапку.`,
-    choices: [
-      { text: 'Взять латунный ключ', to: 'ВзятьКлюч' },
-      { text: 'Оставить ключ и спуститься', to: 'ВнутриБашни' }
-    ]
-  },
-  ВзятьКлюч: {
-    location: 'observatory',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы аккуратно отстёгиваете ключ. Тик-Так следует за вами.`,
-    set: { has_key: true },
-    next: 'ВнутриБашни'
-  },
-  ВнутриБашни: {
-    location: 'tower_inside',
-    insert: INSERT_IMG.august_sleep,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Главный зал башни поражал размахом. В центре метался старый смотритель Корнелиус. На постаменте спал Август — Звёздный Светляк размером с сенбернара.`,
-    next: 'Корнелиус1'
-  },
-  Корнелиус1: {
-    location: 'tower_inside',
-    speaker: 'Корнелиус', boxClass: 'cornelius',
-    text: `— Беда! Катастрофа долины! Фестиваль через два часа, а наш золотой мальчик спит без задних лапок!`,
-    next: 'Корнелиус2'
-  },
-  Корнелиус2: {
-    location: 'tower_inside',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Господин Корнелиус, спокойствие! Олвен прислал подкрепление!`,
-    next: 'Корнелиус3'
-  },
-  Корнелиус3: {
-    location: 'tower_inside',
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Смотритель замер, развернулся и уставился на вас через тройные линзы.`,
-    next: 'Корнелиус4'
-  },
-  Корнелиус4: {
-    location: 'tower_inside',
-    speaker: 'Корнелиус', boxClass: 'cornelius',
-    text: `— Ох... Хвала небесам! Вы здесь! Спасите Августа!`,
-    choices: [
-      { text: 'Показать Корнелиусу письмо Олвена со схемой', to: 'ПоказатьСхему1' },
-      { text: 'Осмотреть колокольный механизм и хрустальные линзы', to: 'ОсмотрМеханизма1' },
-      { text: 'Подойти к Августу и тихо заговорить с ним', to: 'ОсмотрАвгуста1' }
-    ]
-  },
-  ПоказатьСхему1: {
-    location: 'tower_inside',
-    speaker: 'Корнелиус', boxClass: 'cornelius',
-    text: `— Батюшки! Да ведь это же настройка гармонического строя третьей октавы!`,
-    set: { has_scheme: true },
-    next: 'ГлавнаяПочинка'
-  },
-  ОсмотрМеханизма1: {
-    location: 'tower_inside',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `— Работа ясна! Мы можем сделать это несколькими путями!`,
-    set: { inspected_mechanism: true },
-    next: 'ГлавнаяПочинка'
-  },
-  ОсмотрАвгуста1: {
-    location: 'tower_inside',
-    insert: INSERT_IMG.august_sleep,
-    insertDuration: 1800,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы тихонько проводите ладонью по его пушистой голове. Август приоткрывает огромный фиолетовый глаз.`,
-    set: { has_met_august: true },
-    next: 'ГлавнаяПочинка'
-  },
-  /* 🎭 3-я КОНЦОВКА — добавлен третий вариант */
-  ГлавнаяПочинка: {
-    location: 'tower_inside',
-    speaker: 'Мира', boxClass: 'mira',
-    text: `Корнелиус замер в ожидании с маслёнкой наготове. Какой план действий вы выберете?`,
-    choices: [
-      { text: 'План 1: Полная синхронизация всех сил — природа, наука и дружба вместе', to: 'ФиналГармония' },
-      { text: 'План 2: Полагаться на инженерную смекалку и точный расчёт', to: 'ФиналМастерство' },
-      { text: 'План 3: Окружить Августа заботой, лакомством и теплом', to: 'ФиналИзобилие' } /* 🎭 */
-    ]
-  },
-
-  /* === 3 ФИНАЛА === */
-  ФиналГармония: {
-    location: 'final',
-    insert: INSERT_IMG.august_fly,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы разворачиваете схему Олвена. Мира выставляет колокола под углом сорок пять градусов. Корнелиус дрожащими руками подаёт вам флакон Селесты — золотистые капли лунного зверобоя падают на сахарную пластину.<br><br>Перо Лазурной Сойки взмахивает над серебряными лепестками — пыль веков слетает, и колокола оживают чистым хрустальным звоном. Август приоткрывает фиолетовый глаз... и встаёт во весь рост!`,
-    next: 'КонецГармония'
-  },
-  ФиналМастерство: {
-    location: 'final',
-    insert: INSERT_IMG.august_fly,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Мира берёт дело в свои руки. Ключ на двенадцать от Тик-Така, кристалл кварца Бруно — в оправу оптической оси. Все шестерёнки встают на места с идеальным кликом: <i>тик-так, тик-так</i>.<br><br>Механическая карусель оживает без единого скрипа. Зеркала выстраиваются в идеальную спираль — и Август, очарованный безупречной гармонией движения, взмывает в центр конструкции!`,
-    next: 'КонецМастерство'
-  },
-  /* 🎭 3-я КОНЦОВКА — новый пассаж */
-  ФиналИзобилие: {
-    location: 'final',
-    insert: INSERT_IMG.august_fly,
-    insertDuration: 2500,
-    speaker: 'Рассказчик', boxClass: 'narrator',
-    text: `Вы не спешите с механизмами. Сначала — забота. Мира разводит огонь под хрустальной чашей, вы капаете в неё <strong>флакон Селесты</strong> — тёплый аромат лунного зверобоя и мелиссы наполняет зал.<br><br>Август шевелит усиками, принюхивается... и сонно улыбается. Пара капель на сахарную пластину — и светляк припадает к чаше. С каждым глотком его крылья трепещут всё ярче, пока тёплое медовое сияние не заливает весь зал.`,
-    next: 'КонецИзобилие'
-  },
-
-  КонецГармония: {
-    location: 'epilogue',
-    cutscene: 'ending_harmony',
-    speaker: 'Финал', boxClass: 'final-box', ending: 'harmony',
-    text: `<b>КОНЕЦ: Финал Гармонии</b><br><br><i>Вы доказали, что природа, наука и тепло сердец вместе способны оживить даже самое хрупкое волшебство.</i>`,
-    endingScreen: 'harmony'
-  },
-  КонецМастерство: {
-    location: 'epilogue',
-    cutscene: 'ending_mastery',
-    speaker: 'Финал', boxClass: 'final-box', ending: 'mastery',
-    text: `<b>КОНЕЦ: Финал Мастерства</b><br><br><i>Точный расчёт и крепкая дружба творят чудеса.</i>`,
-    endingScreen: 'mastery'
-  },
-  /* 🎭 3-я КОНЦОВКА — новый финал */
-  КонецИзобилие: {
-    location: 'epilogue',
-    cutscene: 'ending_nature',
-    speaker: 'Финал', boxClass: 'final-nature', ending: 'nature',
-    text: `<b>КОНЕЦ: Финал Изобилия</b><br><br><i>Сытый дух — счастливая долина! Ваша доброта подарила жителям самую красивую ночь в году.</i>`,
-    endingScreen: 'nature'
-  }
+  "title": { isTitle: true },
+  "Start1": { location: "start", insert: INSERT_IMG["city_holiday"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой — а по утрам солнце поднимается из-за маяка и заливает золотом черепичные крыши.", next: "Start2" },
+  "Start2": { location: "start", insert: INSERT_IMG["sunrise_lighthouse"], insertDuration: 2000, speaker: "Рассказчик", boxClass: "narrator", text: "Сегодня — особенный день. Праздник Осенней Звезды. Город украшен гирляндами из яблок, трактиры пекут пироги, а ремесленники развешивают флаги. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков.", next: "Start3" },
+  "Start3": { location: "player_outside", speaker: "Рассказчик", boxClass: "narrator", text: "Вы — молодой травник, ученик мастера Олвена. Ваш дом стоит на краю города, среди яблоневых садов. Этим утром вы проснулись от тишины: обычно в это время над озером уже гудели пчёлы и сновали лодки. Сегодня — тихо.", next: "Start4" },
+  "Start4": { location: "player_outside", speaker: "Рассказчик", boxClass: "narrator", text: "На столе в доме лежало письмо: плотный пергамент, запечатанный золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.", next: "Start5" },
+  "Start5": { location: "player_inside", speaker: "Рассказчик", boxClass: "narrator", text: "Вы вернулись в дом. За окном — знакомый вид на потухший маяк. На столе — письмо и чашка остывшего травяного чая. И тут скрипнула калитка, послышались лёгкие шаги.", next: "Start6" },
+  "Start6": { location: "player_table", insert: INSERT_IMG["mira_arrive"], insertDuration: 2200, speaker: "Мира", boxClass: "mira", text: "— Подъём, Хранитель трав и ветров! Мастер Олвен передал: в маяке не просто перегорела свеча — там заклинило рунный резонатор. Я взяла отмычки, разводной ключ на двенадцать и банку лучшей графитовой смазки. А у тебя что в письме?", choices: [{ text: "Вскрыть письмо мастера Олвена прямо сейчас", to: "ОткрытьПисьмо" }, { text: "Спрятать письмо и сразу обсудить маршрут", to: "ВыборПути" }, { text: "Пошутить над Мирой и её чехлом с инструментами", to: "РазговорСМирой1" }] },
+  "ОткрытьПисьмо": { location: "letter_close", insert: INSERT_IMG["letter_seal"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Вы ломаете восковую печать. Внутри — не просто записка, а тщательно вычерченная схема линз с личными пометками мастера, сделанными серебряными чернилами.", next: "ПисьмоОлвена" },
+  "ПисьмоОлвена": { location: "parchment", insert: INSERT_IMG["olven_scheme"], insertDuration: 2400, speaker: "Мастер Олвен", boxClass: "olven", text: "«Мой юный друг! Сердце маяка — живое существо, древний Звёздный Светляк по имени Август. Он не переносит грубой силы и фальшивых нот. Если механизм замер, ищите причину не в поломке металла, а в нарушении гармонии. Возьмите с собой частицу стихии и помните: свет рождается из дружбы, а не из принуждения. Корнелиус стар и суетлив — помогите ему сохранить спокойствие».", set: { "has_scheme": true }, next: "ПисьмоОлвена2" },
+  "ПисьмоОлвена2": { location: "player_table2", speaker: "Мира", boxClass: "mira", text: "— «Свет рождается из дружбы»... Красиво сказано, но без шестерёнок он всё равно не закрутится! Ладно, Олвен мудр. Как пойдём к холму Светлячков?", choices: [{ text: "Пойти через Старый каменный мост", to: "СтарыйМост" }, { text: "Срезать через тенистую Грибную тропу", to: "ГрибнаяТропа" }, { text: "Сначала заглянуть в лавку травницы Селесты", to: "ЛавкаСелесты" }] },
+  "ВыборПути": { location: "player_table2", speaker: "Рассказчик", boxClass: "narrator", text: "Вы прячете письмо во внутренний карман.", next: "ВыборПути2" },
+  "ВыборПути2": { location: "player_table2", speaker: "Вы", boxClass: "player", text: "— Разберёмся по дороге. Сначала — к маяку.", next: "ВыборПути3" },
+  "ВыборПути3": { location: "player_table2", insert: INSERT_IMG["mira_joke"], insertDuration: 1800, speaker: "Мира", boxClass: "mira", text: "— Тогда решай, как пойдём. Через Старый мост — надёжнее. Грибной тропой — короче, но там свои сюрпризы. Или заглянем к бабушке Селесте — она всегда что-то подскажет.", choices: [{ text: "Пойти через Старый каменный мост", to: "СтарыйМост" }, { text: "Срезать через Грибную тропу", to: "ГрибнаяТропа" }, { text: "Заглянуть в лавку травницы Селесты", to: "ЛавкаСелесты" }] },
+  "РазговорСМирой1": { location: "player_table2", speaker: "Рассказчик", boxClass: "narrator", text: "Вы с улыбкой оглядываете её внушительный багаж.", next: "РазговорСМирой2" },
+  "РазговорСМирой2": { location: "player_table2", speaker: "Вы", boxClass: "player", text: "— Ты собралась чинить маяк или перестраивать всю часовую башню столицы за один присест?", next: "РазговорСМирой3" },
+  "РазговорСМирой3": { location: "player_table2", insert: INSERT_IMG["mira_joke"], insertDuration: 1800, speaker: "Мира", boxClass: "mira", text: "— Настоящий механик готов ко всему! Вдруг нам по дороге попадётся застрявшая заводная стрекоза? Нет уж, инструменты лишними не бывают. Ну так что пишет Олвен?", next: "ОткрытьПисьмо" },
+  "СтарыйМост": { location: "most_sleep", insert: INSERT_IMG["bruno_block"], insertDuration: 2400, speaker: "Рассказчик", boxClass: "narrator", text: "Старый каменный мост вздымался над бурным горным ручьём широкой аркой из серого гранита, заросшего бархатным мхом. Прямо по центру, развалившись на нагретых полуденным солнцем камнях, дремал каменный гаргуль Бруно. Его хвост с кисточкой мирно покачивался в воздухе.", next: "СтарыйМост2" },
+  "СтарыйМост2": { location: "most_awake", insert: INSERT_IMG["bruno_awake"], insertDuration: 2000, speaker: "Бруно", boxClass: "bruno", text: "— Ба, знакомые лица! Куда путь держите в такой важный день? Уж не к маяку ли?", next: "СтарыйМост3" },
+  "СтарыйМост3": { location: "most_awake", speaker: "Мира", boxClass: "mira", text: "— Именно туда, Бруно. Время не ждёт, солнце перевалило за полдень. Пропустишь нас без долгих церемоний?", next: "СтарыйМост4" },
+  "СтарыйМост4": { location: "most_awake", insert: INSERT_IMG["bruno_riddle"], insertDuration: 2400, speaker: "Бруно", boxClass: "bruno", text: "— Церемонии — основа порядка в долине! Но ради праздника я не стану мучить вас тремя испытаниями. Одной загадки довольно. Слушайте: «Не имеет крыльев, а летает; не имеет голоса, а воет; в стужу жалит, в зной ласкает, а сожмёшь в кулак — исчезнет без следа».", choices: [{ text: "Ответить с уверенностью: «Это горный ветер!»", to: "МостВетер" }, { text: "Попробовать поэтический ответ: «Это лесное эхо»", to: "МостЭхо" }, { text: "Достать из сумки медовое сушёное яблоко и угостить Бруно", to: "МостУгощение" }, { text: "Расспросить Бруно: не видел ли он, что стряслось с башней ночью?", to: "МостРасспросы" }] },
+  "МостВетер": { location: "most_awake", insert: INSERT_IMG["bruno_wind"], insertDuration: 2000, speaker: "Бруно", boxClass: "bruno", text: "Бруно хлопнул каменными крыльями, подняв облачко безвредной пыли: — В самую точку! Кому как не ученику Хранителя ветров знать повадки воздуха. Ты заслужил свободный проход!", next: "МостВетер2" },
+  "МостВетер2": { location: "most_awake", insert: INSERT_IMG["bruno_feather"], insertDuration: 2200, speaker: "Бруно", boxClass: "bruno", text: "— Вот, держи. Это Перо Лазурной Сойки-Вестницы. Оно зачаровано на лёгкое дыхание. Если в механизмах башни застрянет пыль веков — взмахни им, и сквозняк сделает всю работу чисто и без поломок!", set: { "has_feather": true }, next: "МостСвободен" },
+  "МостЭхо": { location: "most_awake", speaker: "Бруно", boxClass: "bruno", text: "Бруно басовито захохотал, сотрясая каменные перила: — Ох, молодёжь! Поэзии в тебе хоть отбавляй, а вот физика хромает! Разве эхо может ласкать в зной или жалить в стужу? Это ветер! Но за дерзость и красивый слог я не стану вас задерживать.", next: "МостСвободен" },
+  "МостУгощение": { location: "most_awake", insert: INSERT_IMG["bruno_apple"], insertDuration: 2200, speaker: "Бруно", boxClass: "bruno", text: "Каменные ноздри гаргуля затрепетали: — О великие горы... Это то самое? С пасеки мастера Олвена?! Боги гранита, какая сладость! Забирайте мост, проходите скорее!", next: "МостУгощение2" },
+  "МостУгощение2": { location: "most_awake", insert: INSERT_IMG["bruno_crystal"], insertDuration: 2200, speaker: "Бруно", boxClass: "bruno", text: "— И погодите... вот, возьмите! На днях с карниза маяка упал чистейший Кристалл Горного Кварца. Я подобрал, чтобы не растоптали. В оптике маяка ему самое место!", set: { "has_crystal": true }, next: "МостСвободен" },
+  "МостРасспросы": { location: "most_awake", insert: INSERT_IMG["bruno_clue"], insertDuration: 2200, speaker: "Бруно", boxClass: "bruno", text: "— Хм-м... Около полуночи с вершины башни сорвался лёгкий серебристый всполох. А потом: динь-дон-хрясь! Будто музыкальная шкатулка поперхнулась желудем. Ветер тогда дул с Заброшенной Обсерватории.", set: { "has_clue": true }, next: "МостРасспросы2" },
+  "МостРасспросы2": { location: "most_awake", speaker: "Мира", boxClass: "mira", text: "— Сквозняк мог сбить настройку балансира! Спасибо, дядюшка Бруно, это важная зацепка. Ну а загадку отгадывать будете?", choices: [{ text: "Ответить: «Это горный ветер!»", to: "МостВетер" }, { text: "Угостить Бруно медовым лакомством", to: "МостУгощение" }] },
+  "МостСвободен": { location: "most_empty", speaker: "Мира", boxClass: "mira", text: "— Дорога свободна — идём к маяку!", next: "БашняСнаружи" },
+  "ГрибнаяТропа": { location: "grib_tropa", speaker: "Рассказчик", boxClass: "narrator", text: "Грибная тропа встретила вас мягким сумраком древних дубов и прохладой. Под ногами ковром стелился изумрудный мох, а вдоль стволов мерцали фосфорные шляпки опят-фонариков.", next: "ГрибнаяТропа2" },
+  "ГрибнаяТропа2": { location: "grib_action", insert: INSERT_IMG["shustik_stuck"], insertDuration: 2400, speaker: "Шустик", boxClass: "shustik", text: "— Ой-ой-ой! Беда-кручина! Скоро вечер, фестиваль без праздничных огней останется! Дерево уснуло и колесо зажало!", choices: [{ text: "Осторожно смазать корни травяным маслом", to: "ГрибыМасло" }, { text: "Предложить Мире использовать рычаг", to: "ГрибыМеханика" }, { text: "Заговорить с деревом на языке ветров и шёпотов", to: "ГрибыМагия" }] },
+  "ГрибыМагия": { location: "grib_action", insert: INSERT_IMG["shustik_magic"], insertDuration: 2400, speaker: "Рассказчик", boxClass: "narrator", text: "Вы прикладываете ладонь к тёплой коре и тихо напеваете древний распев Верхнего Шепота. Корни мягко шевельнулись, потягиваясь, и тележка Шустика плавно высвободилась сама собой.", next: "ГрибыМагия2" },
+  "ГрибыМагия2": { location: "grib_action", insert: INSERT_IMG["shustik_gift"], insertDuration: 2200, speaker: "Шустик", boxClass: "shustik", text: "— Вот это чудеса! Ты умеешь разговаривать с великанами! Возьми Пыльцу Звёздных Светляков — если её увидит Август, у него сразу запоёт сердце! А я покажу вам старую калитку в скале под башней.", set: { "has_pollen": true }, next: "БашняТайныйВход" },
+  "ГрибыМасло": { location: "grib_action", insert: INSERT_IMG["shustik_oil"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Вы капаете на корень вытяжкой дикого миндаля. Корень размягчается, и Мира легко вытягивает тележку на ровную тропу.", next: "ГрибыНаграда" },
+  "ГрибыМеханика": { location: "grib_action", insert: INSERT_IMG["shustik_lever"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Мира подкладывает под монтировку дубовый брусок и наваливается всем весом: — Раз, два — взяли! Рычаг первого рода — лучшее колдовство на свете! Корень подаётся, колесо свободно.", next: "ГрибыНаграда" },
+  "ГрибыНаграда": { location: "grib_action", insert: INSERT_IMG["shustik_gift"], insertDuration: 2200, speaker: "Шустик", boxClass: "shustik", text: "— Спасены! Спасибо, добрые путники! Держите мешочек искристой пыльцы — она пригодится, если нужно разжечь погасший фитиль! А тропка выведет прямо к вратам башни.", set: { "has_pollen": true }, next: "БашняСнаружи" },
+  "ЛавкаСелесты": { location: "lavka", insert: INSERT_IMG["selesta_greet"], insertDuration: 2200, speaker: "Бабушка Селеста", boxClass: "selesta", text: "— Батюшки, юные мастера! Беда с маяком, весь посёлок гудит! Чуяло моё сердце: Август вчера слишком грустно пел. Вы на маяк?", next: "ЛавкаСелесты2" },
+  "ЛавкаСелесты2": { location: "lavka", speaker: "Мира", boxClass: "mira", text: "— Да, бабушка Селеста. Нам нужно оживить резонатор.", next: "ЛавкаСелесты3" },
+  "ЛавкаСелесты3": { location: "lavka", insert: INSERT_IMG["selesta_vial"], insertDuration: 2200, speaker: "Бабушка Селеста", boxClass: "selesta", text: "— Возьмите-ка вот это. Капли лунного зверобоя и сладкой мелиссы. Если Август закапризничает — пара капель на сахарную пластину вернут ему бодрость духа.", set: { "has_selesta_vial": true }, choices: [{ text: "Отправиться к Старому мосту", to: "СтарыйМост" }, { text: "Пойти короткой Грибной тропой", to: "ГрибнаяТропа" }] },
+  "БашняСнаружи": { location: "tower", speaker: "Рассказчик", boxClass: "narrator", text: "Перед вами вздымалась Башня Светлячков. Массивные дубовые двери были заперты. На бронзовой накладке замка — циферблат с четырьмя стихийными знаками: Солнце, Ветер, Вода и Росток.", next: "БашняСнаружи2" },
+  "БашняСнаружи2": { location: "tower", insert: INSERT_IMG["door_riddle"], insertDuration: 2200, speaker: "Мира", boxClass: "mira", text: "— Загадка гильдии архитекторов! «Лишь союз тепла и движения пробудит спящий свет». Что выбираем?", choices: [{ text: "Выставить комбинацию: «Солнце и Ветер»", to: "ДверьОткрыта" }, { text: "Выставить комбинацию: «Вода и Росток»", to: "ДверьОшибка" }, { text: "Осмотреть окрестности: вдруг есть другой проход?", to: "ОсмотрСтен" }] },
+  "ДверьОшибка": { location: "tower", insert: INSERT_IMG["door_water"], insertDuration: 2000, speaker: "Мира", boxClass: "mira", text: "Замок издаёт мелодичный перелив — и из сопла брызгает освежающая струя мятной воды прямо в лицо! — Освежает! Но подсказка гласила: «Тепло и движение»! Попробуем ещё раз?", next: "ДверьОткрыта" },
+  "ОсмотрСтен": { location: "tower", speaker: "Мира", boxClass: "mira", text: "— Окно приоткрыто, там Обсерватория. Можем подняться туда или открыть парадную дверь.", choices: [{ text: "Открыть парадную дверь", to: "ДверьОткрыта" }, { text: "Залезть в окно Обсерватории", to: "Обсерватория" }] },
+  "ДверьОткрыта": { location: "tower", insert: INSERT_IMG["door_open"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Щёлк-щёлк-клац! Медные шестерни весело зажужжали. Тяжёлые дубовые двери плавно распахнулись, пропуская вас в прохладный холл башни.", next: "ВнутриБашни" },
+  "Обсерватория": { location: "observatory", insert: INSERT_IMG["cat_sleep"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Вы оказались в комнате с медными звёздными картами и телескопом. На столе спал заводной кот Тик-Так с латунным ключом на ошейнике.", choices: [{ text: "Взять латунный ключ", to: "ВзятьКлюч" }, { text: "Оставить ключ коту и спуститься", to: "ВнутриБашни" }] },
+  "ВзятьКлюч": { location: "observatory", insert: INSERT_IMG["cat_key"], insertDuration: 2000, speaker: "Рассказчик", boxClass: "narrator", text: "Кот доверчиво протягивает лапку. Вы аккуратно отстёгиваете ключ. Тик-Так довольно мурлычет и решает пойти с вами.", set: { "has_key": true }, next: "ВнутриБашни" },
+  "БашняТайныйВход": { location: "tower_secret", insert: INSERT_IMG["secret_entry"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Шустик привёл вас к незаметному гроту в скале, замаскированному диким виноградом. Маленькая дверца легко поддалась нажатию тайного сучка, и винтовая лестница вывела прямо в главный зал.", next: "ВнутриБашни" },
+  "ВнутриБашни": { location: "tower_inside", insert: INSERT_IMG["cornelius_panic"], insertDuration: 2400, speaker: "Рассказчик", boxClass: "narrator", text: "Главный зал башни поражал размахом. В центре метался старый смотритель Корнелиус с масленкой в руках. На постаменте спал Август — Звёздный Светляк размером с доброго сенбернара.", next: "Корнелиус1" },
+  "Корнелиус1": { location: "tower_inside", speaker: "Корнелиус", boxClass: "cornelius", text: "— Беда! Катастрофа долины! Фестиваль через два часа, а наш золотой мальчик спит без задних лапок! Ночью налетел порыв ветра, сбил настройку колоколов, и Август уснул от скуки и тишины!", next: "Корнелиус2" },
+  "Корнелиус2": { location: "tower_inside", speaker: "Мира", boxClass: "mira", text: "— Господин Корнелиус, спокойствие! Олвен прислал подкрепление!", next: "Корнелиус3" },
+  "Корнелиус3": { location: "tower_inside", speaker: "Корнелиус", boxClass: "cornelius", text: "— Ох... Хвала небесам! Вы здесь! Спасите Августа! Без колокольного звона он не начнёт вырабатывать звёздный свет!", choices: [{ text: "Показать Корнелиусу схему из письма Олвена", to: "ПоказатьСхему" }, { text: "Осмотреть колокольный механизм и линзы", to: "ОсмотрМеханизма" }, { text: "Подойти к Августу и тихо заговорить с ним", to: "ОсмотрАвгуста" }] },
+  "ПоказатьСхему": { location: "tower_inside", insert: INSERT_IMG["schema_show"], insertDuration: 2200, speaker: "Корнелиус", boxClass: "cornelius", text: "— Батюшки! Да ведь это же настройка гармонического строя третьей октавы! Олвен вычислил точную частоту вибрации света: колокола нужно свести под углом сорок пять градусов к центральной линзе!", next: "ГлавнаяПочинка" },
+  "ОсмотрМеханизма": { location: "tower_inside", insert: INSERT_IMG["mechanism_inspect"], insertDuration: 2200, speaker: "Мира", boxClass: "mira", text: "Три резонансных колокола, трубки лунного сиропа с сахарными пробками, оптическая карусель зеркал. — Работа ясна! Мы можем сделать это несколькими путями!", next: "ГлавнаяПочинка" },
+  "ОсмотрАвгуста": { location: "tower_inside", insert: INSERT_IMG["august_wake_eye"], insertDuration: 2000, speaker: "Рассказчик", boxClass: "narrator", text: "Вы тихонько проводите ладонью по пушистой голове Августа. Он издаёт тихий звук, похожий на мурлыканье, и приоткрывает огромный фиолетовый глаз — в нём лишь лёгкая грусть и дремота.", next: "ГлавнаяПочинка" },
+  "ГлавнаяПочинка": { location: "tower_inside", speaker: "Мира", boxClass: "mira", text: "Корнелиус замер в ожидании с масленкой наготове. Какой план действий вы выберете?", choices: [{ text: "План 1: Настроить колокола чистым тоном и силой ветра", to: "ФиналМузыка", need: "music" }, { text: "План 2: Приготовить целебный лунный нектар", to: "ФиналНектар", need: "nectar" }, { text: "План 3: Инженерная смекалка — кристалл и ключ", to: "ФиналМеханика", need: "mechanics" }, { text: "План 4: Полная синхронизация — всё вместе", to: "ФиналЕдинство", need: "unity" }] },
+  "ФиналМузыка": { location: "final", insert: INSERT_IMG["plan_music"], insertDuration: 2600, speaker: "Рассказчик", boxClass: "narrator", text: "Вы достаёте бронзовый камертон Олвена. Чистая хрустальная нота повисает под сводами. Пером Лазурной Сойки вы смахиваете пыль веков с серебряных лепестков колоколов — они оживают чистым звоном. Август сладко зевает и встаёт во весь рост, заливая зал мягким медовым светом!", next: "КонецМузыка" },
+  "ФиналНектар": { location: "final", insert: INSERT_IMG["plan_nectar"], insertDuration: 2600, speaker: "Рассказчик", boxClass: "narrator", text: "Смешав родниковую воду, лаванду и капли Селесты (или пыльцу Шустика), вы заливаете золотистый сироп в хрустальную чашу. Аромат карамели заполняет купол. Август припадает к чаше — с каждым глотком его тельце светится ярче: от розового до сапфирового и золотого огня!", next: "КонецНектар" },
+  "ФиналМеханика": { location: "final", insert: INSERT_IMG["plan_mechanics"], insertDuration: 2600, speaker: "Рассказчик", boxClass: "narrator", text: "Мира ключом на двенадцать заменяет шарнир, вы устанавливаете в оправу оптики Кристалл Кварца. Шестерёнки встают на места с идеальным «тик-так». Зеркала выстраиваются в спираль — очарованный гармонией движения, Август с жужжанием взмывает в центр конструкции!", next: "КонецМеханика" },
+  "ФиналЕдинство": { location: "final", insert: INSERT_IMG["plan_unity"], insertDuration: 2600, speaker: "Рассказчик", boxClass: "narrator", text: "Вы делаете всё сразу и сообща: Корнелиус подаёт прокладки, Мира настраивает зеркала по чертежу Олвена, вы наполняете чашу нектаром и настраиваете колокола на праздничный лад. Когда Август делает первый глоток, раздаётся хрустальный звон — светляк взмывает под купол, а вокруг башни кружат сотни лесных светлячков!", next: "КонецЕдинство" },
+  "КонецМузыка": { location: "epilogue", insert: INSERT_IMG["ending_melody"], insertDuration: 2600, speaker: "Финал", boxClass: "final-melody", text: "<b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство. Свет маяка широким янтарным потоком разлился над долиной — праздник спасён.</i>", cutscene: "ending_melody", ending: "melody", endingScreen: "melody" },
+  "КонецНектар": { location: "epilogue", insert: INSERT_IMG["ending_abundance"], insertDuration: 2600, speaker: "Финал", boxClass: "final-abundance", text: "<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина! Небо вспыхнуло изумрудно-бирюзовым сиянием. Ваша доброта подарила жителям самую красивую ночь в году.</i>", cutscene: "ending_abundance", ending: "abundance", endingScreen: "abundance" },
+  "КонецМеханика": { location: "epilogue", insert: INSERT_IMG["ending_engineering"], insertDuration: 2600, speaker: "Финал", boxClass: "final-engineering", text: "<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт, крепкая дружба и ключ на двенадцать творят чудеса почище древних заклятий. Лучи маяка начертили в небе гигантскую светящуюся звезду.</i>", cutscene: "ending_engineering", ending: "engineering", endingScreen: "engineering" },
+  "КонецЕдинство": { location: "epilogue", insert: INSERT_IMG["ending_unity"], insertDuration: 2600, speaker: "Финал", boxClass: "final-unity", text: "<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку. Радужный луч маяка озарил всю долину.</i>", cutscene: "ending_unity", ending: "unity", endingScreen: "unity" }
 };
 
 /* ============================================================
    СОХРАНЕНИЕ
    ============================================================ */
-const SAVE_KEY = 'pesn_augusta_hybrid_v2';
+const SAVE_KEY = 'pesn_augusta_full_v1';
 
 const gameState = {
   currentPassage: 'title',
@@ -1492,35 +991,30 @@ function resetAll() {
 }
 
 /* ============================================================
-   ПРЕДМЕТЫ И ФИНАЛЫ (обновлена логика для 3 финалов)
+   ПРЕДМЕТЫ И УСЛОВИЯ ФИНАЛОВ (4 концовки)
    ============================================================ */
 function has(k) { return !!gameState.variables[k]; }
 
-/* ✨ Гармония — всё вместе: флакон + схема */
-function canDoHarmony() { return has('has_selesta_vial') && has('has_scheme'); }
-/* ⚙ Мастерство — инженерия: ключ или кристалл */
-function canDoMastery() { return has('has_key') || has('has_crystal'); }
-/* 🌿 Изобилие — забота: флакон (в идеале ещё и перо как «тепло природы») */
-function canDoNature() { return has('has_selesta_vial') || has('has_feather'); }
+/* 🎵 Мелодия — нужно перо Бруно */
+function canDoMusic() { return has('has_feather'); }
+/* 🌿 Изобилие — флакон Селесты ИЛИ пыльца Шустика */
+function canDoNectar() { return has('has_selesta_vial') || has('has_pollen'); }
+/* ⚙ Инженерия — кристалл ИЛИ ключ */
+function canDoMechanics() { return has('has_crystal') || has('has_key'); }
+/* 👑 Единство — все три направления сразу */
+function canDoUnity() { return canDoMusic() && canDoNectar() && canDoMechanics(); }
 
-function missingHarmony() {
+function missingMusic() { return has('has_feather') ? [] : ['🪶 Перо Лазурной Сойки (Бруно)']; }
+function missingNectar() { return (has('has_selesta_vial') || has('has_pollen')) ? [] : ['🧪 Флакон Селесты или ✨ Пыльца Шустика']; }
+function missingMechanics() { return (has('has_crystal') || has('has_key')) ? [] : ['💎 Кристалл или 🔑 Ключ']; }
+function missingUnity() {
   const m = [];
-  if (!has('has_selesta_vial')) m.push('🧪 Флакон Селесты');
-  if (!has('has_scheme')) m.push('📜 Схема Олвена');
+  if (!canDoMusic()) m.push('🪶 Перо');
+  if (!canDoNectar()) m.push('🧪 Флакон/✨ Пыльца');
+  if (!canDoMechanics()) m.push('💎 Кристалл/🔑 Ключ');
   return m;
 }
-function missingMastery() {
-  const m = [];
-  if (!has('has_key') && !has('has_crystal')) m.push('🔑 Ключ или 💎 Кристалл');
-  return m;
-}
-function missingNature() {
-  const m = [];
-  if (!has('has_selesta_vial') && !has('has_feather')) {
-    m.push('🧪 Флакон Селесты или 🪶 Перо Сойки');
-  }
-  return m;
-}
+const NEED_CHECK = { music: [canDoMusic, missingMusic], nectar: [canDoNectar, missingNectar], mechanics: [canDoMechanics, missingMechanics], unity: [canDoUnity, missingUnity] };
 
 /* ============================================================
    АУДИО
@@ -1539,7 +1033,7 @@ function startMusic() {
 }
 
 /* ============================================================
-   УВЕДОМЛЕНИЯ
+   УВЕДОМЛЕНИЯ / ПОПАПЫ ПРЕДМЕТОВ
    ============================================================ */
 let notifyTimer = null;
 function showNotification(title, text, type) {
@@ -1566,7 +1060,7 @@ function showItemPopup(key) {
 }
 
 /* ============================================================
-   ДОСТИЖЕНИЯ (обновлено для 3 финалов)
+   ДОСТИЖЕНИЯ
    ============================================================ */
 function unlockAchievement(key) {
   if (gameState.achievements[key]) return;
@@ -1574,18 +1068,17 @@ function unlockAchievement(key) {
   saveGame();
   const a = ACHIEVEMENTS[key];
   if (a) showNotification('🏆 Достижение', `${a.icon} ${a.title}`);
-  /* 🎭 3-я КОНЦОВКА — проверка на все три */
-  if (gameState.endings.harmony && gameState.endings.mastery && gameState.endings.nature) {
-    if (!gameState.achievements.allEndings) {
-      gameState.achievements.allEndings = true;
-      saveGame();
-      setTimeout(() => showNotification('🏆 Достижение', '👑 Все три концовки'), 3500);
-    }
+  const allFour = gameState.endings.melody && gameState.endings.abundance && gameState.endings.engineering && gameState.endings.unity;
+  if (allFour && !gameState.achievements.allEndings) {
+    gameState.achievements.allEndings = true;
+    saveGame();
+    setTimeout(() => showNotification('🏆 Достижение', '🏆 Все четыре концовки'), 3500);
   }
 }
 
 /* ============================================================
-   ФОН И ВСТАВКИ
+   ФОН И ВСТАВКИ (два слоя: локация "без активного действия"
+   и insert — крупный кадр конкретного действия из реплики)
    ============================================================ */
 let bgSwapTimer = null;
 function setBackground(locationKey) {
@@ -1597,6 +1090,10 @@ function setBackground(locationKey) {
   bg.style.opacity = '0';
   bgSwapTimer = setTimeout(() => {
     bg.style.backgroundImage = url ? `url("${url}")` : 'none';
+    // Перезапускаем kenBurns-анимацию
+    bg.style.animation = 'none';
+    void bg.offsetWidth; // reflow
+    bg.style.animation = '';
     bg.style.opacity = '1';
     bgSwapTimer = null;
   }, 500);
@@ -1749,12 +1246,10 @@ function advance() {
   }
 }
 
-function clearTitleElements() {
-  document.querySelectorAll('.title-screen, .title-endings').forEach(el => el.remove());
-}
-function clearDialogueElements() {
-  document.querySelectorAll('.dialogue-box, .choice-box, .game-menu').forEach(el => el.remove());
-}
+function clearTitleElements() { document.querySelectorAll('.title-screen, .title-endings').forEach(el => el.remove()); }
+function clearDialogueElements() { document.querySelectorAll('.dialogue-box, .choice-box, .game-menu').forEach(el => el.remove()); }
+
+const ITEM_ACH = { has_feather: 'feather', has_crystal: 'crystal', has_selesta_vial: 'vial', has_key: 'key', has_scheme: 'scheme', has_pollen: 'pollen' };
 
 function renderPassage(id, addToHistory = true) {
   const passage = PASSAGES[id];
@@ -1772,27 +1267,15 @@ function renderPassage(id, addToHistory = true) {
       if (passage.set[k] && !gameState.variables[k]) newItems.push(k);
     });
     Object.assign(gameState.variables, passage.set);
-
-    const itemAch = {
-      has_feather: 'feather', has_crystal: 'crystal',
-      has_selesta_vial: 'vial', has_key: 'key', has_scheme: 'scheme'
-    };
-    Object.entries(itemAch).forEach(([k, a]) => {
-      if (passage.set[k]) unlockAchievement(a);
-    });
-
-    newItems.forEach((k, i) => {
-      setTimeout(() => showItemPopup(k), 500 + i * 1200);
-    });
+    Object.entries(ITEM_ACH).forEach(([k, a]) => { if (passage.set[k]) unlockAchievement(a); });
+    newItems.forEach((k, i) => { setTimeout(() => showItemPopup(k), 500 + i * 1200); });
   }
 
   if (passage.ending) {
     gameState.endings[passage.ending] = true;
     unlockAchievement(passage.ending);
-    /* 🎭 3-я КОНЦОВКА — проверка на все три */
-    if (gameState.endings.harmony && gameState.endings.mastery && gameState.endings.nature) {
-      unlockAchievement('allEndings');
-    }
+    const allFour = gameState.endings.melody && gameState.endings.abundance && gameState.endings.engineering && gameState.endings.unity;
+    if (allFour) unlockAchievement('allEndings');
     saveGame();
   }
 
@@ -1827,27 +1310,21 @@ function renderPassageInner(id, passage) {
     navHTML = '<div class="choice-box">' + passage.choices.map(c => {
       let cls = '';
       let extra = '';
-      /* 🎭 3-я КОНЦОВКА — проверка для всех трёх финалов */
-      if (c.to === 'ФиналГармония' && !canDoHarmony()) {
-        cls = 'disabled';
-        extra = `<span class="need">(нужно: ${missingHarmony().join(', ')})</span>`;
+      if (c.need && NEED_CHECK[c.need]) {
+        const [okFn, missFn] = NEED_CHECK[c.need];
+        if (!okFn()) {
+          cls = 'disabled';
+          extra = `<span class="need">(нужно: ${missFn().join(', ')})</span>`;
+        }
       }
-      if (c.to === 'ФиналМастерство' && !canDoMastery()) {
-        cls = 'disabled';
-        extra = `<span class="need">(нужно: ${missingMastery().join(', ')})</span>`;
-      }
-      if (c.to === 'ФиналИзобилие' && !canDoNature()) {
-        cls = 'disabled';
-        extra = `<span class="need">(нужно: ${missingNature().join(', ')})</span>`;
-      }
-      return `<a data-to="${c.to}" class="${cls}"><span>${c.text}${extra}</span></a>`;
+      return `<a data-to="${c.to}" data-need="${c.need || ''}" class="${cls}"><span>${c.text}${extra}</span></a>`;
     }).join('') + '</div>';
   }
 
   const gameMenuHTML = `
     <div class="game-menu">
       <button id="btnJournal" title="Журнал">📖</button>
-      <button id="btnAchievements" title="Достижения">🏆</button>
+      <button id="btnGameAchievements" title="Достижения">🏆</button>
       <button id="btnMenu" title="В главное меню">🏠</button>
     </div>
   `;
@@ -1872,19 +1349,26 @@ function renderPassageInner(id, passage) {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       if (btn.classList.contains('disabled')) {
-        const to = btn.dataset.to;
-        let missing;
-        if (to === 'ФиналГармония') missing = missingHarmony();
-        else if (to === 'ФиналМастерство') missing = missingMastery();
-        else missing = missingNature();
-        showNotification('⚠ Не хватает предметов', `Соберите: ${missing.join(', ')}`, 'warn');
+        const need = btn.dataset.need;
+        const missFn = NEED_CHECK[need] ? NEED_CHECK[need][1] : () => [];
+        showNotification('⚠ Не хватает предметов', `Соберите: ${missFn().join(', ')}`, 'warn');
         return;
       }
+      // Сбрасываем печатающийся текст перед переходом
+      if (gameState.typewriterTimer) {
+        clearTimeout(gameState.typewriterTimer);
+        gameState.typewriterTimer = null;
+      }
+      gameState.isTyping = false;
+
       const to = btn.dataset.to;
       if (to === 'title') {
-        gameState.history = []; gameState.historyIndex = -1;
+        gameState.history = [];
+        gameState.historyIndex = -1;
         renderPassage('title', false);
       } else {
+        // ← КЛЮЧЕВОЕ: обрезаем историю до текущей позиции перед новой веткой
+        gameState.history = gameState.history.slice(0, gameState.historyIndex + 1);
         renderPassage(to);
       }
     });
@@ -1902,10 +1386,8 @@ function renderPassageInner(id, passage) {
 
   const journalBtn = document.getElementById('btnJournal');
   if (journalBtn) journalBtn.addEventListener('click', (e) => { e.stopPropagation(); openJournal(); });
-
-  const achBtn = document.getElementById('btnAchievements');
+  const achBtn = document.getElementById('btnGameAchievements');
   if (achBtn) achBtn.addEventListener('click', (e) => { e.stopPropagation(); openAchievements(); });
-
   const menuBtn = document.getElementById('btnMenu');
   if (menuBtn) menuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -1938,7 +1420,7 @@ function renderPassageInner(id, passage) {
 }
 
 /* ============================================================
-   ЭКРАН ПОСЛЕ КОНЦОВКИ (обновлён для 3 концовок)
+   ЭКРАН ПОСЛЕ КОНЦОВКИ
    ============================================================ */
 function showEndingScreen(endingKey) {
   clearDialogueElements();
@@ -1947,9 +1429,10 @@ function showEndingScreen(endingKey) {
   if (clickLayer) clickLayer.classList.remove('enabled');
 
   const data = {
-    harmony: { title: '✨ Финал Гармонии', subtitle: 'Природа, наука и тепло сердец — вместе', color: '#FBBF24' },
-    mastery: { title: '⚙ Финал Мастерства', subtitle: 'Точный расчёт и крепкая дружба', color: '#8bab7a' },
-    nature:  { title: '🌿 Финал Изобилия',  subtitle: 'Сытый дух — счастливая долина', color: '#a8d49a' }
+    melody:      { title: '🎵 Финал Мелодии и Добра',      subtitle: 'Чуткость и верный тон',            color: '#FFC960' },
+    abundance:   { title: '🌿 Финал Заботы и Изобилия',    subtitle: 'Сытый дух — счастливая долина',    color: '#a8d49a' },
+    engineering: { title: '⚙ Финал Инженерного Чуда',      subtitle: 'Точный расчёт и крепкая дружба',   color: '#7cc0ff' },
+    unity:       { title: '👑 Финал Истинной Гармонии',    subtitle: 'Природа, наука и тепло сердец',    color: '#FFD700' },
   }[endingKey] || { title: 'Финал', subtitle: '', color: '#FBBF24' };
 
   const gameArea = document.getElementById('gameArea');
@@ -1969,13 +1452,17 @@ function showEndingScreen(endingKey) {
     </div>
   `;
 
-  document.getElementById('btnPlayAgain').addEventListener('click', () => {
-    resetAll();
-    renderPassage('Start1');
-  });
+  document.getElementById('btnPlayAgain').addEventListener('click', () => { resetAll(); renderPassage('Start1'); });
   document.getElementById('btnOtherEnding').addEventListener('click', () => {
-    gameState.history = []; gameState.historyIndex = -1;
+    gameState.history = [];
+    gameState.historyIndex = -1;
     renderPassage('ВнутриБашни');
+    // Если не хватает предметов для всех финалов — подскажем
+    const ready = [canDoMusic(), canDoNectar(), canDoMechanics(), canDoUnity()].filter(Boolean).length;
+    if (ready < 4) {
+      setTimeout(() => showNotification('💡 Подсказка',
+        `Открыто финалов: ${ready}/4. Пройдите другие маршруты (мост / тропа / лавка), чтобы собрать предметы.`), 800);
+    }
   });
   document.getElementById('btnToMenu').addEventListener('click', () => {
     gameState.history = []; gameState.historyIndex = -1;
@@ -1985,7 +1472,7 @@ function showEndingScreen(endingKey) {
 }
 
 /* ============================================================
-   ТИТУЛЬНЫЙ ЭКРАН (обновлён на 3 концовки)
+   ТИТУЛЬНЫЙ ЭКРАН
    ============================================================ */
 function renderTitleScreen() {
   gameState.currentPassage = 'title';
@@ -1997,8 +1484,7 @@ function renderTitleScreen() {
   if (clickLayer) clickLayer.classList.remove('enabled');
 
   const gameArea = document.getElementById('gameArea');
-  /* 🎭 3-я КОНЦОВКА */
-  const count = ['harmony','mastery','nature'].filter(k => gameState.endings[k]).length;
+  const count = ['melody','abundance','engineering','unity'].filter(k => gameState.endings[k]).length;
   const canLoad = hasSave();
 
   gameArea.style.opacity = '1';
@@ -2011,18 +1497,15 @@ function renderTitleScreen() {
       <div class="title-menu">
         <button id="btnStart">▶ Начать историю</button>
         <button id="btnLoad" ${canLoad ? '' : 'disabled'}>📂 Продолжить</button>
-        <button id="btnAchievements" ${canLoad ? '' : 'disabled'}>🏆 Достижения</button>
+        <button id="btnTitleAchievements" ${canLoad ? '' : 'disabled'}>🏆 Достижения</button>
         <button id="btnReset" ${canLoad ? '' : 'disabled'}>🗑 Сбросить прогресс</button>
       </div>
       <p class="title-footer">Верхний Шепот · Праздник Осенней Звезды</p>
     </div>
-    <div class="title-endings">🏆 Концовок открыто: <b>${count} / 3</b></div>
+    <div class="title-endings">🏆 Концовок открыто: <b>${count} / 4</b></div>
   `;
 
-  document.getElementById('btnStart').addEventListener('click', () => {
-    resetAll();
-    renderPassage('Start1');
-  });
+  document.getElementById('btnStart').addEventListener('click', () => { resetAll(); renderPassage('Start1'); });
   document.getElementById('btnLoad').addEventListener('click', () => {
     if (loadGame()) {
       clearTitleElements();
@@ -2030,12 +1513,9 @@ function renderTitleScreen() {
       renderPassage(target, false);
     }
   });
-  document.getElementById('btnAchievements').addEventListener('click', openAchievements);
+  document.getElementById('btnTitleAchievements').addEventListener('click', openAchievements);
   document.getElementById('btnReset').addEventListener('click', () => {
-    if (confirm('Сбросить весь прогресс?')) {
-      resetAll();
-      renderTitleScreen();
-    }
+    if (confirm('Сбросить весь прогресс?')) { resetAll(); renderTitleScreen(); }
   });
   updateHistoryButtons();
 }
@@ -2054,24 +1534,28 @@ function updateHistoryButtons() {
 }
 function goBack() {
   if (gameState.historyIndex <= 0) return;
+  if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
+  gameState.isTyping = false;
   gameState.historyIndex--;
   renderPassage(gameState.history[gameState.historyIndex], false);
 }
 function goForward() {
   if (gameState.historyIndex >= gameState.history.length - 1) return;
+  if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
+  gameState.isTyping = false;
   gameState.historyIndex++;
   renderPassage(gameState.history[gameState.historyIndex], false);
 }
 
 /* ============================================================
-   МОДАЛКИ (журнал обновлён для 3 концовок)
+   МОДАЛКИ
    ============================================================ */
 function openJournal() {
   const overlay = document.getElementById('modalOverlay');
   const content = document.getElementById('modalContent');
   let html = '<h2>📖 Журнал</h2>';
   html += '<h3>Предметы</h3>';
-  const allKeys = ['has_feather','has_crystal','has_selesta_vial','has_key','has_scheme'];
+  const allKeys = Object.keys(ITEMS);
   const owned = allKeys.filter(k => has(k));
   if (owned.length === 0) {
     html += '<p style="color:#888;font-style:italic;">Пока ничего не найдено</p>';
@@ -2088,24 +1572,19 @@ function openJournal() {
     });
   }
 
-  /* 🎭 3-я КОНЦОВКА — показываем все три финала */
   html += '<h3>Доступные финалы</h3>';
-  const hReady = canDoHarmony(), mReady = canDoMastery(), nReady = canDoNature();
-
-  html += `<div class="ending-status ${hReady?'ready':'locked'}">
-    <div>${hReady?'✅':'🔒'} ✨ Финал Гармонии — всё вместе</div>
-    ${hReady ? '' : `<div class="status-need">Нужно: ${missingHarmony().join(', ')}</div>`}
-  </div>`;
-
-  html += `<div class="ending-status ${mReady?'ready':'locked'}">
-    <div>${mReady?'✅':'🔒'} ⚙ Финал Мастерства — инженерия</div>
-    ${mReady ? '' : `<div class="status-need">Нужно: ${missingMastery().join(', ')}</div>`}
-  </div>`;
-
-  html += `<div class="ending-status ${nReady?'ready':'locked'}">
-    <div>${nReady?'✅':'🔒'} 🌿 Финал Изобилия — забота</div>
-    ${nReady ? '' : `<div class="status-need">Нужно: ${missingNature().join(', ')}</div>`}
-  </div>`;
+  const rows = [
+    ['🎵 Финал Мелодии и Добра', canDoMusic(), missingMusic()],
+    ['🌿 Финал Заботы и Изобилия', canDoNectar(), missingNectar()],
+    ['⚙ Финал Инженерного Чуда', canDoMechanics(), missingMechanics()],
+    ['👑 Финал Истинной Гармонии', canDoUnity(), missingUnity()],
+  ];
+  rows.forEach(([label, ready, missing]) => {
+    html += `<div class="ending-status ${ready?'ready':'locked'}">
+      <div>${ready?'✅':'🔒'} ${label}</div>
+      ${ready ? '' : `<div class="status-need">Нужно: ${missing.join(', ')}</div>`}
+    </div>`;
+  });
 
   html += '<div class="buttons"><button id="journalClose">Закрыть</button></div>';
   content.innerHTML = html;
@@ -2172,6 +1651,7 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
 </script>
 </body>
 </html>
