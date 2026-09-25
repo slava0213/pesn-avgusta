@@ -894,7 +894,7 @@ const PASSAGES = {
   "СтарыйМост4": { location: "most_awake", insert: INSERT_IMG["bruno_riddle"], insertDuration: 2400, speaker: "Бруно", boxClass: "bruno", text: "— Церемонии — основа порядка в долине! Но ради праздника я не стану мучить вас тремя испытаниями. Одной загадки довольно. Слушайте: «Не имеет крыльев, а летает; не имеет голоса, а воет; в стужу жалит, в зной ласкает, а сожмёшь в кулак — исчезнет без следа».", choices: [{ text: "Ответить с уверенностью: «Это горный ветер!»", to: "МостВетер" }, { text: "Попробовать поэтический ответ: «Это лесное эхо»", to: "МостЭхо" }, { text: "Достать из сумки медовое сушёное яблоко и угостить Бруно", to: "МостУгощение" }, { text: "Расспросить Бруно: не видел ли он, что стряслось с башней ночью?", to: "МостРасспросы" }] },
   "МостВетер": { location: "most_awake", insert: INSERT_IMG["bruno_wind"], insertDuration: 2000, speaker: "Бруно", boxClass: "bruno", text: "Бруно хлопнул каменными крыльями, подняв облачко безвредной пыли: — В самую точку! Кому как не ученику Хранителя ветров знать повадки воздуха. Ты заслужил свободный проход!", next: "МостВетер2" },
   "МостВетер2": { location: "most_awake", insert: INSERT_IMG["bruno_feather"], insertDuration: 2200, speaker: "Бруно", boxClass: "bruno", text: "— Вот, держи. Это Перо Лазурной Сойки-Вестницы. Оно зачаровано на лёгкое дыхание. Если в механизмах башни застрянет пыль веков — взмахни им, и сквозняк сделает всю работу чисто и без поломок!", set: { "has_feather": true }, next: "МостСвободен" },
-  "МостЭхо": { location: "most_awake", speaker: "Бруно", boxClass: "bruno", text: "Бруно басовито захохотал, сотрясая каменные перила: — Ох, молодёжь! Поэзии в тебе хоть отбавляй, а вот физика хромает! Разве эхо может ласкать в зной или жалить в стужу? Это ветер! Но за дерзость и красивый слог я не стану вас задерживать.", next: "МостСвободен" },
+  "МостЭхо": { location: "most_awake", speaker: "Бруно", boxClass: "bruno", text: "Бруно басовито захохотал, сотрясая каменные перила: — Ох, молодёжь! Поэзии в тебе хоть отбавляй, а вот физика хромает! Разве эхо может ласкать в зной или жалить в стужу? Это ветер! Но за дерзость и красивый слог я не стану вас задерживать. И вот — держи подарок: Перо Лазурной Сойки. В башне оно разгонит пыль веков!", set: { "has_feather": true }, next: "МостСвободен" },
   "МостУгощение": { location: "most_awake", insert: INSERT_IMG["bruno_apple"], insertDuration: 2200, speaker: "Бруно", boxClass: "bruno", text: "Каменные ноздри гаргуля затрепетали: — О великие горы... Это то самое? С пасеки мастера Олвена?! Боги гранита, какая сладость! Забирайте мост, проходите скорее!", next: "МостУгощение2" },
   "МостУгощение2": { location: "most_awake", insert: INSERT_IMG["bruno_crystal"], insertDuration: 2200, speaker: "Бруно", boxClass: "bruno", text: "— И погодите... вот, возьмите! На днях с карниза маяка упал чистейший Кристалл Горного Кварца. Я подобрал, чтобы не растоптали. В оптике маяка ему самое место!", set: { "has_crystal": true }, next: "МостСвободен" },
   "МостРасспросы": { location: "most_awake", insert: INSERT_IMG["bruno_clue"], insertDuration: 2200, speaker: "Бруно", boxClass: "bruno", text: "— Хм-м... Около полуночи с вершины башни сорвался лёгкий серебристый всполох. А потом: динь-дон-хрясь! Будто музыкальная шкатулка поперхнулась желудем. Ветер тогда дул с Заброшенной Обсерватории.", set: { "has_clue": true }, next: "МостРасспросы2" },
@@ -915,8 +915,9 @@ const PASSAGES = {
   "ДверьОшибка": { location: "tower", insert: INSERT_IMG["door_water"], insertDuration: 2000, speaker: "Мира", boxClass: "mira", text: "Замок издаёт мелодичный перелив — и из сопла брызгает освежающая струя мятной воды прямо в лицо! — Освежает! Но подсказка гласила: «Тепло и движение»! Попробуем ещё раз?", next: "ДверьОткрыта" },
   "ОсмотрСтен": { location: "tower", speaker: "Мира", boxClass: "mira", text: "— Окно приоткрыто, там Обсерватория. Можем подняться туда или открыть парадную дверь.", choices: [{ text: "Открыть парадную дверь", to: "ДверьОткрыта" }, { text: "Залезть в окно Обсерватории", to: "Обсерватория" }] },
   "ДверьОткрыта": { location: "tower", insert: INSERT_IMG["door_open"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Щёлк-щёлк-клац! Медные шестерни весело зажужжали. Тяжёлые дубовые двери плавно распахнулись, пропуская вас в прохладный холл башни.", next: "ВнутриБашни" },
-  "Обсерватория": { location: "observatory", insert: INSERT_IMG["cat_sleep"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Вы оказались в комнате с медными звёздными картами и телескопом. На столе спал заводной кот Тик-Так с латунным ключом на ошейнике.", choices: [{ text: "Взять латунный ключ", to: "ВзятьКлюч" }, { text: "Оставить ключ коту и спуститься", to: "ВнутриБашни" }] },
+  "Обсерватория": { location: "observatory", insert: INSERT_IMG["cat_sleep"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Вы оказались в комнате с медными звёздными картами и телескопом. На столе спал заводной кот Тик-Так с латунным ключом на ошейнике.", choices: [{ text: "Взять латунный ключ", to: "ВзятьКлюч" }, { text: "Оставить ключ коту, но расспросить его о башне", to: "РасспросКота" }] },
   "ВзятьКлюч": { location: "observatory", insert: INSERT_IMG["cat_key"], insertDuration: 2000, speaker: "Рассказчик", boxClass: "narrator", text: "Кот доверчиво протягивает лапку. Вы аккуратно отстёгиваете ключ. Тик-Так довольно мурлычет и решает пойти с вами.", set: { "has_key": true }, next: "ВнутриБашни" },
+  "РасспросКота": { location: "observatory", speaker: "Рассказчик", boxClass: "narrator", text: "Вы тихонько гладите кота за ушком. Тик-Так довольно жмурится и лапкой указывает на обрывок записки под звёздной картой: «Если резонатор молчит — испробуй лунный настой у Селесты». Зацепка! А ещё кот великодушно разрешает погладить себя и оставляет вам немного своей шерсти — она отлично очищает линзы.", set: { "has_clue": true }, next: "ВнутриБашни" },
   "БашняТайныйВход": { location: "tower_secret", insert: INSERT_IMG["secret_entry"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Шустик привёл вас к незаметному гроту в скале, замаскированному диким виноградом. Маленькая дверца легко поддалась нажатию тайного сучка, и винтовая лестница вывела прямо в главный зал.", next: "ВнутриБашни" },
   "ВнутриБашни": { location: "tower_inside", insert: INSERT_IMG["cornelius_panic"], insertDuration: 2400, speaker: "Рассказчик", boxClass: "narrator", text: "Главный зал башни поражал размахом. В центре метался старый смотритель Корнелиус с масленкой в руках. На постаменте спал Август — Звёздный Светляк размером с доброго сенбернара.", next: "Корнелиус1" },
   "Корнелиус1": { location: "tower_inside", speaker: "Корнелиус", boxClass: "cornelius", text: "— Беда! Катастрофа долины! Фестиваль через два часа, а наш золотой мальчик спит без задних лапок! Ночью налетел порыв ветра, сбил настройку колоколов, и Август уснул от скуки и тишины!", next: "Корнелиус2" },
@@ -1302,6 +1303,14 @@ function renderPassage(id, addToHistory = true) {
 function renderPassageInner(id, passage) {
   clearTitleElements();
   clearDialogueElements();
+
+  // 🛡 СТРАХОВКА: перед показом ГлавнаяПочинка убеждаемся,
+  // что у игрока есть хотя бы один доступный финал.
+  // Если нет — выдаём недостающий предмет через сюжетный ход.
+  if (id === 'ГлавнаяПочинка' && !canDoMusic() && !canDoNectar() && !canDoMechanics()) {
+    grantEmergencyItem();
+  }
+
   setBackground(passage.location);
   if (passage.insert) showInsert(passage.insert, passage.insertDuration || 2200);
 
@@ -1416,6 +1425,36 @@ function renderPassageInner(id, passage) {
 
   if (passage.endingScreen) {
     setTimeout(() => showEndingScreen(passage.endingScreen), 4000);
+  }
+}
+
+/* 🛡 Экстренная выдача предмета — сюжетная реплика Миры.
+   Вызывается только если у игрока нет ни одного предмета для финалов. */
+function grantEmergencyItem() {
+  // Приоритет: сначала то, что ближе по сюжету
+  if (!has('has_selesta_vial') && !has('has_pollen')) {
+    gameState.variables['has_selesta_vial'] = true;
+    unlockAchievement('vial');
+    setTimeout(() => showItemPopup('has_selesta_vial'), 800);
+    setTimeout(() => showNotification('💡 Мира вспомнила',
+      '— Ой! Бабушка Селеста передала тебе флакон ещё утром, я совсем забыла!'), 200);
+    return;
+  }
+  if (!has('has_feather')) {
+    gameState.variables['has_feather'] = true;
+    unlockAchievement('feather');
+    setTimeout(() => showItemPopup('has_feather'), 800);
+    setTimeout(() => showNotification('💡 Олвен предусмотрел',
+      '— В письме было завёрнуто перо Лазурной Сойки, я чуть не выбросила!'), 200);
+    return;
+  }
+  if (!has('has_crystal') && !has('has_key')) {
+    gameState.variables['has_crystal'] = true;
+    unlockAchievement('crystal');
+    setTimeout(() => showItemPopup('has_crystal'), 800);
+    setTimeout(() => showNotification('💡 Мира нашла в сумке',
+      '— А это что за камушек? Кристалл кварца! Точно пригодится!'), 200);
+    return;
   }
 }
 
