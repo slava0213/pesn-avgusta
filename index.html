@@ -839,9 +839,6 @@ html, body {
 <div class="particles-layer" id="particlesLayer"></div>
 <div class="vignette-layer"></div>
 
-<!-- INSERT-LAYER УДАЛЁН -->
-<!-- CUTSCENE-LAYER УДАЛЁН -->
-
 <div class="click-layer" id="clickLayer"></div>
 
 <div class="history-controls" id="historyControls" style="display:none;">
@@ -866,40 +863,36 @@ html, body {
 <script>
 const PREFIX = "compressed-";
 
-/* 
-  ВАЖНО: теперь LOCATION_BG содержит и локации, и «вставки».
-  В пассажах вместо passage.insert мы просто указываем location = нужная картинка.
-*/
+/* ============ ФОНЫ ЛОКАЦИЙ ============ */
+/* FIX: final -> august_glow.png, epilogue -> ending_unity.png
+   final_rainbow удалён (файла нет) */
 const LOCATION_BG = {
+  /* Титул и старт */
   "title": "images/bg/" + PREFIX + "title.png",
   "start": "images/bg/" + PREFIX + "city_panorama.png",
   "street": "images/bg/" + PREFIX + "city_street.png",
+  "city_holiday": "images/bg/" + PREFIX + "city_street.png",
+  "sunrise_lighthouse": "images/bg/" + PREFIX + "title.png",
+
+  /* Дом игрока */
   "player_outside": "images/bg/" + PREFIX + "player_house.png",
   "player_inside": "images/bg/" + PREFIX + "player_room.png",
-  "letter_close": "images/bg/" + PREFIX + "letter_closeup.png",
   "player_table": "images/bg/" + PREFIX + "heroes_reading_letter.png",
-  "letter_seal_bg": "images/bg/" + PREFIX + "letter_seal.png",
-  "parchment": "images/bg/" + PREFIX + "olven_scheme.png",
   "player_table2": "images/bg/" + PREFIX + "heroes_table.png",
   "player_hide_letter": "images/bg/" + PREFIX + "hero_hides_letter.png",
+  "letter_close": "images/bg/" + PREFIX + "letter_closeup.png",
+  "letter_seal_bg": "images/bg/" + PREFIX + "letter_seal.png",
+  "parchment": "images/bg/" + PREFIX + "olven_scheme.png",
+
+  /* Мира */
+  "mira_arrive": "images/bg/" + PREFIX + "heroes_reading_letter.png",
+  "mira_joke": "images/bg/" + PREFIX + "heroes_table.png",
+
+  /* Мост и Бруно */
   "most_bridge": "images/bg/" + PREFIX + "stone_bridge.png",
   "most_sleep": "images/bg/" + PREFIX + "bruno_sleeps.png",
   "most_awake": "images/bg/" + PREFIX + "bruno_closeup.png",
   "most_empty": "images/bg/" + PREFIX + "stone_bridge.png",
-  "lavka": "images/bg/" + PREFIX + "selesta_greet.png",
-  "grib_tropa": "images/bg/" + PREFIX + "mushroom_path.png",
-  "grib_action": "images/bg/" + PREFIX + "shustik_stuck.png",
-  "tower": "images/bg/" + PREFIX + "tower_exterior.png",
-  "tower_secret": "images/bg/" + PREFIX + "secret_entry.png",
-  "observatory": "images/bg/" + PREFIX + "observatory.png",
-  "tower_inside": "images/bg/" + PREFIX + "august_hall.png",
-  "final": "images/bg/" + PREFIX + "final_rainbow.png",
-  "epilogue": "images/bg/" + PREFIX + "final_rainbow.png",
-  /* Картинки, которые раньше были вставками — теперь это полноценные фоны */
-  "city_holiday": "images/bg/" + PREFIX + "city_street.png",
-  "sunrise_lighthouse": "images/bg/" + PREFIX + "title.png",
-  "mira_arrive": "images/bg/" + PREFIX + "heroes_reading_letter.png",
-  "mira_joke": "images/bg/" + PREFIX + "heroes_table.png",
   "bruno_block": "images/bg/" + PREFIX + "bruno_sleeps.png",
   "bruno_awake": "images/bg/" + PREFIX + "bruno_closeup.png",
   "bruno_riddle": "images/bg/" + PREFIX + "bruno_riddle.png",
@@ -908,38 +901,61 @@ const LOCATION_BG = {
   "bruno_apple": "images/bg/" + PREFIX + "bruno_apple.png",
   "bruno_crystal": "images/bg/" + PREFIX + "bruno_crystal.png",
   "bruno_clue": "images/bg/" + PREFIX + "bruno_riddle.png",
+
+  /* Грибная тропа и Шустик */
+  "grib_tropa": "images/bg/" + PREFIX + "mushroom_path.png",
+  "grib_action": "images/bg/" + PREFIX + "shustik_stuck.png",
   "shustik_stuck": "images/bg/" + PREFIX + "shustik_stuck.png",
   "shustik_magic": "images/bg/" + PREFIX + "tree_magic.png",
   "shustik_oil": "images/bg/" + PREFIX + "tree_oil.png",
   "shustik_lever": "images/bg/" + PREFIX + "mira_lever.png",
   "shustik_gift": "images/bg/" + PREFIX + "shustik_pollen.png",
+
+  /* Лавка Селесты */
+  "lavka": "images/bg/" + PREFIX + "selesta_greet.png",
   "selesta_greet": "images/bg/" + PREFIX + "selesta_greet.png",
   "selesta_vial": "images/bg/" + PREFIX + "selesta_gives_vial.png",
   "selesta_wave": "images/bg/" + PREFIX + "selesta_wave.png",
+
+  /* Башня снаружи */
+  "tower": "images/bg/" + PREFIX + "tower_exterior.png",
+  "tower_secret": "images/bg/" + PREFIX + "secret_entry.png",
+  "secret_entry": "images/bg/" + PREFIX + "secret_entry.png",
   "door_riddle": "images/bg/" + PREFIX + "door_riddle.png",
   "door_signs": "images/bg/" + PREFIX + "door_signs.png",
   "door_water": "images/bg/" + PREFIX + "door_water.png",
   "door_open": "images/bg/" + PREFIX + "door_open.png",
+
+  /* Обсерватория */
+  "observatory": "images/bg/" + PREFIX + "observatory.png",
   "cat_sleep": "images/bg/" + PREFIX + "observatory.png",
   "cat_key": "images/bg/" + PREFIX + "cat_key.png",
-  "secret_entry": "images/bg/" + PREFIX + "secret_entry.png",
-  "cornelius_panic": "images/bg/" + PREFIX + "cornelius_panic.png",
+
+  /* Башня внутри */
+  "tower_inside": "images/bg/" + PREFIX + "august_hall.png",
+  "august_hall": "images/bg/" + PREFIX + "august_hall.png",
   "august_sleep": "images/bg/" + PREFIX + "august_sleep.png",
   "august_wake_eye": "images/bg/" + PREFIX + "august_sleep.png",
-  "august_hall": "images/bg/" + PREFIX + "august_hall.png",
+  "cornelius_panic": "images/bg/" + PREFIX + "cornelius_panic.png",
   "schema_show": "images/bg/" + PREFIX + "cornelius_scheme.png",
   "mechanism_inspect": "images/bg/" + PREFIX + "mechanism_repair.png",
+
+  /* Финалы */
   "plan_music": "images/bg/" + PREFIX + "tuning_fork.png",
   "plan_nectar": "images/bg/" + PREFIX + "nectar_pour.png",
   "plan_mechanics": "images/bg/" + PREFIX + "mira_gg_lenses.png",
   "plan_unity": "images/bg/" + PREFIX + "august_hall.png",
   "august_fly": "images/bg/" + PREFIX + "august_glow.png",
+
   "ending_melody": "images/bg/" + PREFIX + "ending_melody.png",
   "ending_abundance": "images/bg/" + PREFIX + "ending_abundance.png",
   "ending_engineering": "images/bg/" + PREFIX + "ending_engineering.png",
   "ending_unity": "images/bg/" + PREFIX + "ending_unity.png",
+
+  /* FIX: final_rainbow.png у вас нет — используем august_glow и ending_unity */
+  "final": "images/bg/" + PREFIX + "august_glow.png",
+  "epilogue": "images/bg/" + PREFIX + "ending_unity.png",
   "final_star": "images/bg/" + PREFIX + "final_star.png",
-  "final_rainbow": "images/bg/" + PREFIX + "final_rainbow.png",
 };
 
 const ITEMS = {
@@ -966,13 +982,10 @@ const ACHIEVEMENTS = {
   "allEndings": { icon: "🏆", title: "Все четыре концовки", desc: "Открыть все финалы истории" }
 };
 
-/* CUTSCENES УДАЛЕНЫ */
-
 const PASSAGES = {
   "title": { isTitle: true },
-  /* Start1: было insert city_holiday — теперь location = city_holiday */
-  "Start1": { location: "city_holiday", speaker: "Рассказчик", boxClass: "narrator", text: "Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой — а по утрам солнце поднимается из-за маяка и заливает золотом черепичные крыши.", next: "Start2" },
-  "Start2": { location: "sunrise_lighthouse", speaker: "Рассказчик", boxClass: "narrator", text: "Сегодня — особенный день. Праздник Осенней Звезды. Город украшен гирляндами из яблок, трактиры пекут пироги, а ремесленники развешивают флаги. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков.", next: "Start3" },
+  "Start1": { location: "start", speaker: "Рассказчик", boxClass: "narrator", text: "Верхний Шепот раскинулся на берегу тихого озера, у подножия заснеженных гор. Здесь пахнет сушёными яблоками, речной мятой и смолой — а по утрам солнце поднимается из-за маяка и заливает золотом черепичные крыши.", next: "Start2" },
+  "Start2": { location: "city_holiday", speaker: "Рассказчик", boxClass: "narrator", text: "Сегодня — особенный день. Праздник Осенней Звезды. Город украшен гирляндами из яблок, трактиры пекут пироги, а ремесленники развешивают флаги. Но на рассвете случилось небывалое: погас Главный Маяк в роще Заблудших Светлячков.", next: "Start3" },
   "Start3": { location: "player_outside", speaker: "Рассказчик", boxClass: "narrator", text: "Вы — молодой травник, ученик мастера Олвена. Ваш дом стоит на краю города, среди яблоневых садов. Этим утром вы проснулись от тишины: обычно в это время над озером уже гудели пчёлы и сновали лодки. Сегодня — тихо.", next: "Start4" },
   "Start4": { location: "player_outside", speaker: "Рассказчик", boxClass: "narrator", text: "На столе в доме лежало письмо: плотный пергамент, запечатанный золотистым воском с оттиском кленового листа — личный знак вашего наставника, мастера Олвена.", next: "Start5" },
   "Start5": { location: "player_inside", speaker: "Рассказчик", boxClass: "narrator", text: "Вы вернулись в дом. За окном — знакомый вид на потухший маяк. На столе — письмо и чашка остывшего травяного чая. И тут скрипнула калитка, послышались лёгкие шаги.", next: "Start6" },
@@ -1031,10 +1044,11 @@ const PASSAGES = {
   "ФиналНектар": { location: "plan_nectar", speaker: "Рассказчик", boxClass: "narrator", text: "Смешав родниковую воду, лаванду и капли Селесты (или пыльцу Шустика), вы заливаете золотистый сироп в хрустальную чашу. Аромат карамели заполняет купол. Август припадает к чаше — с каждым глотком его тельце светится ярче: от розового до сапфирового и золотого огня!", next: "КонецНектар" },
   "ФиналМеханика": { location: "plan_mechanics", speaker: "Рассказчик", boxClass: "narrator", text: "Мира ключом на двенадцать заменяет шарнир, вы устанавливаете в оправу оптики Кристалл Кварца. Шестерёнки встают на места с идеальным «тик-так». Зеркала выстраиваются в спираль — очарованный гармонией движения, Август с жужжанием взмывает в центр конструкции!", next: "КонецМеханика" },
   "ФиналЕдинство": { location: "plan_unity", speaker: "Рассказчик", boxClass: "narrator", text: "Вы делаете всё сразу и сообща: Корнелиус подаёт прокладки, Мира настраивает зеркала по чертежу Олвена, вы наполняете чашу нектаром и настраиваете колокола на праздничный лад. Когда Август делает первый глоток, раздаётся хрустальный звон — светляк взмывает под купол, а вокруг башни кружат сотни лесных светлячков!", next: "КонецЕдинство" },
-  "КонецМузыка": { location: "ending_melody", speaker: "Финал", boxClass: "final-melody", text: "<b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство. Свет маяка широким янтарным потоком разлился над долиной — праздник спасён.</i>", ending: "melody", endingScreen: "melody" },
-  "КонецНектар": { location: "ending_abundance", speaker: "Финал", boxClass: "final-abundance", text: "<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина! Небо вспыхнуло изумрудно-бирюзовым сиянием. Ваша доброта подарила жителям самую красивую ночь в году.</i>", ending: "abundance", endingScreen: "abundance" },
-  "КонецМеханика": { location: "ending_engineering", speaker: "Финал", boxClass: "final-engineering", text: "<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт, крепкая дружба и ключ на двенадцать творят чудеса почище древних заклятий. Лучи маяка начертили в небе гигантскую светящуюся звезду.</i>", ending: "engineering", endingScreen: "engineering" },
-  "КонецЕдинство": { location: "ending_unity", speaker: "Финал", boxClass: "final-unity", text: "<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку. Радужный луч маяка озарил всю долину.</i>", ending: "unity", endingScreen: "unity" }
+  /* Финальные пассажи: location = epilogue (ending_unity.png) */
+  "КонецМузыка": { location: "epilogue", speaker: "Финал", boxClass: "final-melody", text: "<b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство. Свет маяка широким янтарным потоком разлился над долиной — праздник спасён.</i>", ending: "melody", endingScreen: "melody" },
+  "КонецНектар": { location: "epilogue", speaker: "Финал", boxClass: "final-abundance", text: "<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина! Небо вспыхнуло изумрудно-бирюзовым сиянием. Ваша доброта подарила жителям самую красивую ночь в году.</i>", ending: "abundance", endingScreen: "abundance" },
+  "КонецМеханика": { location: "epilogue", speaker: "Финал", boxClass: "final-engineering", text: "<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт, крепкая дружба и ключ на двенадцать творят чудеса почище древних заклятий. Лучи маяка начертили в небе гигантскую светящуюся звезду.</i>", ending: "engineering", endingScreen: "engineering" },
+  "КонецЕдинство": { location: "epilogue", speaker: "Финал", boxClass: "final-unity", text: "<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку. Радужный луч маяка озарил всю долину.</i>", ending: "unity", endingScreen: "unity" }
 };
 
 const SAVE_KEY = 'pesn_augusta_full_v1';
@@ -1194,8 +1208,6 @@ function setBackground(locationKey) {
   }, 500);
 }
 
-/* showInsert() УДАЛЕНА */
-
 function preloadImages() {
   Object.values(LOCATION_BG).forEach(url => {
     if (!url) return;
@@ -1329,9 +1341,6 @@ function renderPassageInner(id, passage) {
     grantEmergencyItem();
   }
 
-  /* FIX: теперь фон — это либо passage.location, либо (если есть) passage.insert.
-     Но так как мы убрали insert-слой, в пассажах insert больше не используется —
-     везде указан просто location. */
   setBackground(passage.location);
 
   let navHTML = '';
@@ -1442,7 +1451,6 @@ function renderPassageInner(id, passage) {
     else clickLayer.classList.add('enabled');
   }
 
-  /* Финальный экран показывается сразу после короткой задержки */
   if (passage.endingScreen) {
     setTimeout(() => showEndingScreen(passage.endingScreen), 1200);
   }
@@ -1488,7 +1496,6 @@ function showEndingScreen(endingKey) {
     unity:       { title: 'Финал Истинной Гармонии',     subtitle: 'Природа, наука и тепло сердец',  color: '#FFD700', bg: LOCATION_BG['final_star'] },
   }[endingKey] || { title: 'Финал', subtitle: '', color: '#FBBF24', bg: null };
 
-  /* Смена фона на картинку финала — она видна за окошком */
   if (data.bg) {
     const bg = document.getElementById('bgLayer');
     bg.style.opacity = '0';
