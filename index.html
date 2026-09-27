@@ -864,8 +864,15 @@ html, body {
 const PREFIX = "compressed-";
 
 /* ============ ФОНЫ ЛОКАЦИЙ ============ */
-/* FIX: final -> august_glow.png, epilogue -> ending_unity.png
-   final_rainbow удалён (файла нет) */
+/* FIX: 
+   - final -> august_glow.png
+   - epilogue -> ending_unity.png
+   - final_rainbow удалён (нет файла)
+   - tower_inside/august_hall/cornelius_panic уже указывают на существующие файлы
+   - Start1 -> start (панорама), Start2 -> city_holiday (улица)
+   - ВнутриБашни -> cornelius_panic (крупный план Корнелиуса)
+   - Корнелиус1/2/3, ГлавнаяПочинка, plan_unity -> august_hall (общий зал с 3 персонажами)
+*/
 const LOCATION_BG = {
   /* Титул и старт */
   "title": "images/bg/" + PREFIX + "title.png",
