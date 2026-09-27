@@ -903,72 +903,77 @@ html, body {
 </div>
 
 <script>
-  const LOCATION_BG = {
-  "title": "images/bg/1.png",
-  "start": "images/bg/2.png",
-  "street": "images/bg/3.png",
-  "player_outside": "images/bg/4.png",
-  "player_inside": "images/bg/5.png",
-  "letter_close": "images/bg/6.png",
-  "player_table": "images/bg/7.png",
-  "letter_seal_bg": "images/bg/8.png",
-  "parchment": "images/bg/9.png",
-  "player_table2": "images/bg/10.png",
-  "player_hide_letter": "images/bg/11.png",
-  "most_bridge": "images/bg/12.png",
-  "most_sleep": "images/bg/13.png",
-  "most_awake": "images/bg/14.png",
-  "most_empty": "images/bg/15.png",
-  "lavka": "images/bg/16.png",
-  "grib_tropa": "images/bg/18.png",
-  "grib_action": "images/bg/19.png",
-  "tower": "images/bg/2.png",
-  "tower_secret": "images/bg/8.png",
-  "observatory": "images/bg/5.png",
-  "tower_inside": "images/bg/5.png",
-  "final": "images/bg/14.png",
+const LOCATION_BG = {
+  "title": "images/bg/title.png",
+  "start": "images/bg/city_panorama.png",
+  "street": "images/bg/city_street.png",
+  "player_outside": "images/bg/player_house.png",
+  "player_inside": "images/bg/player_room.png",
+  "letter_close": "images/bg/letter_closeup.png",
+  "player_table": "images/bg/heroes_reading_letter.png",
+  "letter_seal_bg": "images/bg/letter_seal.png",
+  "parchment": "images/bg/olven_scheme.png",
+  "player_table2": "images/bg/heroes_table.png",
+  "player_hide_letter": "images/bg/hero_hides_letter.png",
+  "most_bridge": "images/bg/stone_bridge.png",
+  "most_sleep": "images/bg/bruno_sleeps.png",
+  "most_awake": "images/bg/bruno_closeup.png",
+  "most_empty": "images/bg/stone_bridge.png",
+  "lavka": "images/bg/selesta_greet.png",
+  "grib_tropa": "images/bg/mushroom_path.png",
+  "grib_action": "images/bg/shustik_stuck.png",
+  "tower": "images/bg/tower_exterior.png",
+  "tower_secret": "images/bg/secret_entry.png",
+  "observatory": "images/bg/observatory.png",
+  "tower_inside": "images/bg/august_hall.png",
+  "final": "images/bg/final_rainbow.png",
 };
 
 const INSERT_IMG = {
-  "city_holiday": "images/bg/3.png",
-  "sunrise_lighthouse": "images/bg/1.png",
-  "mira_arrive": "images/bg/7.png",
-  "mira_joke": "images/bg/7.png",
-  "bruno_block": "images/bg/13.png",
-  "bruno_awake": "images/bg/14.png",
-  "bruno_riddle": "images/bg/14.png",
-  "bruno_wind": "images/bg/14.png",
-  "bruno_feather": "images/bg/14.png",
-  "bruno_apple": "images/bg/14.png",
-  "bruno_crystal": "images/bg/14.png",
-  "bruno_clue": "images/bg/14.png",
-  "shustik_stuck": "images/bg/19.png",
-  "shustik_magic": "images/bg/20.png",
-  "shustik_oil": "images/bg/21.png",
-  "shustik_lever": "images/bg/22.png",
-  "shustik_gift": "images/bg/23.png",
-  "selesta_greet": "images/bg/17.png",
-  "selesta_vial": "images/bg/17.png",
-  "door_riddle": "images/bg/8.png",
-  "door_water": "images/bg/8.png",
-  "door_open": "images/bg/8.png",
-  "cat_sleep": "images/bg/5.png",
-  "cat_key": "images/bg/5.png",
-  "secret_entry": "images/bg/8.png",
-  "cornelius_panic": "images/bg/5.png",
-  "august_sleep": "images/bg/5.png",
-  "august_wake_eye": "images/bg/5.png",
-  "schema_show": "images/bg/9.png",
-  "mechanism_inspect": "images/bg/5.png",
-  "plan_music": "images/bg/14.png",
-  "plan_nectar": "images/bg/14.png",
-  "plan_mechanics": "images/bg/14.png",
-  "plan_unity": "images/bg/14.png",
-  "august_fly": "images/bg/14.png",
-  "ending_melody": "images/bg/15.png",
-  "ending_abundance": "images/bg/15.png",
-  "ending_engineering": "images/bg/15.png",
-  "ending_unity": "images/bg/15.png",
+  "city_holiday": "images/bg/city_street.png",
+  "sunrise_lighthouse": "images/bg/title.png",
+  "mira_arrive": "images/bg/heroes_reading_letter.png",
+  "mira_joke": "images/bg/heroes_table.png",
+  "bruno_block": "images/bg/bruno_sleeps.png",
+  "bruno_awake": "images/bg/bruno_closeup.png",
+  "bruno_riddle": "images/bg/bruno_riddle.png",
+  "bruno_wind": "images/bg/bruno_wind.png",
+  "bruno_feather": "images/bg/bruno_feather.png",
+  "bruno_apple": "images/bg/bruno_apple.png",
+  "bruno_crystal": "images/bg/bruno_crystal.png",
+  "bruno_clue": "images/bg/bruno_riddle.png",
+  "shustik_stuck": "images/bg/shustik_stuck.png",
+  "shustik_magic": "images/bg/tree_magic.png",
+  "shustik_oil": "images/bg/tree_oil.png",
+  "shustik_lever": "images/bg/mira_lever.png",
+  "shustik_gift": "images/bg/shustik_pollen.png",
+  "selesta_greet": "images/bg/selesta_greet.png",
+  "selesta_vial": "images/bg/selesta_gives_vial.png",
+  "selesta_wave": "images/bg/selesta_wave.png",
+  "door_riddle": "images/bg/door_riddle.png",
+  "door_signs": "images/bg/door_signs.png",
+  "door_water": "images/bg/door_water.png",
+  "door_open": "images/bg/door_open.png",
+  "cat_sleep": "images/bg/observatory.png",
+  "cat_key": "images/bg/cat_key.png",
+  "secret_entry": "images/bg/secret_entry.png",
+  "cornelius_panic": "images/bg/cornelius_panic.png",
+  "august_sleep": "images/bg/august_sleep.png",
+  "august_wake_eye": "images/bg/august_sleep.png",
+  "august_hall": "images/bg/august_hall.png",
+  "schema_show": "images/bg/cornelius_scheme.png",
+  "mechanism_inspect": "images/bg/mechanism_repair.png",
+  "plan_music": "images/bg/tuning_fork.png",
+  "plan_nectar": "images/bg/nectar_pour.png",
+  "plan_mechanics": "images/bg/mira_gg_lenses.png",
+  "plan_unity": "images/bg/august_hall.png",
+  "august_fly": "images/bg/august_glow.png",
+  "ending_melody": "images/bg/ending_melody.png",
+  "ending_abundance": "images/bg/ending_abundance.png",
+  "ending_engineering": "images/bg/ending_engineering.png",
+  "ending_unity": "images/bg/ending_unity.png",
+  "final_star": "images/bg/final_star.png",
+  "final_rainbow": "images/bg/final_rainbow.png",
 };
 
 const ITEMS = {
@@ -999,7 +1004,7 @@ const CUTSCENES = {
   "ending_melody": { frames: [{ img: INSERT_IMG["plan_music"], duration: 3200 }, { img: INSERT_IMG["ending_melody"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
   "ending_abundance": { frames: [{ img: INSERT_IMG["plan_nectar"], duration: 3200 }, { img: INSERT_IMG["ending_abundance"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
   "ending_engineering": { frames: [{ img: INSERT_IMG["plan_mechanics"], duration: 3200 }, { img: INSERT_IMG["ending_engineering"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-  "ending_unity": { frames: [{ img: INSERT_IMG["plan_unity"], duration: 3200 }, { img: INSERT_IMG["ending_unity"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
+  "ending_unity": { frames: [{ img: INSERT_IMG["plan_unity"], duration: 3200 }, { img: INSERT_IMG["final_star"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
 };
 
 const PASSAGES = {
@@ -1041,7 +1046,8 @@ const PASSAGES = {
   "ГрибыНаграда": { location: "grib_action", insert: INSERT_IMG["shustik_gift"], insertDuration: 2200, speaker: "Шустик", boxClass: "shustik", text: "— Спасены! Спасибо, добрые путники! Держите мешочек искристой пыльцы — она пригодится, если нужно разжечь погасший фитиль! А тропка выведет прямо к вратам башни.", set: { "has_pollen": true }, next: "БашняСнаружи" },
   "ЛавкаСелесты": { location: "lavka", insert: INSERT_IMG["selesta_greet"], insertDuration: 2200, speaker: "Бабушка Селеста", boxClass: "selesta", text: "— Батюшки, юные мастера! Беда с маяком, весь посёлок гудит! Чуяло моё сердце: Август вчера слишком грустно пел. Вы на маяк?", next: "ЛавкаСелесты2" },
   "ЛавкаСелесты2": { location: "lavka", speaker: "Мира", boxClass: "mira", text: "— Да, бабушка Селеста. Нам нужно оживить резонатор.", next: "ЛавкаСелесты3" },
-  "ЛавкаСелесты3": { location: "lavka", speaker: "Бабушка Селеста", boxClass: "selesta", text: "— Возьмите-ка вот это. Капли лунного зверобоя и сладкой мелиссы. Если Август закапризничает — пара капель на сахарную пластину вернут ему бодрость духа.", set: { "has_selesta_vial": true }, choices: [{ text: "Отправиться к Старому мосту", to: "СтарыйМост" }, { text: "Пойти короткой Грибной тропой", to: "ГрибнаяТропа" }] },
+  "ЛавкаСелесты3": { location: "lavka", insert: INSERT_IMG["selesta_vial"], insertDuration: 2200, speaker: "Бабушка Селеста", boxClass: "selesta", text: "— Возьмите-ка вот это. Капли лунного зверобоя и сладкой мелиссы. Если Август закапризничает — пара капель на сахарную пластину вернут ему бодрость духа.", set: { "has_selesta_vial": true }, next: "ЛавкаСелесты4" },
+  "ЛавкаСелесты4": { location: "lavka", insert: INSERT_IMG["selesta_wave"], insertDuration: 2200, speaker: "Рассказчик", boxClass: "narrator", text: "Селеста проводила вас до калитки и долго махала вслед, пока вы шли по усыпанной листьями тропинке.", choices: [{ text: "Отправиться к Старому мосту", to: "СтарыйМост" }, { text: "Пойти короткой Грибной тропой", to: "ГрибнаяТропа" }] },
   "БашняСнаружи": { location: "tower", speaker: "Рассказчик", boxClass: "narrator", text: "Перед вами вздымалась Башня Светлячков. Массивные дубовые двери были заперты. На бронзовой накладке замка — циферблат с четырьмя стихийными знаками: Солнце, Ветер, Вода и Росток.", next: "БашняСнаружи2" },
   "БашняСнаружи2": { location: "tower", insert: INSERT_IMG["door_riddle"], insertDuration: 2200, speaker: "Мира", boxClass: "mira", text: "— Загадка гильдии архитекторов! «Лишь союз тепла и движения пробудит спящий свет». Что выбираем?", choices: [{ text: "Выставить комбинацию: «Солнце и Ветер»", to: "ДверьОткрыта" }, { text: "Выставить комбинацию: «Вода и Росток»", to: "ДверьОшибка" }, { text: "Осмотреть окрестности: вдруг есть другой проход?", to: "ОсмотрСтен" }] },
   "ДверьОшибка": { location: "tower", insert: INSERT_IMG["door_water"], insertDuration: 2000, speaker: "Мира", boxClass: "mira", text: "Замок издаёт мелодичный перелив — и из сопла брызгает освежающая струя мятной воды прямо в лицо! — Освежает! Но подсказка гласила: «Тепло и движение»! Попробуем ещё раз?", next: "ДверьОткрыта" },
@@ -1068,9 +1074,7 @@ const PASSAGES = {
   "КонецМеханика": { location: "epilogue", insert: INSERT_IMG["ending_engineering"], insertDuration: 2600, speaker: "Финал", boxClass: "final-engineering", text: "<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт, крепкая дружба и ключ на двенадцать творят чудеса почище древних заклятий. Лучи маяка начертили в небе гигантскую светящуюся звезду.</i>", cutscene: "ending_engineering", ending: "engineering", endingScreen: "engineering" },
   "КонецЕдинство": { location: "epilogue", insert: INSERT_IMG["ending_unity"], insertDuration: 2600, speaker: "Финал", boxClass: "final-unity", text: "<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку. Радужный луч маяка озарил всю долину.</i>", cutscene: "ending_unity", ending: "unity", endingScreen: "unity" }
 };
-  /* ============================================================
-   СОХРАНЕНИЕ
-   ============================================================ */
+
 const SAVE_KEY = 'pesn_augusta_full_v1';
 
 const gameState = {
@@ -1122,9 +1126,6 @@ function resetAll() {
   try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
 }
 
-/* ============================================================
-   ПРЕДМЕТЫ И УСЛОВИЯ ФИНАЛОВ
-   ============================================================ */
 function has(k) { return !!gameState.variables[k]; }
 function canDoMusic() { return has('has_feather'); }
 function canDoNectar() { return has('has_selesta_vial') || has('has_pollen'); }
@@ -1143,9 +1144,6 @@ function missingUnity() {
 }
 const NEED_CHECK = { music: [canDoMusic, missingMusic], nectar: [canDoNectar, missingNectar], mechanics: [canDoMechanics, missingMechanics], unity: [canDoUnity, missingUnity] };
 
-/* ============================================================
-   АУДИО И ЗВУКОВЫЕ ЭФФЕКТЫ
-   ============================================================ */
 const bgMusic = document.getElementById('bgMusic');
 let musicStarted = false;
 function startMusic() {
@@ -1174,9 +1172,6 @@ function sfxAchievement() { playSFX('sfxAchievement'); }
 function sfxItem()        { playSFX('sfxItem'); }
 function sfxSelect()      { playSFX('sfxSelect'); }
 
-/* ============================================================
-   УВЕДОМЛЕНИЯ / ПОПАПЫ
-   ============================================================ */
 let notifyTimer = null;
 function showNotification(title, text, type) {
   const el = document.getElementById('notification');
@@ -1202,9 +1197,6 @@ function showItemPopup(key) {
   popupTimer = setTimeout(() => p.classList.remove('show'), 2500);
 }
 
-/* ============================================================
-   ДОСТИЖЕНИЯ
-   ============================================================ */
 function unlockAchievement(key) {
   if (gameState.achievements[key]) return;
   gameState.achievements[key] = true;
@@ -1220,9 +1212,6 @@ function unlockAchievement(key) {
   }
 }
 
-/* ============================================================
-   ФОН И ВСТАВКИ
-   ============================================================ */
 let bgSwapTimer = null;
 function setBackground(locationKey) {
   const bg = document.getElementById('bgLayer');
@@ -1262,9 +1251,6 @@ function showInsert(imgUrl, duration) {
   }, duration);
 }
 
-/* ============================================================
-   ПРЕДЗАГРУЗКА КАРТИНОК
-   ============================================================ */
 function preloadImages() {
   Object.values(LOCATION_BG).forEach(url => {
     if (!url) return;
@@ -1278,9 +1264,6 @@ function preloadImages() {
   });
 }
 
-/* ============================================================
-   ЧАСТИЦЫ
-   ============================================================ */
 function initParticles() {
   const layer = document.getElementById('particlesLayer');
   if (!layer) return;
@@ -1299,9 +1282,6 @@ function initParticles() {
   }
 }
 
-/* ============================================================
-   ПЕЧАТАЮЩИЙСЯ ТЕКСТ
-   ============================================================ */
 function typeText(element, html, speed, callback) {
   const tokens = [];
   let i = 0;
@@ -1336,9 +1316,6 @@ function typeText(element, html, speed, callback) {
   step();
 }
 
-/* ============================================================
-   КАТСЦЕНЫ
-   ============================================================ */
 const CutscenePlayer = {
   current: null, frameIndex: 0, timer: null, onFinish: null,
   play(sceneKey, onFinish) {
@@ -1380,9 +1357,6 @@ const CutscenePlayer = {
   }
 };
 
-/* ============================================================
-   ПЕРЕХОДЫ
-   ============================================================ */
 function advance() {
   sfxClick();
   const passage = PASSAGES[gameState.currentPassage];
@@ -1609,9 +1583,6 @@ function grantEmergencyItem() {
   }
 }
 
-/* ============================================================
-   ЭКРАН КОНЦОВКИ
-   ============================================================ */
 function showEndingScreen(endingKey) {
   clearDialogueElements();
   clearTitleElements();
@@ -1622,7 +1593,7 @@ function showEndingScreen(endingKey) {
     melody:      { title: 'Финал Мелодии и Добра',       subtitle: 'Чуткость и верный тон',          color: '#FFC960', bg: INSERT_IMG['ending_melody'] },
     abundance:   { title: 'Финал Заботы и Изобилия',     subtitle: 'Сытый дух — счастливая долина',  color: '#a8d49a', bg: INSERT_IMG['ending_abundance'] },
     engineering: { title: 'Финал Инженерного Чуда',       subtitle: 'Точный расчёт и крепкая дружба', color: '#7cc0ff', bg: INSERT_IMG['ending_engineering'] },
-    unity:       { title: 'Финал Истинной Гармонии',     subtitle: 'Природа, наука и тепло сердец',  color: '#FFD700', bg: INSERT_IMG['ending_unity'] },
+    unity:       { title: 'Финал Истинной Гармонии',     subtitle: 'Природа, наука и тепло сердец',  color: '#FFD700', bg: INSERT_IMG['final_star'] },
   }[endingKey] || { title: 'Финал', subtitle: '', color: '#FBBF24', bg: null };
 
   if (data.bg) {
@@ -1699,9 +1670,6 @@ function showEndingScreen(endingKey) {
   updateHistoryButtons();
 }
 
-/* ============================================================
-   ТИТУЛЬНЫЙ ЭКРАН
-   ============================================================ */
 function renderTitleScreen() {
   gameState.currentPassage = 'title';
   clearDialogueElements();
@@ -1748,9 +1716,6 @@ function renderTitleScreen() {
   updateHistoryButtons();
 }
 
-/* ============================================================
-   НАВИГАЦИЯ
-   ============================================================ */
 function updateHistoryButtons() {
   const back = document.getElementById('btnBack');
   const fwd = document.getElementById('btnForward');
@@ -1775,9 +1740,6 @@ function goForward() {
   renderPassage(gameState.history[gameState.historyIndex], false);
 }
 
-/* ============================================================
-   МОДАЛКИ
-   ============================================================ */
 function openJournal() {
   const overlay = document.getElementById('modalOverlay');
   const content = document.getElementById('modalContent');
@@ -1840,9 +1802,6 @@ function openAchievements() {
   document.getElementById('achClose').addEventListener('click', () => overlay.classList.add('hidden'));
 }
 
-/* ============================================================
-   ИНИЦИАЛИЗАЦИЯ
-   ============================================================ */
 function init() {
   loadGame();
   startMusic();
@@ -1887,7 +1846,6 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
 </script>
 </body>
 </html>
