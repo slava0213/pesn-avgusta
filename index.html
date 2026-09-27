@@ -28,7 +28,7 @@ html, body {
   opacity: 1;
   transition: opacity 0.8s ease-in-out;
   will-change: opacity, transform;
-  transform-origin: center center;      /* FIX: зум из центра, а не из левого верхнего угла */
+  transform-origin: center center;
   animation: kenBurns 28s ease-in-out infinite alternate;
 }
 @keyframes kenBurns {
@@ -36,8 +36,7 @@ html, body {
   100% { transform: scale(1.08) translate(-1.2%, -1%); }
 }
 
-/* ============ ВСТАВКИ (крупные планы) ============ */
-/* FIX: contain вместо cover — чтобы не обрезало лица и предметы по бокам */
+/* ============ ВСТАВКИ ============ */
 .insert-layer {
   position: fixed; inset: 0;
   z-index: 80;
@@ -46,7 +45,7 @@ html, body {
   visibility: hidden;
   transition: opacity 0.7s ease, visibility 0.7s ease;
   background-color: #000;
-  background-size: contain;             /* FIX: было cover */
+  background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
   transform: scale(1);
@@ -60,7 +59,7 @@ html, body {
 }
 @keyframes insertZoom {
   from { transform: scale(1); }
-  to   { transform: scale(1.04); }      /* FIX: было 1.06 — уменьшили, чтобы не вылезало */
+  to   { transform: scale(1.04); }
 }
 
 /* ============ ЧАСТИЦЫ ============ */
@@ -546,7 +545,7 @@ html, body {
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* ============ ЭКРАН КОНЦОВКИ ============ */
+/* ============ ЭКРАН КОНЦОВКИ (поверх фона) ============ */
 .ending-screen {
   position: fixed; inset: 0;
   z-index: 250;
@@ -554,6 +553,7 @@ html, body {
   padding: 20px;
   animation: endingFadeIn 0.9s ease-out;
   overflow-y: auto;
+  pointer-events: auto;
 }
 @keyframes endingFadeIn {
   from { opacity: 0; transform: scale(1.05); }
@@ -785,53 +785,6 @@ html, body {
 .modal .ending-status.locked { background: rgba(224,138,76,0.08); border: 1px solid rgba(224,138,76,0.3); color: #c9c0a6; }
 .modal .ending-status .status-need { font-size: 12px; color: #e07b39; margin-top: 4px; font-style: italic; }
 
-/* ============ КАТСЦЕНЫ ============ */
-.cutscene-layer {
-  position: fixed; inset: 0; z-index: 95; background: #000;
-  opacity: 0; visibility: hidden;
-  transition: opacity 0.7s ease, visibility 0.7s ease;
-  overflow: hidden; cursor: pointer;
-}
-.cutscene-layer.active { opacity: 1; visibility: visible; }
-
-/* FIX: cover вместо contain — заполняет экран без чёрных полос */
-.cutscene-frame {
-  position: absolute; inset: 0;
-  background-size: cover;                  /* FIX: было contain */
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-color: #000;
-  opacity: 0;
-  transform: scale(1.02);
-  transform-origin: center center;
-  transition: opacity 0.9s ease, transform 9s ease-out;
-  will-change: opacity, transform;
-  backface-visibility: hidden;             /* FIX: убирает мерцание на iOS */
-  -webkit-backface-visibility: hidden;
-}
-.cutscene-frame.current { opacity: 1; z-index: 1; transform: scale(1.02); }
-.cutscene-frame.next    { opacity: 0; z-index: 2; transform: scale(1.02); }
-.cutscene-frame.visible { opacity: 1; transform: scale(1.06); }  /* FIX: медленный ken-burns */
-
-.cutscene-progress {
-  position: absolute; left: 0; bottom: 0; height: 4px; width: 0%;
-  background: linear-gradient(90deg, #FBBF24, #F59E0B, #FBBF24);
-  background-size: 200% 100%;
-  box-shadow: 0 0 16px rgba(255,200,100,0.9);
-  z-index: 4; transition: width 0.2s linear;
-}
-.cutscene-caption {
-  position: absolute; left: 50%; bottom: 10vh; transform: translateX(-50%);
-  max-width: 80vw; padding: 16px 32px;
-  background: rgba(0,0,0,0.8);
-  border: 1px solid rgba(244,197,66,0.85);
-  border-radius: 4px; color: #FFF8E7;
-  font-size: clamp(15px, 1.25vw, 19px); line-height: 1.65; text-align: center;
-  text-shadow: 1px 1px 5px rgba(0,0,0,0.95);
-  z-index: 4;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 40px rgba(255,200,80,0.2);
-}
-
 /* ============ СКРОЛЛБАРЫ ============ */
 .dialogue-text::-webkit-scrollbar, .modal::-webkit-scrollbar { width: 6px; }
 .dialogue-text::-webkit-scrollbar-track, .modal::-webkit-scrollbar-track { background: rgba(255,243,196,0.1); border-radius: 3px; }
@@ -852,9 +805,7 @@ html, body {
   .item-popup { padding: 20px 28px; }
   .item-popup .popup-icon { font-size: 40px; }
   .item-popup .popup-name { font-size: 17px; }
-  /* FIX: на мобильных гарантируем правильные режимы */
   .insert-layer { background-size: contain; }
-  .cutscene-frame { background-size: cover; }
 }
 @media (max-width: 480px) {
   .dialogue-box { width: 96vw; max-height: 48vh; bottom: 1.5vh; border-radius: 3px; }
@@ -916,11 +867,7 @@ html, body {
 <div class="particles-layer" id="particlesLayer"></div>
 <div class="vignette-layer"></div>
 
-<div class="cutscene-layer" id="cutsceneLayer">
-  <div class="cutscene-frame current" id="csFrameCurrent"></div>
-  <div class="cutscene-frame next"    id="csFrameNext"></div>
-  <div class="cutscene-progress" id="csProgress"></div>
-</div>
+<!-- КАТСЦЕНЫ УДАЛЕНЫ -->
 
 <div class="click-layer" id="clickLayer"></div>
 
@@ -970,6 +917,7 @@ const LOCATION_BG = {
   "observatory": "images/bg/" + PREFIX + "observatory.png",
   "tower_inside": "images/bg/" + PREFIX + "august_hall.png",
   "final": "images/bg/" + PREFIX + "final_rainbow.png",
+  "epilogue": "images/bg/" + PREFIX + "final_rainbow.png",
 };
 
 const INSERT_IMG = {
@@ -1043,12 +991,7 @@ const ACHIEVEMENTS = {
   "allEndings": { icon: "🏆", title: "Все четыре концовки", desc: "Открыть все финалы истории" }
 };
 
-const CUTSCENES = {
-  "ending_melody": { frames: [{ img: INSERT_IMG["plan_music"], duration: 3200 }, { img: INSERT_IMG["ending_melody"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-  "ending_abundance": { frames: [{ img: INSERT_IMG["plan_nectar"], duration: 3200 }, { img: INSERT_IMG["ending_abundance"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-  "ending_engineering": { frames: [{ img: INSERT_IMG["plan_mechanics"], duration: 3200 }, { img: INSERT_IMG["ending_engineering"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-  "ending_unity": { frames: [{ img: INSERT_IMG["plan_unity"], duration: 3200 }, { img: INSERT_IMG["final_star"], duration: 3200 }, { img: INSERT_IMG["august_fly"], duration: 3200 }] },
-};
+/* CUTSCENES УДАЛЕНЫ */
 
 const PASSAGES = {
   "title": { isTitle: true },
@@ -1112,10 +1055,11 @@ const PASSAGES = {
   "ФиналНектар": { location: "final", insert: INSERT_IMG["plan_nectar"], insertDuration: 2600, speaker: "Рассказчик", boxClass: "narrator", text: "Смешав родниковую воду, лаванду и капли Селесты (или пыльцу Шустика), вы заливаете золотистый сироп в хрустальную чашу. Аромат карамели заполняет купол. Август припадает к чаше — с каждым глотком его тельце светится ярче: от розового до сапфирового и золотого огня!", next: "КонецНектар" },
   "ФиналМеханика": { location: "final", insert: INSERT_IMG["plan_mechanics"], insertDuration: 2600, speaker: "Рассказчик", boxClass: "narrator", text: "Мира ключом на двенадцать заменяет шарнир, вы устанавливаете в оправу оптики Кристалл Кварца. Шестерёнки встают на места с идеальным «тик-так». Зеркала выстраиваются в спираль — очарованный гармонией движения, Август с жужжанием взмывает в центр конструкции!", next: "КонецМеханика" },
   "ФиналЕдинство": { location: "final", insert: INSERT_IMG["plan_unity"], insertDuration: 2600, speaker: "Рассказчик", boxClass: "narrator", text: "Вы делаете всё сразу и сообща: Корнелиус подаёт прокладки, Мира настраивает зеркала по чертежу Олвена, вы наполняете чашу нектаром и настраиваете колокола на праздничный лад. Когда Август делает первый глоток, раздаётся хрустальный звон — светляк взмывает под купол, а вокруг башни кружат сотни лесных светлячков!", next: "КонецЕдинство" },
-  "КонецМузыка": { location: "epilogue", insert: INSERT_IMG["ending_melody"], insertDuration: 2600, speaker: "Финал", boxClass: "final-melody", text: "<b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство. Свет маяка широким янтарным потоком разлился над долиной — праздник спасён.</i>", cutscene: "ending_melody", ending: "melody", endingScreen: "melody" },
-  "КонецНектар": { location: "epilogue", insert: INSERT_IMG["ending_abundance"], insertDuration: 2600, speaker: "Финал", boxClass: "final-abundance", text: "<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина! Небо вспыхнуло изумрудно-бирюзовым сиянием. Ваша доброта подарила жителям самую красивую ночь в году.</i>", cutscene: "ending_abundance", ending: "abundance", endingScreen: "abundance" },
-  "КонецМеханика": { location: "epilogue", insert: INSERT_IMG["ending_engineering"], insertDuration: 2600, speaker: "Финал", boxClass: "final-engineering", text: "<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт, крепкая дружба и ключ на двенадцать творят чудеса почище древних заклятий. Лучи маяка начертили в небе гигантскую светящуюся звезду.</i>", cutscene: "ending_engineering", ending: "engineering", endingScreen: "engineering" },
-  "КонецЕдинство": { location: "epilogue", insert: INSERT_IMG["ending_unity"], insertDuration: 2600, speaker: "Финал", boxClass: "final-unity", text: "<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку. Радужный луч маяка озарил всю долину.</i>", cutscene: "ending_unity", ending: "unity", endingScreen: "unity" }
+  /* ФИНАЛЬНЫЕ ПАССАЖИ: убрано поле cutscene, оставлено endingScreen */
+  "КонецМузыка": { location: "epilogue", insert: INSERT_IMG["ending_melody"], insertDuration: 2600, speaker: "Финал", boxClass: "final-melody", text: "<b>КОНЕЦ: Финал Мелодии и Добра</b><br><br><i>Вы доказали, что чуткость и верный тон способны оживить даже самое хрупкое волшебство. Свет маяка широким янтарным потоком разлился над долиной — праздник спасён.</i>", ending: "melody", endingScreen: "melody" },
+  "КонецНектар": { location: "epilogue", insert: INSERT_IMG["ending_abundance"], insertDuration: 2600, speaker: "Финал", boxClass: "final-abundance", text: "<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина! Небо вспыхнуло изумрудно-бирюзовым сиянием. Ваша доброта подарила жителям самую красивую ночь в году.</i>", ending: "abundance", endingScreen: "abundance" },
+  "КонецМеханика": { location: "epilogue", insert: INSERT_IMG["ending_engineering"], insertDuration: 2600, speaker: "Финал", boxClass: "final-engineering", text: "<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт, крепкая дружба и ключ на двенадцать творят чудеса почище древних заклятий. Лучи маяка начертили в небе гигантскую светящуюся звезду.</i>", ending: "engineering", endingScreen: "engineering" },
+  "КонецЕдинство": { location: "epilogue", insert: INSERT_IMG["ending_unity"], insertDuration: 2600, speaker: "Финал", boxClass: "final-unity", text: "<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку. Радужный луч маяка озарил всю долину.</i>", ending: "unity", endingScreen: "unity" }
 };
 
 const SAVE_KEY = 'pesn_augusta_full_v1';
@@ -1266,10 +1210,10 @@ function setBackground(locationKey) {
   bgSwapTimer = setTimeout(() => {
     bg.style.backgroundImage = url ? `url("${url}")` : 'none';
     bg.style.animation = 'none';
-    bg.style.transform = 'scale(1)';       // FIX: сброс зума перед новым фоном
+    bg.style.transform = 'scale(1)';
     void bg.offsetWidth;
     bg.style.animation = '';
-    bg.style.transform = '';                // FIX: отдаём управление keyframe-анимации
+    bg.style.transform = '';
     bg.style.opacity = '1';
     bgSwapTimer = null;
   }, 500);
@@ -1361,82 +1305,7 @@ function typeText(element, html, speed, callback) {
   step();
 }
 
-/* ============================================================
-   КАТСЦЕНЫ — FIX: сброс transform и классов при смене кадра
-   ============================================================ */
-const CutscenePlayer = {
-  current: null, frameIndex: 0, timer: null, onFinish: null,
-  play(sceneKey, onFinish) {
-    const scene = CUTSCENES[sceneKey];
-    if (!scene || !scene.frames || scene.frames.length === 0) { if (onFinish) onFinish(); return; }
-    this.current = scene;
-    this.frameIndex = 0;
-    this.onFinish = onFinish;
-    const layer = document.getElementById('cutsceneLayer');
-    layer.classList.add('active');
-    const curEl = document.getElementById('csFrameCurrent');
-    const nxtEl = document.getElementById('csFrameNext');
-    // FIX: полный сброс состояния перед стартом
-    curEl.className = 'cutscene-frame current';
-    nxtEl.className = 'cutscene-frame next';
-    curEl.style.backgroundImage = `url("${scene.frames[0].img}")`;
-    curEl.style.opacity = '1';
-    curEl.style.transform = '';
-    nxtEl.style.backgroundImage = '';
-    nxtEl.style.opacity = '0';
-    nxtEl.style.transform = '';
-    setTimeout(() => this.showFrame(1), scene.frames[0].duration);
-  },
-  showFrame(index) {
-    if (!this.current || index >= this.current.frames.length) { this.finish(); return; }
-    this.frameIndex = index;
-    const frame = this.current.frames[index];
-    const curEl = document.getElementById('csFrameCurrent');
-    const nxtEl = document.getElementById('csFrameNext');
-
-    // FIX: сброс зума у старого кадра, чтобы не было «дёрганья»
-    curEl.classList.remove('visible');
-    curEl.style.transform = '';
-    curEl.style.opacity = '1';
-
-    nxtEl.style.backgroundImage = `url("${frame.img}")`;
-    nxtEl.style.opacity = '0';
-    nxtEl.style.transform = 'scale(1.02)';
-    void nxtEl.offsetWidth;
-    nxtEl.classList.add('visible');
-    nxtEl.style.opacity = '1';
-
-    setTimeout(() => {
-      curEl.style.backgroundImage = `url("${frame.img}")`;
-      curEl.classList.add('current');
-      curEl.style.opacity = '1';
-      nxtEl.classList.remove('visible');
-      nxtEl.style.opacity = '0';
-      nxtEl.style.transform = 'scale(1.02)';
-    }, 700);
-
-    this.timer = setTimeout(() => this.showFrame(index + 1), frame.duration);
-  },
-  finish() {
-    if (this.timer) { clearTimeout(this.timer); this.timer = null; }
-    document.getElementById('cutsceneLayer').classList.remove('active');
-    const cb = this.onFinish;
-    this.current = null; this.onFinish = null;
-    setTimeout(() => {
-      const curEl = document.getElementById('csFrameCurrent');
-      const nxtEl = document.getElementById('csFrameNext');
-      curEl.style.backgroundImage = '';
-      nxtEl.style.backgroundImage = '';
-      curEl.className = 'cutscene-frame current';   // FIX: сброс классов
-      nxtEl.className = 'cutscene-frame next';      // FIX: сброс классов
-      curEl.style.transform = '';                   // FIX: сброс зума
-      nxtEl.style.transform = '';                   // FIX: сброс зума
-      curEl.style.opacity = '1';
-      nxtEl.style.opacity = '0';
-      if (cb) cb();
-    }, 700);
-  }
-};
+/* CUTSCENE PLAYER УДАЛЁН */
 
 function advance() {
   sfxClick();
@@ -1501,15 +1370,7 @@ function renderPassage(id, addToHistory = true) {
 
   saveGame();
 
-  if (passage.cutscene) {
-    const ga = document.getElementById('gameArea');
-    if (ga) ga.style.opacity = '0';
-    CutscenePlayer.play(passage.cutscene, () => {
-      if (ga) ga.style.opacity = '1';
-      renderPassageInner(id, passage);
-    });
-    return;
-  }
+  /* FIX: блок с cutscene удалён — финальный экран показывается сразу */
   renderPassageInner(id, passage);
 }
 
@@ -1632,8 +1493,9 @@ function renderPassageInner(id, passage) {
     else clickLayer.classList.add('enabled');
   }
 
+  /* FIX: финальный экран показывается сразу после короткой задержки (1.2 сек), без катсцены */
   if (passage.endingScreen) {
-    setTimeout(() => showEndingScreen(passage.endingScreen), 4000);
+    setTimeout(() => showEndingScreen(passage.endingScreen), 1200);
   }
 }
 
@@ -1677,16 +1539,17 @@ function showEndingScreen(endingKey) {
     unity:       { title: 'Финал Истинной Гармонии',     subtitle: 'Природа, наука и тепло сердец',  color: '#FFD700', bg: INSERT_IMG['final_star'] },
   }[endingKey] || { title: 'Финал', subtitle: '', color: '#FBBF24', bg: null };
 
+  /* FIX: смена фона на картинку финала — фон виден за окошком */
   if (data.bg) {
     const bg = document.getElementById('bgLayer');
     bg.style.opacity = '0';
     setTimeout(() => {
       bg.style.backgroundImage = `url("${data.bg}")`;
       bg.style.animation = 'none';
-      bg.style.transform = 'scale(1)';   // FIX: сброс зума
+      bg.style.transform = 'scale(1)';
       void bg.offsetWidth;
       bg.style.animation = '';
-      bg.style.transform = '';            // FIX: отдаём анимации
+      bg.style.transform = '';
       bg.style.opacity = '1';
     }, 400);
   }
