@@ -16,6 +16,8 @@ html, body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ============ ФОН ЛОКАЦИИ ============ */
 .bg-layer {
   position: fixed; inset: 0;
   background-size: cover;
@@ -26,12 +28,42 @@ html, body {
   opacity: 1;
   transition: opacity 0.8s ease-in-out;
   will-change: opacity, transform;
+  transform-origin: center center;      /* FIX: зум из центра, а не из левого верхнего угла */
   animation: kenBurns 28s ease-in-out infinite alternate;
 }
 @keyframes kenBurns {
   0%   { transform: scale(1)    translate(0, 0); }
   100% { transform: scale(1.08) translate(-1.2%, -1%); }
 }
+
+/* ============ ВСТАВКИ (крупные планы) ============ */
+/* FIX: contain вместо cover — чтобы не обрезало лица и предметы по бокам */
+.insert-layer {
+  position: fixed; inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+  background-color: #000;
+  background-size: contain;             /* FIX: было cover */
+  background-position: center center;
+  background-repeat: no-repeat;
+  transform: scale(1);
+  transform-origin: center center;
+  will-change: opacity, transform;
+}
+.insert-layer.active {
+  opacity: 1;
+  visibility: visible;
+  animation: insertZoom 6s ease-out forwards;
+}
+@keyframes insertZoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.04); }      /* FIX: было 1.06 — уменьшили, чтобы не вылезало */
+}
+
+/* ============ ЧАСТИЦЫ ============ */
 .particles-layer {
   position: fixed; inset: 0;
   pointer-events: none;
@@ -53,34 +85,16 @@ html, body {
   90%  { opacity: 0.65; }
   100% { transform: translateY(-110vh) translateX(40px) scale(1.1); opacity: 0; }
 }
-.insert-layer {
-  position: fixed; inset: 0;
-  z-index: 80;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.7s ease, visibility 0.7s ease;
-  background-color: #000;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  transform: scale(1);
-}
-.insert-layer.active {
-  opacity: 1;
-  visibility: visible;
-  animation: insertZoom 6s ease-out forwards;
-}
-@keyframes insertZoom {
-  from { transform: scale(1); }
-  to   { transform: scale(1.06); }
-}
+
+/* ============ ВИНЬЕТКА ============ */
 .vignette-layer {
   position: fixed; inset: 0; pointer-events: none; z-index: 4;
   background:
     radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0,0,0,0.7) 100%),
     linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 25%, transparent 65%, rgba(0,0,0,0.7) 100%);
 }
+
+/* ============ ЗАГРУЗКА ============ */
 .loading-screen {
   position: fixed; inset: 0; z-index: 5000;
   background: radial-gradient(ellipse at center, #14101e 0%, #0a0a14 100%);
@@ -107,12 +121,14 @@ html, body {
 }
 @keyframes pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
 
+/* ============ КЛИК-СЛОЙ ============ */
 .click-layer {
   position: fixed; inset: 0; z-index: 90;
   background: transparent; cursor: pointer; display: none;
 }
 .click-layer.enabled { display: block; }
 
+/* ============ ДИАЛОГ ============ */
 .dialogue-box {
   position: fixed; left: 50%; bottom: 3vh;
   transform: translateX(-50%);
@@ -250,6 +266,7 @@ html, body {
 .dialogue-box.player .speaker-name { background: linear-gradient(180deg, rgba(60,140,200,1) 0%, rgba(35,90,150,1) 100%); color: #F0F8FF; }
 .dialogue-box.player .speaker-name::after { border-top-color: rgba(35,90,150,1); }
 
+/* ============ ВЫБОР ============ */
 .choice-box {
   position: fixed; left: 50%; bottom: 40vh;
   transform: translateX(-50%); z-index: 101;
@@ -315,6 +332,7 @@ html, body {
 .choice-box a.disabled::before { content: '🔒'; color: #888; text-shadow: none; font-size: 16px; }
 .choice-box a .need { color: #e07b39; font-size: 0.85em; font-style: italic; margin-left: 0.3em; }
 
+/* ============ ИСТОРИЯ ============ */
 .history-controls {
   position: fixed; top: 18px; left: 18px;
   display: flex; gap: 12px; z-index: 300;
@@ -346,6 +364,7 @@ html, body {
 }
 .history-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(0.8); }
 
+/* ============ МЕНЮ ============ */
 .game-menu {
   position: fixed; top: 18px; right: 18px;
   display: flex; gap: 12px; z-index: 300;
@@ -373,6 +392,7 @@ html, body {
   color: #FFD700;
 }
 
+/* ============ УВЕДОМЛЕНИЯ ============ */
 .notification {
   position: fixed; top: 90px; right: 24px;
   background: linear-gradient(180deg, rgba(217,119,6,0.97) 0%, rgba(160,75,10,0.97) 100%);
@@ -408,6 +428,7 @@ html, body {
 }
 .notification.warn b { color: #FECACA; }
 
+/* ============ ПОПАП ПРЕДМЕТА ============ */
 .item-popup {
   position: fixed; top: 50%; left: 50%;
   transform: translate(-50%, -50%) scale(0.85);
@@ -433,6 +454,7 @@ html, body {
 .item-popup .popup-name { color: #FFF8E7; font-size: 20px; font-weight: bold; letter-spacing: 1px; text-shadow: 0 0 14px rgba(255,220,100,0.7); }
 .item-popup .popup-hint { color: #d8c9a8; font-size: 13px; font-style: italic; margin-top: 10px; max-width: 320px; }
 
+/* ============ ТИТУЛЬНЫЙ ЭКРАН ============ */
 .title-screen {
   position: fixed; inset: 0;
   display: flex; flex-direction: column;
@@ -524,6 +546,7 @@ html, body {
   -webkit-backdrop-filter: blur(8px);
 }
 
+/* ============ ЭКРАН КОНЦОВКИ ============ */
 .ending-screen {
   position: fixed; inset: 0;
   z-index: 250;
@@ -688,6 +711,7 @@ html, body {
   .ending-buttons button { padding: 11px 16px; font-size: 12px; letter-spacing: 1.5px; }
 }
 
+/* ============ МОДАЛКИ ============ */
 .modal-overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.85);
@@ -761,6 +785,7 @@ html, body {
 .modal .ending-status.locked { background: rgba(224,138,76,0.08); border: 1px solid rgba(224,138,76,0.3); color: #c9c0a6; }
 .modal .ending-status .status-need { font-size: 12px; color: #e07b39; margin-top: 4px; font-style: italic; }
 
+/* ============ КАТСЦЕНЫ ============ */
 .cutscene-layer {
   position: fixed; inset: 0; z-index: 95; background: #000;
   opacity: 0; visibility: hidden;
@@ -768,16 +793,26 @@ html, body {
   overflow: hidden; cursor: pointer;
 }
 .cutscene-layer.active { opacity: 1; visibility: visible; }
+
+/* FIX: cover вместо contain — заполняет экран без чёрных полос */
 .cutscene-frame {
   position: absolute; inset: 0;
-  background-size: contain; background-position: center; background-repeat: no-repeat;
-  background-color: #000; opacity: 0; transform: scale(1);
+  background-size: cover;                  /* FIX: было contain */
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: #000;
+  opacity: 0;
+  transform: scale(1.02);
+  transform-origin: center center;
   transition: opacity 0.9s ease, transform 9s ease-out;
   will-change: opacity, transform;
+  backface-visibility: hidden;             /* FIX: убирает мерцание на iOS */
+  -webkit-backface-visibility: hidden;
 }
-.cutscene-frame.current { opacity: 1; z-index: 1; }
-.cutscene-frame.next { opacity: 0; z-index: 2; }
-.cutscene-frame.visible { opacity: 1; }
+.cutscene-frame.current { opacity: 1; z-index: 1; transform: scale(1.02); }
+.cutscene-frame.next    { opacity: 0; z-index: 2; transform: scale(1.02); }
+.cutscene-frame.visible { opacity: 1; transform: scale(1.06); }  /* FIX: медленный ken-burns */
+
 .cutscene-progress {
   position: absolute; left: 0; bottom: 0; height: 4px; width: 0%;
   background: linear-gradient(90deg, #FBBF24, #F59E0B, #FBBF24);
@@ -797,10 +832,12 @@ html, body {
   box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 40px rgba(255,200,80,0.2);
 }
 
+/* ============ СКРОЛЛБАРЫ ============ */
 .dialogue-text::-webkit-scrollbar, .modal::-webkit-scrollbar { width: 6px; }
 .dialogue-text::-webkit-scrollbar-track, .modal::-webkit-scrollbar-track { background: rgba(255,243,196,0.1); border-radius: 3px; }
 .dialogue-text::-webkit-scrollbar-thumb, .modal::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #FBBF24, #F59E0B); border-radius: 3px; }
 
+/* ============ АДАПТИВ ============ */
 @media (max-width: 768px) {
   .dialogue-box { width: 94vw; max-height: 42vh; bottom: 2vh; }
   .speaker-name { top: -22px; left: 22px; padding: 8px 20px 7px; font-size: 14px; min-width: 110px; letter-spacing: 1.5px; }
@@ -815,6 +852,9 @@ html, body {
   .item-popup { padding: 20px 28px; }
   .item-popup .popup-icon { font-size: 40px; }
   .item-popup .popup-name { font-size: 17px; }
+  /* FIX: на мобильных гарантируем правильные режимы */
+  .insert-layer { background-size: contain; }
+  .cutscene-frame { background-size: cover; }
 }
 @media (max-width: 480px) {
   .dialogue-box { width: 96vw; max-height: 48vh; bottom: 1.5vh; border-radius: 3px; }
@@ -833,6 +873,7 @@ html, body {
 
 .hidden { display: none !important; }
 
+/* ============ ЦВЕТА ПЕРСОНАЖЕЙ (финалы) ============ */
 .dialogue-box.shustik { border-color: rgba(120,160,90,0.85); }
 .dialogue-box.shustik .speaker-name { background: linear-gradient(180deg, rgba(110,150,80,1) 0%, rgba(70,100,45,1) 100%); }
 .dialogue-box.shustik .speaker-name::after { border-top-color: rgba(70,100,45,1); }
@@ -1225,8 +1266,10 @@ function setBackground(locationKey) {
   bgSwapTimer = setTimeout(() => {
     bg.style.backgroundImage = url ? `url("${url}")` : 'none';
     bg.style.animation = 'none';
+    bg.style.transform = 'scale(1)';       // FIX: сброс зума перед новым фоном
     void bg.offsetWidth;
     bg.style.animation = '';
+    bg.style.transform = '';                // FIX: отдаём управление keyframe-анимации
     bg.style.opacity = '1';
     bgSwapTimer = null;
   }, 500);
@@ -1318,6 +1361,9 @@ function typeText(element, html, speed, callback) {
   step();
 }
 
+/* ============================================================
+   КАТСЦЕНЫ — FIX: сброс transform и классов при смене кадра
+   ============================================================ */
 const CutscenePlayer = {
   current: null, frameIndex: 0, timer: null, onFinish: null,
   play(sceneKey, onFinish) {
@@ -1328,22 +1374,47 @@ const CutscenePlayer = {
     this.onFinish = onFinish;
     const layer = document.getElementById('cutsceneLayer');
     layer.classList.add('active');
-    const firstFrame = scene.frames[0];
-    document.getElementById('csFrameCurrent').style.backgroundImage = `url("${firstFrame.img}")`;
-    document.getElementById('csFrameNext').style.backgroundImage = '';
-    setTimeout(() => this.showFrame(1), firstFrame.duration);
+    const curEl = document.getElementById('csFrameCurrent');
+    const nxtEl = document.getElementById('csFrameNext');
+    // FIX: полный сброс состояния перед стартом
+    curEl.className = 'cutscene-frame current';
+    nxtEl.className = 'cutscene-frame next';
+    curEl.style.backgroundImage = `url("${scene.frames[0].img}")`;
+    curEl.style.opacity = '1';
+    curEl.style.transform = '';
+    nxtEl.style.backgroundImage = '';
+    nxtEl.style.opacity = '0';
+    nxtEl.style.transform = '';
+    setTimeout(() => this.showFrame(1), scene.frames[0].duration);
   },
   showFrame(index) {
     if (!this.current || index >= this.current.frames.length) { this.finish(); return; }
     this.frameIndex = index;
     const frame = this.current.frames[index];
-    const nextEl = document.getElementById('csFrameNext');
-    nextEl.style.backgroundImage = `url("${frame.img}")`;
-    nextEl.style.opacity = '1';
+    const curEl = document.getElementById('csFrameCurrent');
+    const nxtEl = document.getElementById('csFrameNext');
+
+    // FIX: сброс зума у старого кадра, чтобы не было «дёрганья»
+    curEl.classList.remove('visible');
+    curEl.style.transform = '';
+    curEl.style.opacity = '1';
+
+    nxtEl.style.backgroundImage = `url("${frame.img}")`;
+    nxtEl.style.opacity = '0';
+    nxtEl.style.transform = 'scale(1.02)';
+    void nxtEl.offsetWidth;
+    nxtEl.classList.add('visible');
+    nxtEl.style.opacity = '1';
+
     setTimeout(() => {
-      document.getElementById('csFrameCurrent').style.backgroundImage = `url("${frame.img}")`;
-      nextEl.style.opacity = '0';
+      curEl.style.backgroundImage = `url("${frame.img}")`;
+      curEl.classList.add('current');
+      curEl.style.opacity = '1';
+      nxtEl.classList.remove('visible');
+      nxtEl.style.opacity = '0';
+      nxtEl.style.transform = 'scale(1.02)';
     }, 700);
+
     this.timer = setTimeout(() => this.showFrame(index + 1), frame.duration);
   },
   finish() {
@@ -1352,8 +1423,16 @@ const CutscenePlayer = {
     const cb = this.onFinish;
     this.current = null; this.onFinish = null;
     setTimeout(() => {
-      document.getElementById('csFrameCurrent').style.backgroundImage = '';
-      document.getElementById('csFrameNext').style.backgroundImage = '';
+      const curEl = document.getElementById('csFrameCurrent');
+      const nxtEl = document.getElementById('csFrameNext');
+      curEl.style.backgroundImage = '';
+      nxtEl.style.backgroundImage = '';
+      curEl.className = 'cutscene-frame current';   // FIX: сброс классов
+      nxtEl.className = 'cutscene-frame next';      // FIX: сброс классов
+      curEl.style.transform = '';                   // FIX: сброс зума
+      nxtEl.style.transform = '';                   // FIX: сброс зума
+      curEl.style.opacity = '1';
+      nxtEl.style.opacity = '0';
       if (cb) cb();
     }, 700);
   }
@@ -1604,8 +1683,10 @@ function showEndingScreen(endingKey) {
     setTimeout(() => {
       bg.style.backgroundImage = `url("${data.bg}")`;
       bg.style.animation = 'none';
+      bg.style.transform = 'scale(1)';   // FIX: сброс зума
       void bg.offsetWidth;
       bg.style.animation = '';
+      bg.style.transform = '';            // FIX: отдаём анимации
       bg.style.opacity = '1';
     }, 400);
   }
