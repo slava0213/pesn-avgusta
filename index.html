@@ -38,23 +38,25 @@ html, body {
 }
 
 /* ============ СЛОЙ СПРАЙТОВ ============ */
+/* FIX: спрайты прижаты к низу, крупнее, с отступом под диалог */
 .sprites-layer {
   position: fixed;
   left: 0; right: 0;
-  bottom: 22vh;
-  height: 60vh;
+  bottom: 0;
+  height: 78vh;
   z-index: 5;
   pointer-events: none;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 0 2vw;
+  padding: 0;
+  padding-bottom: 28vh;      /* отступ под диалоговое окно */
 }
 .sprite {
   position: relative;
   height: 100%;
   width: auto;
-  max-width: 40vw;
+  max-width: 32vw;           /* ~треть экрана по ширине */
   object-fit: contain;
   object-position: bottom center;
   filter: drop-shadow(0 8px 24px rgba(0,0,0,0.7));
@@ -831,8 +833,8 @@ html, body {
   .item-popup { padding: 20px 28px; }
   .item-popup .popup-icon { font-size: 40px; }
   .item-popup .popup-name { font-size: 17px; }
-  .sprites-layer { bottom: 26vh; height: 50vh; padding: 0 1vw; }
-  .sprite { max-width: 45vw; }
+  .sprites-layer { height: 60vh; padding-bottom: 32vh; }
+  .sprite { max-width: 40vw; }
 }
 @media (max-width: 480px) {
   .dialogue-box { width: 96vw; max-height: 48vh; bottom: 1.5vh; border-radius: 3px; }
@@ -847,8 +849,8 @@ html, body {
   .history-controls, .game-menu { top: 12px; }
   .history-controls { left: 12px; }
   .game-menu { right: 12px; }
-  .sprites-layer { bottom: 32vh; height: 42vh; }
-  .sprite { max-width: 48vw; }
+  .sprites-layer { height: 50vh; padding-bottom: 38vh; }
+  .sprite { max-width: 45vw; }
 }
 
 .hidden { display: none !important; }
@@ -1007,7 +1009,6 @@ const LOCATION_BG = {
   "final_star": "images/bg/" + PREFIX + "final_star.png",
 };
 
-/* FIX: пути к папке images/sprite/ (без S) и учёт hero_.png / mira_.png */
 const SPRITE_FRAMES = {
   hero: {
     idle:    "images/sprite/hero_.png",
@@ -1037,7 +1038,6 @@ const SPRITE_FRAMES = {
   }
 };
 
-/* FIX: портреты NPC отключены (пустой объект) */
 const PORTRAITS = {};
 
 const ITEMS = {
@@ -1132,7 +1132,6 @@ const PASSAGES = {
   "КонецЕдинство": { location: "epilogue", speaker: "Финал", boxClass: "final-unity", text: "<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку. Радужный луч маяка озарил всю долину.</i>", ending: "unity", endingScreen: "unity" }
 };
 
-/* ============ СИСТЕМА СПРАЙТОВ ============ */
 const SpriteSystem = {
   heroEl: null, miraEl: null,
   heroTimer: null, miraTimer: null,
@@ -1244,7 +1243,6 @@ const SpriteSystem = {
     }, 60);
   },
 
-  /* FIX: этот метод отсутствовал — из-за него была ошибка в консоли */
   syncWithSpeaker(speakerName) {
     const name = (speakerName || '').toLowerCase();
     if (name.includes('вы') || name.includes('игрок') || name.includes('герой')) {
@@ -1257,7 +1255,6 @@ const SpriteSystem = {
   }
 };
 
-/* FIX: PortraitSystem отключён (пустые методы) */
 const PortraitSystem = {
   init() {},
   show() {},
@@ -1954,7 +1951,7 @@ function openAchievements() {
   html += '</div><div class="buttons"><button id="achClose">Закрыть</button></div>';
   content.innerHTML = html;
   overlay.classList.remove('hidden');
-  document.getElementById('achClose').addEventListener('click', () => overlay.classList.remove('hidden'));
+  document.getElementById('achClose').addEventListener('click', () => overlay.classList.add('hidden'));
 }
 
 function init() {
