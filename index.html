@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Песнь Августа</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="icon" href="data:,">
 <style>
 * { box-sizing: border-box; }
 html, body {
@@ -85,107 +86,6 @@ html, body {
 @keyframes spriteFadeOut {
   from { opacity: 1; transform: translateY(0); }
   to   { opacity: 0; transform: translateY(20px); }
-}
-
-/* ============ ОКНО ПОРТРЕТА NPC (круглое, левый нижний) ============ */
-.portrait-box {
-  position: fixed;
-  left: 2vw;
-  bottom: 22vh;
-  width: clamp(160px, 16vw, 240px);
-  height: clamp(160px, 16vw, 240px);
-  z-index: 6;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(30px) scale(0.9);
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
-  transform-origin: center center;
-}
-.portrait-box.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  animation: portraitBreath 4s ease-in-out infinite;
-}
-.portrait-box.visible.talking {
-  animation: portraitTalk 1.2s ease-in-out infinite;
-}
-.portrait-box.hidden-portrait {
-  opacity: 0;
-  transform: translateY(30px) scale(0.9);
-  animation: none;
-}
-@keyframes portraitBreath {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50%      { transform: translateY(-6px) scale(1.025); }
-}
-@keyframes portraitTalk {
-  0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
-  25%      { transform: translateY(-4px) scale(1.02) rotate(-1deg); }
-  75%      { transform: translateY(-2px) scale(1.015) rotate(1deg); }
-}
-.portrait-frame {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  overflow: hidden;
-  background: linear-gradient(180deg, rgba(28,22,14,0.85) 0%, rgba(14,10,6,0.95) 100%);
-  border: 3px solid rgba(244,197,66,0.9);
-  box-shadow:
-    0 20px 50px rgba(0,0,0,0.8),
-    0 0 40px rgba(255,200,80,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.15);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.portrait-frame::before {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 1px solid rgba(244,197,66,0.5);
-  box-shadow: 0 0 24px rgba(255,200,80,0.4);
-  pointer-events: none;
-  z-index: 3;
-}
-.portrait-frame::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  box-shadow:
-    inset 0 -20px 40px rgba(0,0,0,0.5),
-    inset 0 8px 20px rgba(255,200,80,0.08);
-  pointer-events: none;
-  z-index: 3;
-}
-.portrait-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 25%;
-  display: block;
-}
-.portrait-name {
-  position: absolute;
-  left: 50%;
-  bottom: 4px;
-  transform: translateX(-50%);
-  padding: 4px 14px;
-  background: linear-gradient(180deg, rgba(217,119,6,0.95) 0%, rgba(160,75,10,0.95) 100%);
-  color: #FFF8E7;
-  font-size: clamp(10px, 0.85vw, 12px);
-  font-weight: bold;
-  letter-spacing: 1.2px;
-  border-radius: 999px;
-  border: 1px solid rgba(244,197,66,0.95);
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.85);
-  white-space: nowrap;
-  z-index: 4;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.7);
 }
 
 /* ============ ЧАСТИЦЫ ============ */
@@ -933,12 +833,6 @@ html, body {
   .item-popup .popup-name { font-size: 17px; }
   .sprites-layer { bottom: 26vh; height: 50vh; padding: 0 1vw; }
   .sprite { max-width: 45vw; }
-  .portrait-box {
-    left: 1.5vw;
-    bottom: 26vh;
-    width: clamp(120px, 20vw, 170px);
-    height: clamp(120px, 20vw, 170px);
-  }
 }
 @media (max-width: 480px) {
   .dialogue-box { width: 96vw; max-height: 48vh; bottom: 1.5vh; border-radius: 3px; }
@@ -955,16 +849,6 @@ html, body {
   .game-menu { right: 12px; }
   .sprites-layer { bottom: 32vh; height: 42vh; }
   .sprite { max-width: 48vw; }
-  .portrait-box {
-    left: 1.5vw;
-    bottom: 32vh;
-    width: clamp(100px, 24vw, 140px);
-    height: clamp(100px, 24vw, 140px);
-  }
-  .portrait-name {
-    font-size: 10px;
-    padding: 3px 10px;
-  }
 }
 
 .hidden { display: none !important; }
@@ -1012,13 +896,6 @@ html, body {
 <div class="sprites-layer" id="spritesLayer">
   <img id="spriteHero" class="sprite hero hidden-sprite" alt="Герой">
   <img id="spriteMira" class="sprite mira hidden-sprite" alt="Мира">
-</div>
-
-<div class="portrait-box hidden-portrait" id="portraitBox">
-  <div class="portrait-frame">
-    <img id="portraitImg" class="portrait-img" alt="">
-    <div class="portrait-name" id="portraitName"></div>
-  </div>
 </div>
 
 <div class="particles-layer" id="particlesLayer"></div>
@@ -1130,7 +1007,7 @@ const LOCATION_BG = {
   "final_star": "images/bg/" + PREFIX + "final_star.png",
 };
 
-/* FIX: пути к папке images/sprite/ (без S!) и учёт hero_.png / mira_.png */
+/* FIX: пути к папке images/sprite/ (без S) и учёт hero_.png / mira_.png */
 const SPRITE_FRAMES = {
   hero: {
     idle:    "images/sprite/hero_.png",
@@ -1160,13 +1037,8 @@ const SPRITE_FRAMES = {
   }
 };
 
-const PORTRAITS = {
-  bruno:     { img: "images/portraits/bruno.png",     name: "Бруно" },
-  shustik:   { img: "images/portraits/shustik.png",   name: "Шустик" },
-  selesta:   { img: "images/portraits/selesta.png",   name: "Селеста" },
-  cornelius: { img: "images/portraits/cornelius.png", name: "Корнелиус" },
-  olven:     { img: "images/portraits/olven.png",     name: "Мастер Олвен" }
-};
+/* FIX: портреты NPC отключены (пустой объект) */
+const PORTRAITS = {};
 
 const ITEMS = {
   "has_feather": { icon: "🪶", name: "Перо Лазурной Сойки", hint: "Очищает звуковые трубки от пыли веков — ключ к Финалу Мелодии" },
@@ -1370,54 +1242,27 @@ const SpriteSystem = {
       }
       el.src = frames[i++];
     }, 60);
+  },
+
+  /* FIX: этот метод отсутствовал — из-за него была ошибка в консоли */
+  syncWithSpeaker(speakerName) {
+    const name = (speakerName || '').toLowerCase();
+    if (name.includes('вы') || name.includes('игрок') || name.includes('герой')) {
+      this.show('hero');
+      this.setActive('hero');
+    } else if (name.includes('мира')) {
+      this.show('mira');
+      this.setActive('mira');
+    }
   }
 };
 
-/* ============ СИСТЕМА ПОРТРЕТОВ NPC ============ */
+/* FIX: PortraitSystem отключён (пустые методы) */
 const PortraitSystem = {
-  box: null, img: null, name: null,
-  currentKey: null, hideTimer: null,
-
-  init() {
-    this.box  = document.getElementById('portraitBox');
-    this.img  = document.getElementById('portraitImg');
-    this.name = document.getElementById('portraitName');
-  },
-
-  show(key, talking) {
-    const data = PORTRAITS[key];
-    if (!data || !this.box) return;
-    if (this.hideTimer) { clearTimeout(this.hideTimer); this.hideTimer = null; }
-    if (this.currentKey === key) {
-      this.box.classList.toggle('talking', !!talking);
-      return;
-    }
-    this.currentKey = key;
-    this.img.src = data.img;
-    this.img.alt = data.name;
-    this.name.textContent = data.name;
-    this.box.classList.remove('hidden-portrait');
-    this.box.classList.add('visible');
-    this.box.classList.toggle('talking', !!talking);
-  },
-
-  hide() {
-    if (!this.box) return;
-    this.box.classList.remove('visible');
-    this.box.classList.remove('talking');
-    this.box.classList.add('hidden-portrait');
-    this.currentKey = null;
-  },
-
-  syncWithSpeaker(speakerName) {
-    const name = (speakerName || '').toLowerCase();
-    if (name.includes('бруно'))          this.show('bruno', true);
-    else if (name.includes('шустик'))    this.show('shustik', true);
-    else if (name.includes('селест'))    this.show('selesta', true);
-    else if (name.includes('корнелиус')) this.show('cornelius', true);
-    else if (name.includes('олвен'))     this.show('olven', true);
-    else                                  this.hide();
-  }
+  init() {},
+  show() {},
+  hide() {},
+  syncWithSpeaker() {}
 };
 
 const SAVE_KEY = 'pesn_augusta_full_v1';
@@ -1589,10 +1434,6 @@ function preloadImages() {
       arr.forEach(url => { const img = new Image(); img.src = url; });
     });
   });
-  Object.values(PORTRAITS).forEach(p => {
-    const img = new Image();
-    img.src = p.img;
-  });
 }
 
 function initParticles() {
@@ -1638,7 +1479,6 @@ function typeText(element, html, speed, callback) {
       gameState.isTyping = false;
       SpriteSystem.stopTalking('hero');
       SpriteSystem.stopTalking('mira');
-      if (PortraitSystem.box) PortraitSystem.box.classList.remove('talking');
       if (callback) callback();
       return;
     }
@@ -1661,7 +1501,6 @@ function advance() {
     gameState.isTyping = false;
     SpriteSystem.stopTalking('hero');
     SpriteSystem.stopTalking('mira');
-    if (PortraitSystem.box) PortraitSystem.box.classList.remove('talking');
     return;
   }
   if (passage.choices && passage.choices.length > 0) return;
@@ -1738,10 +1577,8 @@ function renderPassageInner(id, passage) {
 
   if (isHeroOrMira) {
     SpriteSystem.syncWithSpeaker(passage.speaker);
-    PortraitSystem.hide();
   } else {
     SpriteSystem.hideAll();
-    PortraitSystem.syncWithSpeaker(passage.speaker);
   }
 
   let navHTML = '';
@@ -1853,7 +1690,6 @@ function renderPassageInner(id, passage) {
     textEl.innerHTML = text;
     SpriteSystem.stopTalking('hero');
     SpriteSystem.stopTalking('mira');
-    if (PortraitSystem.box) PortraitSystem.box.classList.remove('talking');
   }
 
   const clickLayer = document.getElementById('clickLayer');
@@ -1898,7 +1734,6 @@ function showEndingScreen(endingKey) {
   clearDialogueElements();
   clearTitleElements();
   SpriteSystem.hideAll();
-  PortraitSystem.hide();
   const clickLayer = document.getElementById('clickLayer');
   if (clickLayer) clickLayer.classList.remove('enabled');
 
@@ -1990,7 +1825,6 @@ function renderTitleScreen() {
   clearDialogueElements();
   clearTitleElements();
   SpriteSystem.hideAll();
-  PortraitSystem.hide();
   setBackground('title');
 
   const clickLayer = document.getElementById('clickLayer');
@@ -2120,7 +1954,7 @@ function openAchievements() {
   html += '</div><div class="buttons"><button id="achClose">Закрыть</button></div>';
   content.innerHTML = html;
   overlay.classList.remove('hidden');
-  document.getElementById('achClose').addEventListener('click', () => overlay.classList.add('hidden'));
+  document.getElementById('achClose').addEventListener('click', () => overlay.classList.remove('hidden'));
 }
 
 function init() {
@@ -2129,7 +1963,6 @@ function init() {
   initParticles();
   preloadImages();
   SpriteSystem.init();
-  PortraitSystem.init();
 
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button, .history-btn');
