@@ -36,6 +36,63 @@ html, body {
   100% { transform: scale(1.08) translate(-1.2%, -1%); }
 }
 
+/* ============ СЛОЙ СПРАЙТОВ ============ */
+.sprites-layer {
+  position: fixed;
+  left: 0; right: 0;
+  bottom: 22vh;                  /* над диалоговым окном */
+  height: 60vh;
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 2vw;
+}
+.sprite {
+  position: relative;
+  height: 100%;
+  width: auto;
+  max-width: 40vw;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.7));
+  transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+  image-rendering: auto;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.sprite.hero { transform-origin: bottom left; }
+.sprite.mira { transform-origin: bottom right; }
+
+/* Активный (говорит) — яркий */
+.sprite.active {
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.7)) brightness(1.05);
+  opacity: 1;
+}
+/* Неактивный — чуть темнее */
+.sprite.inactive {
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.7)) brightness(0.7) saturate(0.85);
+  opacity: 0.9;
+}
+/* Скрыт (персонажа нет в сцене) */
+.sprite.hidden-sprite {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Плавное появление / исчезновение */
+.sprite.fade-in  { animation: spriteFadeIn 0.5s ease-out both; }
+.sprite.fade-out { animation: spriteFadeOut 0.5s ease-in both; }
+@keyframes spriteFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spriteFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(20px); }
+}
+
 /* ============ ЧАСТИЦЫ ============ */
 .particles-layer {
   position: fixed; inset: 0;
@@ -779,6 +836,8 @@ html, body {
   .item-popup { padding: 20px 28px; }
   .item-popup .popup-icon { font-size: 40px; }
   .item-popup .popup-name { font-size: 17px; }
+  .sprites-layer { bottom: 26vh; height: 50vh; padding: 0 1vw; }
+  .sprite { max-width: 45vw; }
 }
 @media (max-width: 480px) {
   .dialogue-box { width: 96vw; max-height: 48vh; bottom: 1.5vh; border-radius: 3px; }
@@ -793,6 +852,8 @@ html, body {
   .history-controls, .game-menu { top: 12px; }
   .history-controls { left: 12px; }
   .game-menu { right: 12px; }
+  .sprites-layer { bottom: 32vh; height: 42vh; }
+  .sprite { max-width: 48vw; }
 }
 
 .hidden { display: none !important; }
@@ -836,6 +897,10 @@ html, body {
 <audio id="sfxSelect" preload="auto" src="audio/select.mp3"></audio>
 
 <div class="bg-layer" id="bgLayer"></div>
+<div class="sprites-layer" id="spritesLayer">
+  <img id="spriteHero" class="sprite hero hidden-sprite" alt="Герой">
+  <img id="spriteMira" class="sprite mira hidden-sprite" alt="Мира">
+</div>
 <div class="particles-layer" id="particlesLayer"></div>
 <div class="vignette-layer"></div>
 
@@ -862,17 +927,16 @@ html, body {
 
 <script>
 const PREFIX = "compressed-";
+const SPRITE_PREFIX = "";
 
 /* ============ ФОНЫ ЛОКАЦИЙ ============ */
 const LOCATION_BG = {
-  /* Титул и старт */
   "title": "images/bg/" + PREFIX + "title.png",
   "start": "images/bg/" + PREFIX + "city_panorama.png",
   "street": "images/bg/" + PREFIX + "city_street.png",
   "city_holiday": "images/bg/" + PREFIX + "city_street.png",
   "sunrise_lighthouse": "images/bg/" + PREFIX + "title.png",
 
-  /* Дом игрока */
   "player_outside": "images/bg/" + PREFIX + "player_house.png",
   "player_inside": "images/bg/" + PREFIX + "player_room.png",
   "player_table": "images/bg/" + PREFIX + "heroes_reading_letter.png",
@@ -882,11 +946,9 @@ const LOCATION_BG = {
   "letter_seal_bg": "images/bg/" + PREFIX + "letter_seal.png",
   "parchment": "images/bg/" + PREFIX + "olven_scheme.png",
 
-  /* Мира */
   "mira_arrive": "images/bg/" + PREFIX + "heroes_reading_letter.png",
   "mira_joke": "images/bg/" + PREFIX + "heroes_table.png",
 
-  /* Мост и Бруно */
   "most_bridge": "images/bg/" + PREFIX + "stone_bridge.png",
   "most_sleep": "images/bg/" + PREFIX + "bruno_sleeps.png",
   "most_awake": "images/bg/" + PREFIX + "bruno_closeup.png",
@@ -900,7 +962,6 @@ const LOCATION_BG = {
   "bruno_crystal": "images/bg/" + PREFIX + "bruno_crystal.png",
   "bruno_clue": "images/bg/" + PREFIX + "bruno_riddle.png",
 
-  /* Грибная тропа и Шустик */
   "grib_tropa": "images/bg/" + PREFIX + "mushroom_path.png",
   "grib_action": "images/bg/" + PREFIX + "shustik_stuck.png",
   "shustik_stuck": "images/bg/" + PREFIX + "shustik_stuck.png",
@@ -909,13 +970,11 @@ const LOCATION_BG = {
   "shustik_lever": "images/bg/" + PREFIX + "mira_lever.png",
   "shustik_gift": "images/bg/" + PREFIX + "shustik_pollen.png",
 
-  /* Лавка Селесты */
   "lavka": "images/bg/" + PREFIX + "selesta_greet.png",
   "selesta_greet": "images/bg/" + PREFIX + "selesta_greet.png",
   "selesta_vial": "images/bg/" + PREFIX + "selesta_gives_vial.png",
   "selesta_wave": "images/bg/" + PREFIX + "selesta_wave.png",
 
-  /* Башня снаружи */
   "tower": "images/bg/" + PREFIX + "tower_exterior.png",
   "tower_secret": "images/bg/" + PREFIX + "secret_entry.png",
   "secret_entry": "images/bg/" + PREFIX + "secret_entry.png",
@@ -924,12 +983,10 @@ const LOCATION_BG = {
   "door_water": "images/bg/" + PREFIX + "door_water.png",
   "door_open": "images/bg/" + PREFIX + "door_open.png",
 
-  /* Обсерватория */
   "observatory": "images/bg/" + PREFIX + "observatory.png",
   "cat_sleep": "images/bg/" + PREFIX + "observatory.png",
   "cat_key": "images/bg/" + PREFIX + "cat_key.png",
 
-  /* Башня внутри */
   "tower_inside": "images/bg/" + PREFIX + "august_hall.png",
   "august_hall": "images/bg/" + PREFIX + "august_hall.png",
   "august_sleep": "images/bg/" + PREFIX + "august_sleep.png",
@@ -939,7 +996,6 @@ const LOCATION_BG = {
   "schema_show": "images/bg/" + PREFIX + "cornelius_scheme.png",
   "mechanism_inspect": "images/bg/" + PREFIX + "mechanism_repair.png",
 
-  /* Финалы */
   "plan_music": "images/bg/" + PREFIX + "tuning_fork.png",
   "plan_nectar": "images/bg/" + PREFIX + "nectar_pour.png",
   "plan_mechanics": "images/bg/" + PREFIX + "mira_gg_lenses.png",
@@ -956,11 +1012,41 @@ const LOCATION_BG = {
   "final_star": "images/bg/" + PREFIX + "final_star.png",
 };
 
+/* ============ СПРАЙТЫ ============ */
+const SPRITE_FRAMES = {
+  hero: {
+    idle:    "images/sprites/hero_1.png",
+    talk:   ["images/sprites/hero_1.png",
+             "images/sprites/hero_2.png",
+             "images/sprites/hero_3.png",
+             "images/sprites/hero_2.png"],
+    blink:  ["images/sprites/hero_1.png",
+             "images/sprites/hero_4.png",
+             "images/sprites/hero_5.png",
+             "images/sprites/hero_4.png",
+             "images/sprites/hero_1.png"],
+    listen:  "images/sprites/hero_6.png"
+  },
+  mira: {
+    idle:    "images/sprites/mira_1.png",
+    talk:   ["images/sprites/mira_1.png",
+             "images/sprites/mira_2.png",
+             "images/sprites/mira_3.png",
+             "images/sprites/mira_2.png"],
+    blink:  ["images/sprites/mira_1.png",
+             "images/sprites/mira_4.png",
+             "images/sprites/mira_5.png",
+             "images/sprites/mira_4.png",
+             "images/sprites/mira_1.png"],
+    listen:  "images/sprites/mira_6.png"
+  }
+};
+
 const ITEMS = {
   "has_feather": { icon: "🪶", name: "Перо Лазурной Сойки", hint: "Очищает звуковые трубки от пыли веков — ключ к Финалу Мелодии" },
   "has_crystal": { icon: "💎", name: "Кристалл Горного Кварца", hint: "Фокусирует оптику маяка — ключ к Финалу Инженерного Чуда" },
   "has_selesta_vial": { icon: "🧪", name: "Флакон Селесты", hint: "Пробуждает Августа лакомством — ключ к Финалу Изобилия" },
-  "has_key": { icon: "🔑", name: "Латунный ключ", hint: "Калибровка призм главного механизма — ключ к Финалу Инженерного Чуда" },
+  "has_key": { icon: "🔑", name: "Латунный ключ", hint: "Калибровка призм главного механизма — ключ к Финал Инженерного Чуда" },
   "has_scheme": { icon: "📜", name: "Схема Олвена", hint: "Настройка гармонического строя третьей октавы" },
   "has_clue": { icon: "🔍", name: "Зацепка от Бруно", hint: "Сквозняк сбил настройку колоколов ночью" },
   "has_pollen": { icon: "✨", name: "Пыльца Звёздных Светляков", hint: "Пробуждает сердце светляка — ключ к Финалу Изобилия" }
@@ -1046,6 +1132,134 @@ const PASSAGES = {
   "КонецНектар": { location: "epilogue", speaker: "Финал", boxClass: "final-abundance", text: "<b>КОНЕЦ: Финал Заботы и Изобилия</b><br><br><i>Сытый дух — счастливая долина! Небо вспыхнуло изумрудно-бирюзовым сиянием. Ваша доброта подарила жителям самую красивую ночь в году.</i>", ending: "abundance", endingScreen: "abundance" },
   "КонецМеханика": { location: "epilogue", speaker: "Финал", boxClass: "final-engineering", text: "<b>КОНЕЦ: Финал Инженерного Чуда</b><br><br><i>Точный расчёт, крепкая дружба и ключ на двенадцать творят чудеса почище древних заклятий. Лучи маяка начертили в небе гигантскую светящуюся звезду.</i>", ending: "engineering", endingScreen: "engineering" },
   "КонецЕдинство": { location: "epilogue", speaker: "Финал", boxClass: "final-unity", text: "<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку. Радужный луч маяка озарил всю долину.</i>", ending: "unity", endingScreen: "unity" }
+};
+
+/* ============ СПРАЙТ-СИСТЕМА ============ */
+const SpriteSystem = {
+  heroEl: null,
+  miraEl: null,
+  heroTimer: null,
+  miraTimer: null,
+  heroBlinkTimer: null,
+  miraBlinkTimer: null,
+  heroTalking: false,
+  miraTalking: false,
+
+  init() {
+    this.heroEl = document.getElementById('spriteHero');
+    this.miraEl = document.getElementById('spriteMira');
+    if (this.heroEl) this.heroEl.src = SPRITE_FRAMES.hero.idle;
+    if (this.miraEl) this.miraEl.src = SPRITE_FRAMES.mira.idle;
+    this.scheduleBlink('hero');
+    this.scheduleBlink('mira');
+  },
+
+  show(character) {
+    const el = character === 'hero' ? this.heroEl : this.miraEl;
+    if (!el) return;
+    el.classList.remove('hidden-sprite');
+    el.classList.add('fade-in');
+    setTimeout(() => el.classList.remove('fade-in'), 600);
+  },
+
+  hide(character) {
+    const el = character === 'hero' ? this.heroEl : this.miraEl;
+    if (!el) return;
+    el.classList.add('fade-out');
+    setTimeout(() => {
+      el.classList.remove('fade-out');
+      el.classList.add('hidden-sprite');
+    }, 500);
+  },
+
+  hideAll() {
+    this.hide('hero');
+    this.hide('mira');
+  },
+
+  setActive(character) {
+    if (this.heroEl) {
+      this.heroEl.classList.toggle('active', character === 'hero');
+      this.heroEl.classList.toggle('inactive', character !== 'hero');
+    }
+    if (this.miraEl) {
+      this.miraEl.classList.toggle('active', character === 'mira');
+      this.miraEl.classList.toggle('inactive', character !== 'mira');
+    }
+  },
+
+  startTalking(character) {
+    const el = character === 'hero' ? this.heroEl : this.miraEl;
+    const frames = SPRITE_FRAMES[character].talk;
+    if (!el || !frames) return;
+    this.stopTalking(character);
+    if (character === 'hero') this.heroTalking = true;
+    else this.miraTalking = true;
+    let i = 0;
+    const interval = setInterval(() => {
+      if (!(character === 'hero' ? this.heroTalking : this.miraTalking)) {
+        clearInterval(interval);
+        return;
+      }
+      el.src = frames[i];
+      i = (i + 1) % frames.length;
+    }, 150);
+    if (character === 'hero') this.heroTimer = interval;
+    else this.miraTimer = interval;
+  },
+
+  stopTalking(character) {
+    if (character === 'hero') {
+      this.heroTalking = false;
+      if (this.heroTimer) { clearInterval(this.heroTimer); this.heroTimer = null; }
+      if (this.heroEl) this.heroEl.src = SPRITE_FRAMES.hero.idle;
+    } else {
+      this.miraTalking = false;
+      if (this.miraTimer) { clearInterval(this.miraTimer); this.miraTimer = null; }
+      if (this.miraEl) this.miraEl.src = SPRITE_FRAMES.mira.idle;
+    }
+  },
+
+  scheduleBlink(character) {
+    const delay = 2000 + Math.random() * 2500;
+    const timer = setTimeout(() => {
+      this.blink(character);
+      this.scheduleBlink(character);
+    }, delay);
+    if (character === 'hero') this.heroBlinkTimer = timer;
+    else this.miraBlinkTimer = timer;
+  },
+
+  blink(character) {
+    const el = character === 'hero' ? this.heroEl : this.miraEl;
+    const frames = SPRITE_FRAMES[character].blink;
+    if (!el || !frames) return;
+    if (character === 'hero' ? this.heroTalking : this.miraTalking) return;
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i >= frames.length) {
+        clearInterval(interval);
+        if (!(character === 'hero' ? this.heroTalking : this.miraTalking)) {
+          el.src = SPRITE_FRAMES[character].idle;
+        }
+        return;
+      }
+      el.src = frames[i++];
+    }, 60);
+  },
+
+  syncWithSpeaker(speakerName) {
+    const name = (speakerName || '').toLowerCase();
+    const isHero = name.includes('вы') || name.includes('игрок') || name.includes('герой');
+    const isMira = name.includes('мира');
+    if (isHero) {
+      this.show('hero');
+      this.setActive('hero');
+    } else if (isMira) {
+      this.show('mira');
+      this.setActive('mira');
+    }
+  }
 };
 
 const SAVE_KEY = 'pesn_augusta_full_v1';
@@ -1211,6 +1425,12 @@ function preloadImages() {
     const img = new Image();
     img.src = url;
   });
+  ['hero', 'mira'].forEach(ch => {
+    Object.values(SPRITE_FRAMES[ch]).forEach(v => {
+      const arr = Array.isArray(v) ? v : [v];
+      arr.forEach(url => { const img = new Image(); img.src = url; });
+    });
+  });
 }
 
 function initParticles() {
@@ -1254,6 +1474,9 @@ function typeText(element, html, speed, callback) {
       cursor.remove();
       element.innerHTML = html;
       gameState.isTyping = false;
+      // FIX: останавливаем речь когда текст допечатан
+      SpriteSystem.stopTalking('hero');
+      SpriteSystem.stopTalking('mira');
       if (callback) callback();
       return;
     }
@@ -1274,6 +1497,8 @@ function advance() {
     const textEl = document.getElementById('dialogueText');
     if (textEl) textEl.innerHTML = passage.text || '';
     gameState.isTyping = false;
+    SpriteSystem.stopTalking('hero');
+    SpriteSystem.stopTalking('mira');
     return;
   }
   if (passage.choices && passage.choices.length > 0) return;
@@ -1339,6 +1564,9 @@ function renderPassageInner(id, passage) {
   }
 
   setBackground(passage.location);
+
+  // FIX: синхронизация спрайтов с говорящим
+  SpriteSystem.syncWithSpeaker(passage.speaker);
 
   let navHTML = '';
   if (passage.choices && passage.choices.length > 0) {
@@ -1433,6 +1661,14 @@ function renderPassageInner(id, passage) {
 
   updateHistoryButtons();
 
+  // FIX: запускаем анимацию речи только для говорящего
+  const name = (speaker || '').toLowerCase();
+  if (name.includes('вы') || name.includes('игрок') || name.includes('герой')) {
+    SpriteSystem.startTalking('hero');
+  } else if (name.includes('мира')) {
+    SpriteSystem.startTalking('mira');
+  }
+
   const textEl = document.getElementById('dialogueText');
   const text = passage.text || '';
   if (gameState.settings.typewriter === 'on') {
@@ -1440,6 +1676,8 @@ function renderPassageInner(id, passage) {
     typeText(textEl, text, gameState.settings.textSpeed, () => { gameState.isTyping = false; });
   } else {
     textEl.innerHTML = text;
+    SpriteSystem.stopTalking('hero');
+    SpriteSystem.stopTalking('mira');
   }
 
   const clickLayer = document.getElementById('clickLayer');
@@ -1483,6 +1721,7 @@ function grantEmergencyItem() {
 function showEndingScreen(endingKey) {
   clearDialogueElements();
   clearTitleElements();
+  SpriteSystem.hideAll();
   const clickLayer = document.getElementById('clickLayer');
   if (clickLayer) clickLayer.classList.remove('enabled');
 
@@ -1573,6 +1812,7 @@ function renderTitleScreen() {
   gameState.currentPassage = 'title';
   clearDialogueElements();
   clearTitleElements();
+  SpriteSystem.hideAll();
   setBackground('title');
 
   const clickLayer = document.getElementById('clickLayer');
@@ -1628,6 +1868,8 @@ function goBack() {
   if (gameState.historyIndex <= 0) return;
   if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
   gameState.isTyping = false;
+  SpriteSystem.stopTalking('hero');
+  SpriteSystem.stopTalking('mira');
   gameState.historyIndex--;
   renderPassage(gameState.history[gameState.historyIndex], false);
 }
@@ -1635,6 +1877,8 @@ function goForward() {
   if (gameState.historyIndex >= gameState.history.length - 1) return;
   if (gameState.typewriterTimer) { clearTimeout(gameState.typewriterTimer); gameState.typewriterTimer = null; }
   gameState.isTyping = false;
+  SpriteSystem.stopTalking('hero');
+  SpriteSystem.stopTalking('mira');
   gameState.historyIndex++;
   renderPassage(gameState.history[gameState.historyIndex], false);
 }
@@ -1706,6 +1950,7 @@ function init() {
   startMusic();
   initParticles();
   preloadImages();
+  SpriteSystem.init();
 
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button, .history-btn');
