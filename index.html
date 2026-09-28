@@ -38,7 +38,6 @@ html, body {
 }
 
 /* ============ СЛОЙ СПРАЙТОВ ============ */
-/* FIX: спрайты прижаты к низу, крупнее, с отступом под диалог */
 .sprites-layer {
   position: fixed;
   left: 0; right: 0;
@@ -50,13 +49,13 @@ html, body {
   justify-content: space-between;
   align-items: flex-end;
   padding: 0;
-  padding-bottom: 28vh;      /* отступ под диалоговое окно */
+  padding-bottom: 28vh;
 }
 .sprite {
   position: relative;
   height: 100%;
   width: auto;
-  max-width: 32vw;           /* ~треть экрана по ширине */
+  max-width: 32vw;
   object-fit: contain;
   object-position: bottom center;
   filter: drop-shadow(0 8px 24px rgba(0,0,0,0.7));
@@ -813,6 +812,84 @@ html, body {
 .modal .ending-status.locked { background: rgba(224,138,76,0.08); border: 1px solid rgba(224,138,76,0.3); color: #c9c0a6; }
 .modal .ending-status .status-need { font-size: 12px; color: #e07b39; margin-top: 4px; font-style: italic; }
 
+/* ============ СЛОТЫ СОХРАНЕНИЙ ============ */
+.save-slot {
+  padding: 14px 18px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(244,197,66,0.2);
+  transition: all 0.3s ease;
+}
+.save-slot.slot-filled {
+  background: rgba(251,191,36,0.06);
+  border-color: rgba(251,191,36,0.35);
+}
+.save-slot:hover {
+  border-color: rgba(251,191,36,0.6);
+}
+.slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.slot-num {
+  color: #FBBF24;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+.slot-date {
+  color: #999;
+  font-size: 12px;
+  font-style: italic;
+}
+.slot-scene {
+  color: #ccc;
+  font-size: 12px;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+.slot-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.slot-buttons button {
+  flex: 1;
+  min-width: 100px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(244,197,66,0.6);
+  background: linear-gradient(180deg, rgba(28,22,14,0.9) 0%, rgba(14,10,6,0.95) 100%);
+  color: #FFE9A8;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.slot-buttons button:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(244,197,66,0.22) 0%, rgba(180,120,20,0.15) 100%);
+  border-color: rgba(244,197,66,1);
+  color: #FFF8E7;
+  transform: translateY(-1px);
+}
+.slot-buttons button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(0.7);
+}
+.slot-save { border-color: rgba(139,171,122,0.6); color: #a8d49a; }
+.slot-save:hover:not(:disabled) { border-color: rgba(139,171,122,1); background: linear-gradient(180deg, rgba(139,171,122,0.2) 0%, rgba(90,120,80,0.15) 100%); }
+.slot-load { border-color: rgba(100,150,255,0.6); color: #9cc0ff; }
+.slot-load:hover:not(:disabled) { border-color: rgba(100,150,255,1); background: linear-gradient(180deg, rgba(100,150,255,0.2) 0%, rgba(60,90,180,0.15) 100%); }
+.slot-delete { border-color: rgba(248,113,113,0.6); color: #fca5a5; }
+.slot-delete:hover:not(:disabled) { border-color: rgba(248,113,113,1); background: linear-gradient(180deg, rgba(248,113,113,0.2) 0%, rgba(180,60,60,0.15) 100%); }
+
 /* ============ СКРОЛЛБАРЫ ============ */
 .dialogue-text::-webkit-scrollbar, .modal::-webkit-scrollbar { width: 6px; }
 .dialogue-text::-webkit-scrollbar-track, .modal::-webkit-scrollbar-track { background: rgba(255,243,196,0.1); border-radius: 3px; }
@@ -940,7 +1017,7 @@ const LOCATION_BG = {
   "player_table2": "images/bg/" + PREFIX + "heroes_table.png",
   "player_hide_letter": "images/bg/" + PREFIX + "hero_hides_letter.png",
   "letter_close": "images/bg/" + PREFIX + "letter_closeup.png",
-  "letter_seal_bg": "images/bg/" + PREFIX + "letter_seal.png",
+"letter_seal_bg": "images/bg/" + PREFIX + "letter_seal.png",
   "parchment": "images/bg/" + PREFIX + "olven_scheme.png",
 
   "mira_arrive": "images/bg/" + PREFIX + "heroes_reading_letter.png",
@@ -1132,6 +1209,7 @@ const PASSAGES = {
   "КонецЕдинство": { location: "epilogue", speaker: "Финал", boxClass: "final-unity", text: "<b>КОНЕЦ: Финал Истинной Гармонии Стихий</b><br><br><i>Вы объединили природу, науку и тепло сердец, подарив миру незабываемую сказку. Радужный луч маяка озарил всю долину.</i>", ending: "unity", endingScreen: "unity" }
 };
 
+/* ============ СИСТЕМА СПРАЙТОВ ============ */
 const SpriteSystem = {
   heroEl: null, miraEl: null,
   heroTimer: null, miraTimer: null,
@@ -1261,6 +1339,66 @@ const PortraitSystem = {
   hide() {},
   syncWithSpeaker() {}
 };
+
+/* ============ СИСТЕМА СЛОТОВ СОХРАНЕНИЙ ============ */
+const SLOT_KEY = 'pesn_augusta_slots_v1';
+const SLOT_COUNT = 6;
+
+function getSlots() {
+  try {
+    const raw = localStorage.getItem(SLOT_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch (e) { return {}; }
+}
+
+function writeSlots(slots) {
+  try {
+    localStorage.setItem(SLOT_KEY, JSON.stringify(slots));
+  } catch (e) {}
+}
+
+function saveToSlot(slotNum) {
+  const slots = getSlots();
+  slots[slotNum] = {
+    passage: gameState.currentPassage,
+    variables: gameState.variables,
+    endings: gameState.endings,
+    achievements: gameState.achievements,
+    history: gameState.history,
+    historyIndex: gameState.historyIndex,
+    settings: gameState.settings,
+    timestamp: Date.now()
+  };
+  writeSlots(slots);
+}
+
+function loadFromSlot(slotNum) {
+  const slots = getSlots();
+  const slot = slots[slotNum];
+  if (!slot) return false;
+  gameState.currentPassage = slot.passage || 'title';
+  gameState.variables = slot.variables || {};
+  gameState.endings = slot.endings || {};
+  gameState.achievements = slot.achievements || {};
+  gameState.history = slot.history || [];
+  gameState.historyIndex = typeof slot.historyIndex === 'number' ? slot.historyIndex : -1;
+  if (slot.settings) Object.assign(gameState.settings, slot.settings);
+  return true;
+}
+
+function deleteSlot(slotNum) {
+  const slots = getSlots();
+  delete slots[slotNum];
+  writeSlots(slots);
+}
+
+function formatDate(ts) {
+  if (!ts) return '— пусто —';
+  const d = new Date(ts);
+  const pad = n => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 const SAVE_KEY = 'pesn_augusta_full_v1';
 
@@ -1596,6 +1734,7 @@ function renderPassageInner(id, passage) {
 
   const gameMenuHTML = `
     <div class="game-menu">
+      <button id="btnSave" title="Сохранить / Загрузить">💾</button>
       <button id="btnJournal" title="Журнал">📖</button>
       <button id="btnGameAchievements" title="Достижения">🏆</button>
       <button id="btnMenu" title="В главное меню">🏠</button>
@@ -1656,6 +1795,8 @@ function renderPassageInner(id, passage) {
     });
   }
 
+  const saveBtn = document.getElementById('btnSave');
+  if (saveBtn) saveBtn.addEventListener('click', (e) => { e.stopPropagation(); openSaveMenu(); });
   const journalBtn = document.getElementById('btnJournal');
   if (journalBtn) journalBtn.addEventListener('click', (e) => { e.stopPropagation(); openJournal(); });
   const achBtn = document.getElementById('btnGameAchievements');
@@ -1851,11 +1992,7 @@ function renderTitleScreen() {
 
   document.getElementById('btnStart').addEventListener('click', () => { resetAll(); renderPassage('Start1'); });
   document.getElementById('btnLoad').addEventListener('click', () => {
-    if (loadGame()) {
-      clearTitleElements();
-      const target = gameState.currentPassage === 'title' ? 'Start1' : gameState.currentPassage;
-      renderPassage(target, false);
-    }
+    openSaveMenu();
   });
   document.getElementById('btnTitleAchievements').addEventListener('click', openAchievements);
   document.getElementById('btnReset').addEventListener('click', () => {
@@ -1890,6 +2027,80 @@ function goForward() {
   SpriteSystem.stopTalking('mira');
   gameState.historyIndex++;
   renderPassage(gameState.history[gameState.historyIndex], false);
+}
+
+/* ============ ОКНО СОХРАНЕНИЙ ============ */
+function openSaveMenu() {
+  const overlay = document.getElementById('modalOverlay');
+  const content = document.getElementById('modalContent');
+  const slots = getSlots();
+
+  let html = '<h2>💾 Сохранения</h2>';
+  html += '<p style="color:#999;font-size:12px;margin:-10px 0 18px;">Выберите слот для сохранения или загрузки. Всего 6 слотов.</p>';
+
+  for (let i = 1; i <= SLOT_COUNT; i++) {
+    const slot = slots[i];
+    const hasData = !!slot;
+    const dateStr = hasData ? formatDate(slot.timestamp) : '— пусто —';
+    const sceneStr = hasData ? (PASSAGES[slot.passage]?.speaker || slot.passage) : '';
+    const cls = hasData ? 'slot-filled' : 'slot-empty';
+
+    html += `
+      <div class="save-slot ${cls}">
+        <div class="slot-header">
+          <div class="slot-num">Слот ${i}</div>
+          <div class="slot-date">${dateStr}</div>
+        </div>
+        ${hasData ? `<div class="slot-scene">Сцена: ${sceneStr}</div>` : ''}
+        <div class="slot-buttons">
+          <button class="slot-save" data-slot="${i}">💾 Сохранить</button>
+          <button class="slot-load" data-slot="${i}" ${hasData ? '' : 'disabled'}>📂 Загрузить</button>
+          <button class="slot-delete" data-slot="${i}" ${hasData ? '' : 'disabled'}>🗑 Удалить</button>
+        </div>
+      </div>
+    `;
+  }
+
+  html += '<div class="buttons"><button id="saveClose">Закрыть</button></div>';
+  content.innerHTML = html;
+  overlay.classList.remove('hidden');
+
+  content.querySelectorAll('.slot-save').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const num = parseInt(btn.dataset.slot, 10);
+      saveToSlot(num);
+      showNotification('💾 Сохранено', `Сохранено в слот ${num}`);
+      openSaveMenu();
+    });
+  });
+
+  content.querySelectorAll('.slot-load').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const num = parseInt(btn.dataset.slot, 10);
+      if (!getSlots()[num]) return;
+      if (!confirm(`Загрузить слот ${num}? Текущий прогресс будет потерян.`)) return;
+      if (loadFromSlot(num)) {
+        overlay.classList.add('hidden');
+        clearTitleElements();
+        clearDialogueElements();
+        renderPassage(gameState.currentPassage, false);
+        showNotification('📂 Загружено', `Загружен слот ${num}`);
+      }
+    });
+  });
+
+  content.querySelectorAll('.slot-delete').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const num = parseInt(btn.dataset.slot, 10);
+      if (!getSlots()[num]) return;
+      if (!confirm(`Удалить слот ${num}?`)) return;
+      deleteSlot(num);
+      showNotification('🗑 Удалено', `Слот ${num} очищен`);
+      openSaveMenu();
+    });
+  });
+
+  document.getElementById('saveClose').addEventListener('click', () => overlay.classList.add('hidden'));
 }
 
 function openJournal() {
